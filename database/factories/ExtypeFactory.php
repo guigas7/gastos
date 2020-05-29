@@ -2,11 +2,12 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\AppExtype;
+use App\Extype;
 use Faker\Generator as Faker;
 
-$factory->define(AppExtype::class, function (Faker $faker) {
+$factory->define(Extype::class, function (Faker $faker) {
     return [
-        //
+        'name' => $faker->word,
+        'description' => $faker->text(200),
     ];
 });

@@ -11,6 +11,19 @@ class SourcesTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+    	$names = [
+    		'Cepeti',
+    		'Cuidados Intensivos (jur)',
+    		'Cuidados Intensivos (fis)',
+    		'Tecnologia',
+    		'Comunicação',
+    		'Pesquisa'
+    	];
+    	
+    	foreach ($names as $name) {
+	    	factory('App\Source')->create([
+	    		'name' => $name
+	    	]);
+    	}
     }
 }

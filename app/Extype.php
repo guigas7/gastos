@@ -32,4 +32,54 @@ class Extype extends Model
                 'year',
             ]);
     }
+
+        public static function boot()
+    {
+        parent::boot();
+ 
+        static::creating(function ($type) {
+            if (!is_null($type->prontuario)) {
+                $type->slug = str_slug($type->prontuario);
+     
+                $latestSlug =
+                Extype::whereRaw("slug RLIKE '^{$type->slug}(--[0-9]*)?$'")
+                    ->latest('slug')
+                    ->pluck('slug');
+                if ($latestSlug->first() != null) {
+                    $pieces = explode('--', $latestSlug->first());
+                    if (count($pieces) == 1) { // first repetition
+                        $type->slug .= '--' . '1';
+                    } else {
+                        $number = intval(end($pieces));
+                        $type->slug .= '--' . ($number + 1);
+                    }
+                } 
+            }
+        });
+ 
+        static::updating(function ($type) {
+            $oldtype = Extype::findOrFail($type->id);
+            if (is_null($type->prontuario)) {
+                $type->slug = null;
+            } else {
+                if ($oldtype->prontuario != $type->prontuario) { // se o nome foi alterado, então altera slug também
+                    $type->slug = str_slug($type->prontuario);
+    
+                    $latestSlug =
+                    Extype::whereRaw("slug RLIKE '^{$type->slug}(--[0-9]*)?$'")
+                        ->latest('slug')
+                        ->pluck('slug');
+                    if ($latestSlug->first() != null) {
+                        $pieces = explode('--', $latestSlug->first());
+                        if (count($pieces) == 1) { // first repetition
+                            $type->slug .= '--' . '1';
+                        } else {
+                            $number = intval(end($pieces));
+                            $type->slug .= '--' . ($number + 1);
+                        }
+                    } 
+                }
+            }
+        });
+    }
 }

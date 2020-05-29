@@ -25,11 +25,6 @@ class Source extends Model
         return 'slug';
     }
 
-    public function patientsPr()
-    {
-        return $this->hasMany('App\Prpatient', 'hospital_id');
-    }
-
     public function intypes()
     {
         return $this->belongsToMany(Source:class)
@@ -47,5 +42,55 @@ class Source extends Model
                 'year',
             ]);
     }
+
+    public static function boot()
+    {
+        parent::boot();
+ 
+        static::creating(function ($source) {
+            if (!is_null($source->prontuario)) {
+                $source->slug = str_slug($source->prontuario);
+     
+                $latestSlug =
+                Source::whereRaw("slug RLIKE '^{$source->slug}(--[0-9]*)?$'")
+                    ->latest('slug')
+                    ->pluck('slug');
+                if ($latestSlug->first() != null) {
+                    $pieces = explode('--', $latestSlug->first());
+                    if (count($pieces) == 1) { // first repetition
+                        $source->slug .= '--' . '1';
+                    } else {
+                        $number = intval(end($pieces));
+                        $source->slug .= '--' . ($number + 1);
+                    }
+                } 
+            }
+        });
+ 
+        static::updating(function ($source) {
+            $oldsource = Source::findOrFail($source->id);
+            if (is_null($source->prontuario)) {
+                $source->slug = null;
+            } else {
+                if ($oldsource->prontuario != $source->prontuario) { // se o nome foi alterado, então altera slug também
+                    $source->slug = str_slug($source->prontuario);
+    
+                    $latestSlug =
+                    Source::whereRaw("slug RLIKE '^{$source->slug}(--[0-9]*)?$'")
+                        ->latest('slug')
+                        ->pluck('slug');
+                    if ($latestSlug->first() != null) {
+                        $pieces = explode('--', $latestSlug->first());
+                        if (count($pieces) == 1) { // first repetition
+                            $source->slug .= '--' . '1';
+                        } else {
+                            $number = intval(end($pieces));
+                            $source->slug .= '--' . ($number + 1);
+                        }
+                    } 
+                }
+            }
+        });
+	}
 }
 

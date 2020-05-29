@@ -4,7 +4,13 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-	protected $toTruncate = ['users'];
+	protected $toTruncate = [
+        'users',
+        'sources',
+        'months',
+        'intypes',
+        'extypes'
+    ];
     /**
      * Seed the application's database.
      *
@@ -17,5 +23,9 @@ class DatabaseSeeder extends Seeder
 		}
 
         $this->call(UsersTableSeeder::class);
+        $this->call(SourcesTableSeeder::class);
+        $this->call(MonthsTableSeeder::class);
+        $this->call(IntypesTableSeeder::class);
+        $this->call(ExtypesTableSeeder::class);
     }
 }
