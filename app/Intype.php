@@ -38,7 +38,7 @@ class Intype extends Model
  
         static::creating(function ($type) {
             if (!is_null($type->name)) {
-                $type->slug = str_slug($type->name);
+                $type->slug = Str::slug($type->name);
      
                 $latestSlug =
                 Intype::whereRaw("slug RLIKE '^{$type->slug}(--[0-9]*)?$'")
@@ -62,7 +62,7 @@ class Intype extends Model
                 $type->slug = null;
             } else {
                 if ($oldtype->name != $type->name) { // se o nome foi alterado, então altera slug também
-                    $type->slug = str_slug($type->name);
+                    $type->slug = Str::slug($type->name);
     
                     $latestSlug =
                     Intype::whereRaw("slug RLIKE '^{$type->slug}(--[0-9]*)?$'")

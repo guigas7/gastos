@@ -49,7 +49,7 @@ class Source extends Model
  
         static::creating(function ($source) {
             if (!is_null($source->name)) {
-                $source->slug = str_slug($source->name);
+                $source->slug = Str::slug($source->name);
      
                 $latestSlug =
                 Source::whereRaw("slug RLIKE '^{$source->slug}(--[0-9]*)?$'")
@@ -74,7 +74,7 @@ class Source extends Model
                 $source->slug = null;
             } else {
                 if ($oldsource->name != $source->name) { // se o nome foi alterado, então altera slug também
-                    $source->slug = str_slug($source->name);
+                    $source->slug = Str::slug($source->name);
     
                     $latestSlug =
                     Source::whereRaw("slug RLIKE '^{$source->slug}(--[0-9]*)?$'")
