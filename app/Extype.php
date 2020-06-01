@@ -38,8 +38,8 @@ class Extype extends Model
         parent::boot();
  
         static::creating(function ($type) {
-            if (!is_null($type->prontuario)) {
-                $type->slug = str_slug($type->prontuario);
+            if (!is_null($type->name)) {
+                $type->slug = str_slug($type->name);
      
                 $latestSlug =
                 Extype::whereRaw("slug RLIKE '^{$type->slug}(--[0-9]*)?$'")
@@ -59,11 +59,11 @@ class Extype extends Model
  
         static::updating(function ($type) {
             $oldtype = Extype::findOrFail($type->id);
-            if (is_null($type->prontuario)) {
+            if (is_null($type->name)) {
                 $type->slug = null;
             } else {
-                if ($oldtype->prontuario != $type->prontuario) { // se o nome foi alterado, então altera slug também
-                    $type->slug = str_slug($type->prontuario);
+                if ($oldtype->name != $type->name) { // se o nome foi alterado, então altera slug também
+                    $type->slug = str_slug($type->name);
     
                     $latestSlug =
                     Extype::whereRaw("slug RLIKE '^{$type->slug}(--[0-9]*)?$'")

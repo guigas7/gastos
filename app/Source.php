@@ -48,8 +48,8 @@ class Source extends Model
         parent::boot();
  
         static::creating(function ($source) {
-            if (!is_null($source->prontuario)) {
-                $source->slug = str_slug($source->prontuario);
+            if (!is_null($source->name)) {
+                $source->slug = str_slug($source->name);
      
                 $latestSlug =
                 Source::whereRaw("slug RLIKE '^{$source->slug}(--[0-9]*)?$'")
@@ -70,11 +70,11 @@ class Source extends Model
  
         static::updating(function ($source) {
             $oldsource = Source::findOrFail($source->id);
-            if (is_null($source->prontuario)) {
+            if (is_null($source->name)) {
                 $source->slug = null;
             } else {
-                if ($oldsource->prontuario != $source->prontuario) { // se o nome foi alterado, então altera slug também
-                    $source->slug = str_slug($source->prontuario);
+                if ($oldsource->name != $source->name) { // se o nome foi alterado, então altera slug também
+                    $source->slug = str_slug($source->name);
     
                     $latestSlug =
                     Source::whereRaw("slug RLIKE '^{$source->slug}(--[0-9]*)?$'")
