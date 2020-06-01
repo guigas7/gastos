@@ -36,7 +36,6 @@ class FirstTables extends Migration
             $table->index(['intype_id', 'source_id', 'year']);
             $table->unsignedBigInteger('intype_id');
             $table->unsignedBigInteger('source_id');
-            $table->decimal('default', 19,4)->nullable();
             $table->string('year', 4);
 
             $table->foreign('intype_id')

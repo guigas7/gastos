@@ -10,6 +10,6 @@ $factory->define(Inregister::class, function (Faker $faker) {
         'intype_source_id' => factory(\App\IntypeSource::class),
         'month' => sprintf("%02d", $faker->numberBetween(1, 12)),
         'value' => $faker->randomFloat(2),
-        'observations' => $faker->text(200),
+        'observations' => $faker->optional()->text(200),
     ];
 });
