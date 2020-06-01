@@ -12,4 +12,6 @@ class Month extends Model
      * @var array
      */
     protected $guarded = [];
+
+    public $timestamps = false;
 }

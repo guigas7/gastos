@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 use App\Source;
 use App\Intype;
 
-class ExtypeSource extends Pivot
+class IntypeSource extends Pivot
 {
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -14,6 +14,8 @@ class ExtypeSource extends Pivot
      * @var bool
      */
     public $incrementing = true;
+
+    public $timestamps = false;
 
    	/**
      * The attributes that are not mass assignable.
@@ -29,6 +31,6 @@ class ExtypeSource extends Pivot
 
     public function sources()
     {
-        return $this->belongsTo(Source:class);
+        return $this->belongsTo(Source::class);
     }
 }

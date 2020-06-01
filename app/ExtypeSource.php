@@ -15,6 +15,8 @@ class ExtypeSource extends Pivot
      */
     public $incrementing = true;
 
+    public $timestamps = false;
+
     /**
      * The attributes that are not mass assignable.
      *
@@ -29,6 +31,6 @@ class ExtypeSource extends Pivot
 
     public function sources()
     {
-        return $this->belongsTo(Source:class);
+        return $this->belongsTo(Source::class);
     }
 }

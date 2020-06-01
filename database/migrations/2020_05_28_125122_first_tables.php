@@ -105,9 +105,8 @@ class FirstTables extends Migration
 
         Schema::create('months', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 8);
+            $table->string('name', 10);
             $table->string('number', 2);
-            $table->timestamps();
         });
     }
 

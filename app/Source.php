@@ -27,7 +27,7 @@ class Source extends Model
 
     public function intypes()
     {
-        return $this->belongsToMany(Source:class)
+        return $this->belongsToMany(Source::class)
             ->using('App\IntypeSource')->withPivot([
                 'default',
                 'year',
@@ -36,7 +36,7 @@ class Source extends Model
 
     public function extypes()
     {
-        return $this->belongsToMany(Source:class)
+        return $this->belongsToMany(Source::class)
             ->using('App\ExtypeSource')->withPivot([
                 'default',
                 'year',
@@ -65,6 +65,7 @@ class Source extends Model
                     }
                 } 
             }
+            dd($source);
         });
  
         static::updating(function ($source) {

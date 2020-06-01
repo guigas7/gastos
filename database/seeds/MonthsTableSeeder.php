@@ -42,7 +42,7 @@ class MonthsTableSeeder extends Seeder
     	];
 
     	foreach ($names as $i => $name) {
-	    	factory('App\Source')->create([
+	    	factory('App\Month')->create([
 	    		'name' => $name,
 	    		'number' => $numbers[$i]
 	    	]);
