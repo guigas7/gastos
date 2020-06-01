@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Intype;
 use App\Extype;
+use Illuminate\Support\Str;
 
 class Source extends Model
 {
@@ -65,7 +66,6 @@ class Source extends Model
                     }
                 } 
             }
-            dd($source);
         });
  
         static::updating(function ($source) {

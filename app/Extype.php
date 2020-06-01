@@ -4,6 +4,7 @@ namespace App;
 
 use App\Source;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Extype extends Model
 {
@@ -26,7 +27,7 @@ class Extype extends Model
 
     public function sources()
     {
-        return $this->belongsToMany(Source:class)
+        return $this->belongsToMany(Source::class)
             ->using('App\ExtypeSource')->withPivot([
                 'default',
                 'year',

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class ExtypeSourcesTableSeeder extends Seeder
+class IntypeSourcesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,14 +12,14 @@ class ExtypeSourcesTableSeeder extends Seeder
     public function run()
     {
     	$source_ids = range(1, 6);
-    	$extype_ids = range(1, 17);
+    	$intype_ids = range(1, 12);
     	$years = range(2019,2021);
     	foreach ($years as $year) {
     	    foreach ($source_ids as $source) {
-    		    foreach ($extype_ids as $type) {
-	    	        factory('App\ExtypeSource')->create([
+    		    foreach ($intype_ids as $type) {
+	    	        factory('App\IntypeSource')->create([
 	    		        'source_id' => $source,
-	    		        'extype_id' => $type,
+	    		        'intype_id' => $type,
 	    		        'year' => $year,
 	    	        ]);
     	        }

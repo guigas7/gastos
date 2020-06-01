@@ -18,7 +18,7 @@ class FirstTables extends Migration
         Schema::create('sources', function (Blueprint $table) {
             $table->id();
             $table->string('name', 80);
-            $table->string('slug', 90)->unique()->nullable();
+            $table->string('slug', 90)->unique();
             $table->boolean('income')->default(0);
             $table->timestamps();
         }); 
@@ -26,7 +26,7 @@ class FirstTables extends Migration
         Schema::create('intypes', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
-            $table->string('slug', 60)->unique()->nullable();
+            $table->string('slug', 60)->unique();
             $table->string('description', 255);
             $table->timestamps();
         });
@@ -36,7 +36,7 @@ class FirstTables extends Migration
             $table->index(['intype_id', 'source_id', 'year']);
             $table->unsignedBigInteger('intype_id');
             $table->unsignedBigInteger('source_id');
-            $table->decimal('default', 19,4);
+            $table->decimal('default', 19,4)->nullable();
             $table->string('year', 4);
 
             $table->foreign('intype_id')
@@ -66,7 +66,7 @@ class FirstTables extends Migration
         Schema::create('extypes', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
-            $table->string('slug', 60)->unique()->nullable();
+            $table->string('slug', 60)->unique();
             $table->string('description', 255);
             $table->timestamps();
         });
@@ -76,7 +76,7 @@ class FirstTables extends Migration
             $table->index(['extype_id', 'source_id', 'year']);
             $table->unsignedBigInteger('extype_id');
             $table->unsignedBigInteger('source_id');
-            $table->decimal('default', 19,4);
+            $table->decimal('default', 19,4)->nullable();
             $table->string('year', 4);
 
             $table->foreign('extype_id')

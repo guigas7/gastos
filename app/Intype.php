@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Intype extends Model
 {
@@ -25,7 +26,7 @@ class Intype extends Model
 
     public function sources()
     {
-        return $this->belongsToMany(Source:class)
+        return $this->belongsToMany(Source::class)
             ->using('App\IntypeSource')->withPivot([
                 'default',
                 'year',

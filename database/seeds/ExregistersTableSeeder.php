@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Extype;
-use App\Source;
+use App\ExtypeSource;
 
 class ExregistersTableSeeder extends Seeder
 {
@@ -13,12 +12,30 @@ class ExregistersTableSeeder extends Seeder
      */
     public function run()
     {
-    	$types = Extype::all();
-    	$types = Extype::all();
-    	foreach ($names as $name) {
-	    	factory('App\Extype')->create([
-	    		'name' => $name
-	    	]);
-    	}
+        $months = [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08",
+            "09",
+            "10",
+            "11",
+            "12",
+        ];
+
+        $ids = ExtypeSource::all()->pluck('id')->toArray();
+
+        foreach ($ids as $id) {
+            foreach ($months as $month) {
+                factory('App\Exregister')->create([
+                    'extype_source_id' => $id,
+                    'month' => $month,
+                ]);
+            }
+        }
     }
 }
