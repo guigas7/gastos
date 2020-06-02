@@ -26,11 +26,12 @@ class Intype extends Model
 
     public function sources()
     {
-        return $this->belongsToMany(Source::class)
-            ->using('App\IntypeSource')->withPivot([
-                'default',
-                'year',
-            ]);
+        return $this->belongsToMany(
+            'App\Source',
+            'intype_source',
+            'intype_id',
+            'source_id',
+        )->withPivot('year');
     }
 
             public static function boot()

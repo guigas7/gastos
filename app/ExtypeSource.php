@@ -24,12 +24,12 @@ class ExtypeSource extends Pivot
      */
     protected $guarded = ['extype_id', 'source_id'];
 
-    public function extypes()
+    public function extype()
     {
         return $this->belongsTo(Extype::class);
     }
 
-    public function sources()
+    public function source()
     {
         return $this->belongsTo(Source::class);
     }

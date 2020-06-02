@@ -27,11 +27,12 @@ class Extype extends Model
 
     public function sources()
     {
-        return $this->belongsToMany(Source::class)
-            ->using('App\ExtypeSource')->withPivot([
-                'default',
-                'year',
-            ]);
+        return $this->belongsToMany(
+            'App\Source',
+            'extype_source',
+            'extype_id',
+            'source_id',
+        )->withPivot('year');
     }
 
         public static function boot()

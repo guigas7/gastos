@@ -28,20 +28,22 @@ class Source extends Model
 
     public function intypes()
     {
-        return $this->belongsToMany(Source::class)
-            ->using('App\IntypeSource')->withPivot([
-                'default',
-                'year',
-            ]);
+        return $this->belongsToMany(
+            'App\Intype',
+            'intype_source',
+            'source_id',
+            'intype_id',
+        )->withPivot('year');
     }
 
     public function extypes()
     {
-        return $this->belongsToMany(Source::class)
-            ->using('App\ExtypeSource')->withPivot([
-                'default',
-                'year',
-            ]);
+        return $this->belongsToMany(
+            'App\Extype',
+            'extype_source',
+            'source_id',
+            'extype_id',
+        )->withPivot('default','year');
     }
 
     public static function boot()

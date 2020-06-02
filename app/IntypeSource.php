@@ -24,12 +24,12 @@ class IntypeSource extends Pivot
      */
     protected $guarded = ['intype_id', 'source_id'];
 
-    public function intypes()
+    public function intype()
     {
         return $this->belongsTo(Intype::class);
     }
 
-    public function sources()
+    public function source()
     {
         return $this->belongsTo(Source::class);
     }
