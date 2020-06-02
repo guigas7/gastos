@@ -13,8 +13,8 @@ class SourcesTableSeeder extends Seeder
     {
     	$names = [
     		'Cepeti',
-    		'Cuidados Intensivos (jur)',
-    		'Cuidados Intensivos (fis)',
+    		'Cuidados Intensivos do Paraná (jur)',
+    		'Cuidados Intensivos do Paraná (fis)',
     		'Tecnologia',
     		'Comunicação',
     		'Pesquisa'
