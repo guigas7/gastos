@@ -19,4 +19,13 @@ class Exregister extends Model
         return $this->belongsTo('App\ExtypeSource', 'extype_source_id');
     }
 
+    public function source()
+    {
+        return $this->extypeSource->source;
+    }
+
+    public function extype()
+    {
+        return $this->extypeSource->extype;
+    }
 }
