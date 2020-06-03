@@ -46,6 +46,16 @@ class Source extends Model
         )->withPivot('default','year');
     }
 
+    public function extypeSources()
+    {
+        return $this->hasMany('App\ExtypeSource');
+    }
+
+    public function intypeSources()
+    {
+        return $this->hasMany('App\IntypeSource');
+    }
+
     public static function boot()
     {
         parent::boot();

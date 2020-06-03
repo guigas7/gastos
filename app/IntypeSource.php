@@ -33,4 +33,9 @@ class IntypeSource extends Pivot
     {
         return $this->belongsTo(Source::class);
     }
+
+    public function inregisters()
+    {
+        return $this->hasMany('App\Inregister', 'intype_source_id');
+    }
 }
