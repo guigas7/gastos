@@ -13,9 +13,10 @@ class Exregister extends Model
      * @var array
      */
     protected $guarded = ['extype_source_id'];
-
-    public function extypeSource()
+    
+    public function ExtypeSource()
     {
-        return $this->belongsTo(ExtypeSource::class);
+        return $this->belongsTo('App\ExtypeSource', 'extype_source_id');
     }
+
 }

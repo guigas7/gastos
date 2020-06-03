@@ -14,8 +14,13 @@ class Inregister extends Model
      */
     protected $guarded = ['intype_source_id'];
 
-    public function intypeSource()
+    public function Source()
     {
-        return $this->belongsTo(IntypeSource::class);
+        return $this->hasOneThrough('App\IntypeSource', 'App\Source');
+    }
+
+    public function Intype()
+    {
+        return $this->hasOneThrough('App\IntypeSource', 'App\Intype');
     }
 }
