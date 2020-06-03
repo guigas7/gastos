@@ -16,7 +16,9 @@ class DatabaseSeeder extends Seeder
             'sources',
             'months',
             'intypes',
-            'extypes'
+            'extypes',
+            'intype_source',
+            'extype_source',
         ];
 
         Schema::disableForeignKeyConstraints();
@@ -32,7 +34,5 @@ class DatabaseSeeder extends Seeder
         $this->call(ExtypesTableSeeder::class);
         $this->call(IntypeSourcesTableSeeder::class);
         $this->call(ExtypeSourcesTableSeeder::class);
-        $this->call(InregistersTableSeeder::class);
-        $this->call(ExregistersTableSeeder::class);
     }
 }

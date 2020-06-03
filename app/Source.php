@@ -33,7 +33,12 @@ class Source extends Model
             'intype_source',
             'source_id',
             'intype_id',
-        )->withPivot('year');
+        )->withPivot(
+            'year',
+            'month',
+            'value',
+            'observations',
+        );
     }
 
     public function extypes()
@@ -43,7 +48,13 @@ class Source extends Model
             'extype_source',
             'source_id',
             'extype_id',
-        )->withPivot('default','year');
+        )->withPivot(
+            'year',
+            'default',
+            'month',
+            'value',
+            'observations',
+        );
     }
 
     public function extypeSources()
