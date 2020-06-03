@@ -34,7 +34,12 @@ class Intype extends Model
         )->withPivot('year');
     }
 
-            public static function boot()
+    public function intypeSources()
+    {
+        return $this->hasMany('App\IntypeSource');
+    }
+
+    public static function boot()
     {
         parent::boot();
  

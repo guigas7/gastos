@@ -35,7 +35,12 @@ class Extype extends Model
         )->withPivot('year');
     }
 
-        public static function boot()
+    public function exregisters()
+    {
+        return $this->hasMany('App\Exregister', 'extype_source_id');
+    }
+
+    public static function boot()
     {
         parent::boot();
  

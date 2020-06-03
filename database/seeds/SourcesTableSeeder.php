@@ -17,7 +17,7 @@ class SourcesTableSeeder extends Seeder
     		'Cuidados Intensivos do Paraná (fis)',
     		'Tecnologia',
     		'Comunicação',
-    		'Pesquisa'
+    		'Pesquisa',
     	];
     	
     	foreach ($names as $name) {

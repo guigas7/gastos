@@ -33,9 +33,4 @@ class ExtypeSource extends Pivot
     {
         return $this->belongsTo(Source::class);
     }
-
-    public function exregisters()
-    {
-        return $this->hasMany('App\Exregister', 'extype_source_id');
-    }
 }
