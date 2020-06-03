@@ -33,10 +33,13 @@ class FirstTables extends Migration
 
         Schema::create('intype_source', function (Blueprint $table) {
             $table->id();
-            $table->index(['intype_id', 'source_id', 'year']);
+            $table->index(['intype_id', 'source_id', 'year', 'month']);
             $table->unsignedBigInteger('intype_id');
             $table->unsignedBigInteger('source_id');
             $table->string('year', 4);
+            $table->string('month', 2);
+            $table->decimal('value', 19,4);
+            $table->string('observations', 255)->nullable();
 
             $table->foreign('intype_id')
                 ->references('id')
@@ -49,19 +52,6 @@ class FirstTables extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::create('inregisters', function (Blueprint $table) {
-            $table->id();
-            $table->index(['intype_source_id', 'month']);
-            $table->unsignedBigInteger('intype_source_id');
-            $table->string('month', 2);
-            $table->decimal('value', 19,4);
-            $table->string('observations', 255)->nullable();
-            $table->timestamps();
-
-            $table->foreign('intype_source_id')->references('id')
-                ->on('intype_source')->onDelete('no action');
-        }); 
-
         Schema::create('extypes', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
@@ -72,11 +62,14 @@ class FirstTables extends Migration
 
         Schema::create('extype_source', function (Blueprint $table) {
             $table->id();
-            $table->index(['extype_id', 'source_id', 'year']);
+            $table->index(['extype_id', 'source_id', 'year', 'month']);
             $table->unsignedBigInteger('extype_id');
             $table->unsignedBigInteger('source_id');
             $table->decimal('default', 19,4)->nullable();
             $table->string('year', 4);
+            $table->string('month', 2);
+            $table->decimal('value', 19,4);
+            $table->string('observations', 255)->nullable();
 
             $table->foreign('extype_id')
                 ->references('id')
@@ -88,19 +81,6 @@ class FirstTables extends Migration
                 ->on('sources')
                 ->onDelete('cascade');
         });
-
-        Schema::create('exregisters', function (Blueprint $table) {
-            $table->id();
-            $table->index(['extype_source_id', 'month']);
-            $table->unsignedBigInteger('extype_source_id');
-            $table->string('month', 2);
-            $table->decimal('value', 19,4);
-            $table->string('observations', 255)->nullable();
-            $table->timestamps();
-
-            $table->foreign('extype_source_id')->references('id')
-                ->on('extype_source')->onDelete('no action');
-        }); 
 
         Schema::create('months', function (Blueprint $table) {
             $table->id();
@@ -124,11 +104,6 @@ class FirstTables extends Migration
             $table->dropForeign('source_id');
         });
         Schema::dropIfExists('intype_source');
-
-        Schema::table('inregisters', function (Blueprint $table) {
-            $table->dropForeign('intype_source_id');
-        });
-        Schema::dropIfExists('inregisters');
         
         Schema::dropIfExists('extypes');
 
@@ -137,11 +112,6 @@ class FirstTables extends Migration
             $table->dropForeign('source_id');
         });
         Schema::dropIfExists('extype_source');
-
-        Schema::table('exregisters', function (Blueprint $table) {
-            $table->dropForeign('extype_source_id');
-        });
-        Schema::dropIfExists('exregisters');
 
         Schema::dropIfExists('months');
 
