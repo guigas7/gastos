@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Source;
 use Illuminate\Http\Request;
+use App\Source;
+use App\Month;
 
 class SourceController extends Controller
 {
@@ -14,7 +15,14 @@ class SourceController extends Controller
      */
     public function index()
     {
-        //
+        $months = Month::all();
+        $years = yearRange();
+        $sources = Source::all();
+        return view('source.index', compact(
+        	'months',
+        	'sources',
+        	'years',
+        ));
     }
 
     /**
@@ -24,7 +32,10 @@ class SourceController extends Controller
      */
     public function create()
     {
-        //
+        $months = Month::all();
+        $years = yearRange();
+        $extypes = Extype::all();
+        $intypes = Intype::all();
     }
 
     /**

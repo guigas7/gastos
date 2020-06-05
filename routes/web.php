@@ -19,57 +19,57 @@ Auth::routes(['register' => false]);
 // ----- x ------ ------------------------------ ----- x ----- \\
 
 // Lista de centros de despesas e receita (sources). Opções de editar, excluir, visualizar e criar
-Route::get('/centros', 							'SourcesController@index')	->name('sources.index');
+Route::get('/centros', 							'SourceController@index')	->name('source.index');
 // Inserir novo centro
-Route::post('/centros/criar', 					'SourcesController@store')	->name('sources.store');
+Route::post('/centros/criar', 					'SourceController@store')	->name('source.store');
 // Formuláio de criação de novo centro
-Route::get('/centros/criar', 					'SourcesController@create')	->name('sources.create');
+Route::get('/centros/criar', 					'SourceController@create')	->name('source.create');
 // Formuláio de edição do centro {source}
-Route::get('/centros/{source}/editar', 			'SourcesController@edit')	->name('sources.edit');
+Route::get('/centros/{source}/editar', 			'SourceController@edit')	->name('source.edit');
 // Atualizar o centro {source}
-Route::put('/centros/{source}/', 				'SourcesController@update')	->name('sources.update');
+Route::put('/centros/{source}/', 				'SourceController@update')	->name('source.update');
 // Ver as despesas e receitas mensais (se houver) do centro {source}, no ano {year}, no mês {month}
-Route::get('/centros/{source}/{year}/{month}', 	'SourcesController@show')	->name('sources.show');
+Route::get('/centros/{source}/{year}/{month}', 	'SourceController@show')	->name('source.show');
 // Apagar o centro {source}
-Route::delete('/centros/{source}/', 			'SourcesController@destroy')->name('sources.delete');
+Route::delete('/centros/{source}/', 			'SourceController@destroy')->name('source.delete');
 
 // ----- x ------ ----------------- ----- x ----- \\
 // ----- x ------ Tipos de Despesas ----- x ----- \\
 // ----- x ------ ----------------- ----- x ----- \\
 
 // Lista de tipos de despesas. Opções de editar, visualizar, excluir e criar
-Route::get('/despesas/', 							'ExpensesController@index')	->name('expenses.index');
+Route::get('/despesas/', 							'ExtypeController@index')	->name('expense.index');
 // Inserir novo tipo de despesa
-Route::post('/despesas/criar', 					'ExpensesController@store')	->name('expenses.store');
+Route::post('/despesas/criar', 					'ExtypeController@store')	->name('expense.store');
 // Formuláio de criação de novo tipo de despesa
-Route::get('/despesas/criar', 					'ExpensesController@create')	->name('expenses.create');
+Route::get('/despesas/criar', 					'ExtypeController@create')	->name('expense.create');
 // Formuláio de edição do tipo de despesa {expense}
-Route::get('/despesas/{expense}/editar', 			'ExpensesController@edit')	->name('expenses.edit');
+Route::get('/despesas/{expense}/editar', 			'ExtypeController@edit')	->name('expense.edit');
 // Atualizar o tipo de despesa {expense}
-Route::put('/despesas/{expense}/', 				'ExpensesController@update')	->name('expenses.update');
+Route::put('/despesas/{expense}/', 				'ExtypeController@update')	->name('expense.update');
 // Ver o valor mensal da despesa {expense}, no ano {year}, no mês {month}, para todos os centros de despesa
-Route::get('/despesas/{expense}/{year}/{month}', 	'ExpensesController@show')	->name('expenses.show');
+Route::get('/despesas/{expense}/{year}/{month}', 	'ExtypeController@show')	->name('expense.show');
 // Apagar o centro {expense}
-Route::delete('/despesas/{expense}/', 			'ExpensesController@destroy')->name('expenses.delete');
+Route::delete('/despesas/{expense}/', 			'ExtypeController@destroy')->name('expense.delete');
 
 // ----- x ------ ----------------- ----- x ----- \\
 // ----- x ------ Tipos de Receitas ----- x ----- \\
 // ----- x ------ ----------------- ----- x ----- \\
 
 // Lista de tipos de receitas. Opções de editar, visualizar, excluir e criar
-Route::get('/receitas/', 							'IncomesController@index')	->name('incomes.index');
+Route::get('/receitas/', 							'IntypeController@index')	->name('income.index');
 // Inserir novo tipo de receita
-Route::post('/receitas/criar', 					'IncomesController@store')	->name('incomes.store');
+Route::post('/receitas/criar', 					'IntypeController@store')	->name('income.store');
 // Formuláio de criação de novo tipo de receita
-Route::get('/receitas/criar', 					'IncomesController@create')	->name('incomes.create');
+Route::get('/receitas/criar', 					'IntypeController@create')	->name('income.create');
 // Formuláio de edição do tipo de receita {expense}
-Route::get('/receitas/{expense}/editar', 			'IncomesController@edit')	->name('incomes.edit');
+Route::get('/receitas/{expense}/editar', 			'IntypeController@edit')	->name('income.edit');
 // Atualizar o tipo de receita {expense}
-Route::put('/receitas/{expense}/', 				'IncomesController@update')	->name('incomes.update');
+Route::put('/receitas/{expense}/', 				'IntypeController@update')	->name('income.update');
 // Ver o valor mensal da receita {expense}, no ano {year}, no mês {month}, para todos os centros de receita
-Route::get('/receitas/{expense}/{year}/{month}', 	'IncomesController@show')	->name('incomes.show');
+Route::get('/receitas/{expense}/{year}/{month}', 	'IntypeController@show')	->name('income.show');
 // Apagar o centro {expense}
-Route::delete('/receitas/{expense}/', 			'IncomesController@destroy')->name('incomes.delete');
+Route::delete('/receitas/{expense}/', 			'IntypeController@destroy')->name('income.delete');
 
 // ----- x ------ ---------- ----- x ----- \\
 // ----- x ------ Relatórios ----- x ----- \\
