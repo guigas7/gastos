@@ -67,6 +67,66 @@ class Source extends Model
         return $this->hasMany('App\IntypeSource');
     }
 
+    public function allIntypesAt($year, $month = null)
+    {
+        if (empty($month)) {
+            return $this->intypes->
+            where('pivot.year', $year)->
+            map(function ($item) {
+                return $item->only('id', 'name', 'slug', 'description');
+            })->unique();
+        }
+
+        return $this->intypes->
+            where('pivot.year', $year)->
+            where('pivot.month', $month)->
+            map(function ($item) {
+                return $item->only('id', 'name', 'slug', 'description');
+            })->unique();
+    }
+
+    public function allExtypesAt($year, $month = null)
+    {
+        if (empty($month)) {
+            return $this->extypes->
+            where('pivot.year', $year)->
+            map(function ($item) {
+                return $item->only('id', 'name', 'slug', 'description');
+            })->unique();
+        }
+        
+        return $this->extypes->
+            where('pivot.year', $year)->
+            where('pivot.month', $month)->
+            map(function ($item) {
+                return $item->only('id', 'name', 'slug', 'description');
+            })->unique();
+    }
+
+    public function allInValuesAt($year, $month = null)
+    {
+        if (empty($month)) {
+            return $this->intypeSources->
+            where('year', $year);
+        }
+        
+        return $this->intypeSources->
+            where('year', $year)->
+            where('month', $month);
+    }
+
+    public function allExValuesAt($year, $month = null)
+    {
+        if (empty($month)) {
+            return $this->extypeSources->
+            where('year', $year);
+        }
+        
+        return $this->extypeSources->
+            where('year', $year)->
+            where('month', $month);
+    }
+
     public static function boot()
     {
         parent::boot();
