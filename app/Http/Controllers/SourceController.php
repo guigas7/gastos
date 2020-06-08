@@ -18,6 +18,7 @@ class SourceController extends Controller
         $months = Month::all();
         $years = yearRange();
         $sources = Source::all();
+        dd(compact('months', 'years', 'sources'));
         return view('source.index', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
@@ -36,6 +37,7 @@ class SourceController extends Controller
         $years = yearRange();
         $extypes = Extype::all();
         $intypes = Intype::all();
+        dd(compact('months', 'years', 'extypes', 'intypes'));
         return view('source.create', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
@@ -87,7 +89,18 @@ class SourceController extends Controller
      */
     public function edit(Source $source)
     {
-        //
+        $months = Month::all();
+        $years = yearRange();
+        $extypes = Extype::all();
+        $intypes = Intype::all();
+        dd(compact('months', 'years', 'extypes', 'intypes'));
+        return view('source.edit', compact(
+        	'months', // all months, with name, short (name), and string
+        	'years', // all years, just strings
+        	'extypes', // all existing extypes
+        	'intypes', // all existing intypes
+        	'source', // current source to edit
+        ));
     }
 
     /**
