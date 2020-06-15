@@ -8,13 +8,9 @@
                 <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    You are logged in!
+                    Olá usuário, 
+                    <br>
+                    Este sistema foi criado com o intuito de facilitar a visualização e manutenção do fluxo de caixa do CEPETI
                 </div>
             </div>
         </div>
