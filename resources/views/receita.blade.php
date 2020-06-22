@@ -12,7 +12,7 @@
                         <th>
                             <br>
                             <h4 style="text-align: center">
-                                <a class="botao" href="{{ route('source.index') }}">{{$data->name}}</a>
+                                <a class="botao" href="{{ URL::to('receita/' . $data->slug) }}">{{$data->name}}</a>
                             </h4>
                             <br>
                         </th>

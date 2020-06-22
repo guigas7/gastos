@@ -26,6 +26,10 @@ Route::get('/despesa/{pagina}', function($abr){
     $pagina = $abr;
     return view('despesa/centros', compact('pagina'));
 });
+Route::get('/receita/{pagina}', function($abr){
+    $pagina = $abr;
+    return view('receita/centros', compact('pagina'));
+});
 // ----- x ------ ------------------------------ ----- x ----- \\
 // ----- x ------ Centros de Despesas e Receitas ----- x ----- \\
 // ----- x ------ ------------------------------ ----- x ----- \\
