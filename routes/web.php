@@ -14,6 +14,10 @@ Auth::routes(['register' => false]);
 Route::get('/', 'HomeController@index');
 Route::get('/despesa', 'HomeController@despesa');
 Route::get('/receita', 'HomeController@receita');
+Route::get('despesa', function (){
+    $centro = DB::table('sources')->get();
+    return view('despesa', ['centro' => $centro]);
+});
 // ----- x ------ ------------------------------ ----- x ----- \\
 // ----- x ------ Centros de Despesas e Receitas ----- x ----- \\
 // ----- x ------ ------------------------------ ----- x ----- \\
