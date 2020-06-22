@@ -10,10 +10,10 @@ Route::get('/home', 'HomeController@index');
 // ----- x ------ ---- ----- x ----- \\
 // ----- x ------ Auth ----- x ----- \\
 // ----- x ------ ---- ----- x ----- \\
-Route::get('/landing', 'HomeController@rota');
-
 Auth::routes(['register' => false]);
-Route::get('/', 'HomeController@__construct');
+Route::get('/', 'HomeController@index');
+Route::get('/despesa', 'HomeController@despesa');
+Route::get('/receita', 'HomeController@receita');
 // ----- x ------ ------------------------------ ----- x ----- \\
 // ----- x ------ Centros de Despesas e Receitas ----- x ----- \\
 // ----- x ------ ------------------------------ ----- x ----- \\
