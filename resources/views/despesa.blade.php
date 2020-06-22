@@ -11,14 +11,15 @@
                     <th>
                         <br>
                         <h4 style="text-align: center">
-                            <a href="{{ route('source.index') }}">{{$data->name}}</a>
+                            <a class="botao" href="{{ route('source.index') }}">{{$data->name}}</a>
                         </h4>
                         <br>
                     </th>
                 </tr>
             @endforeach
+            <br>
             <h4 style="text-align: center">
-                <a href="{{ route('source.create') }}">{{ __('Criar novo centro') }}</a>
+                <a class="botao" href="{{ route('source.create') }}">{{ __('Criar novo centro') }}</a>
             </h4>
         </div>
     </div>

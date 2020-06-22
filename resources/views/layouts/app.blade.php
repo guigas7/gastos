@@ -28,6 +28,37 @@
             -ms-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
         }
+        .botao {
+            border:1px solid #25692A;
+            border-radius:4px;
+            display:inline-block;
+            cursor:pointer;
+            font-family:Verdana;
+            font-weight:bold;
+            font-size:100%;
+            padding:6px 10px;
+            text-decoration:none;
+        }
+        a:link {
+            color: green;
+            background-color: transparent;
+            text-decoration: none;
+        }
+        a:visited {
+            color: green;
+            background-color: transparent;
+            text-decoration: none;
+        }
+        a:hover {
+            color: green;
+            background-color: transparent;
+            text-decoration: underline;
+        }
+        a:active {
+            color: green;
+            background-color: transparent;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
