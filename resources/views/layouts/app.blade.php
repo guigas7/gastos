@@ -73,6 +73,8 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    @guest
+                    @else
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
@@ -82,7 +84,7 @@
                             <a class="nav-link" href="{{ URL::to('despesa') }}">{{ __('Despesa') }}</a>
                         </li>
                     </ul>
-
+                    @endguest
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
@@ -120,7 +122,10 @@
         </nav>
 
         <main class="py-4">
-            @yield('content')
+            @guest
+            @else
+                @yield('content')
+            @endguest
         </main>
     </div>
 </body>
