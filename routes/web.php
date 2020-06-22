@@ -18,6 +18,10 @@ Route::get('despesa', function (){
     $centro = DB::table('sources')->get();
     return view('despesa', ['centro' => $centro]);
 });
+Route::get('receita', function (){
+    $centro = DB::table('sources')->get();
+    return view('receita', ['centro' => $centro]);
+});
 // ----- x ------ ------------------------------ ----- x ----- \\
 // ----- x ------ Centros de Despesas e Receitas ----- x ----- \\
 // ----- x ------ ------------------------------ ----- x ----- \\

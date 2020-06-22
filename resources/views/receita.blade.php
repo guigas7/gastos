@@ -4,17 +4,21 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Receita</div>
-
-                <div class="card-body">
-                    Olá {{ Auth::user()->name }},
-                    <br>
-                    Este sistema foi criado com o intuito de facilitar a visualização e manutenção do fluxo de caixa do CEPETI.
-                    <br>
-                    
-                </div>
-            </div>
+            <h1> Centros de Receita </h1>
+            <br>
+            @foreach($centro as $key => $data)
+                @if($data->income === 0)
+                    <tr>
+                        <th>
+                            <br>
+                            <h4 style="text-align: center">
+                                <a href="{{ route('source.index') }}">{{$data->name}}</a>
+                            </h4>
+                            <br>
+                        </th>
+                    </tr>
+                @endif
+            @endforeach
         </div>
     </div>
 </div>
