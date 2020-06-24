@@ -59,7 +59,7 @@ Route::get('/receita/{pagina}', function($abr){
     $me = DB::table('intypes')->get();
     return view('receita/centros', compact('pagina','sr','ed', 'me'));
 });
-Route::get('/receitas/{pagina}/{esp}', function($abr, $rba){
+Route::get('/receita/{pagina}/{esp}', function($abr, $rba){
     $pagina = $abr;
     $esp = $rba;
     $sr = DB::table('sources')->get();
