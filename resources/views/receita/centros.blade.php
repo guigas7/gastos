@@ -18,7 +18,7 @@
                                             <a class="botao" href="{{ URL::to('despesa/' . $data->slug . '/' . $ds->slug) }}">{{$ds->name}}</a>
                                         </h4>
                                         <br>
-                                        <p>{{$ds->description}}</p>
+                                        <p>{{$ds->description}} ano é {{ date('') }}</p>
                                         <br>
                                     @endif
                                 @endforeach

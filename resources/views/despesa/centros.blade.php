@@ -17,7 +17,7 @@
                                             <div class="row">
                                                 <div class="column">
                                                     <h4 style="text-align: left">
-                                                        <a class="botao" href="{{ URL::to('despesa/' . $data->slug . '/' . $ds->slug . '/editar') }}">{{$ds->name}}</a>
+                                                        <a class="botao" href="{{ URL::to('despesa/' . $data->slug . '/' . $ds->slug ) }}">{{$ds->name}}</a>
                                                     </h4>
                                                 </div>
                                                 <div class="column" >
