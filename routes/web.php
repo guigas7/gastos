@@ -37,6 +37,13 @@ Route::get('/despesa/{pagina}/{esp}', function($abr, $rba){
     $me = DB::table('extypes')->get();
     return view('despesa/especifica', compact('pagina','rba','sr','ed', 'me', 'esp'));
 });
+Route::get('/despesa/{pagina}/criar', function($abr){
+    $pagina = $abr;
+    $sr = DB::table('sources')->get();
+    $ed = DB::table('extype_source')->get();
+    $me = DB::table('extypes')->get();
+    return view('despesa/criar', compact('pagina','sr','ed', 'me'));
+});
 Route::get('/despesa/{pagina}/{esp}/editar', function($abr, $rba){
     $pagina = $abr;
     $esp = $rba;
@@ -59,6 +66,13 @@ Route::get('/receitas/{pagina}/{esp}', function($abr, $rba){
     $ed = DB::table('intype_source')->get();
     $me = DB::table('intypes')->get();
     return view('receita/especifica', compact('pagina','rba','sr','ed', 'me', 'esp'));
+});
+Route::get('/receitas/{pagina}/criar', function($abr){
+    $pagina = $abr;
+    $sr = DB::table('sources')->get();
+    $ed = DB::table('intype_source')->get();
+    $me = DB::table('intypes')->get();
+    return view('receita/criar', compact('pagina','rba','sr','ed', 'me'));
 });
 Route::get('/receitas/{pagina}/{esp}/editar', function($abr, $rba){
     $pagina = $abr;
