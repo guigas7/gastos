@@ -24,11 +24,33 @@ Route::get('receita', function (){
 });
 Route::get('/despesa/{pagina}', function($abr){
     $pagina = $abr;
-    return view('despesa/centros', compact('pagina'));
+    $sr = DB::table('sources')->get();
+    $ed = DB::table('extype_source')->get();
+    $me = DB::table('extypes')->get();
+    return view('despesa/centros', compact('pagina','sr','ed', 'me'));
+});
+Route::get('/despesa/{pagina}/{esp}', function($abr, $rba){
+    $pagina = $abr;
+    $esp = $rba;
+    $sr = DB::table('sources')->get();
+    $ed = DB::table('extype_source')->get();
+    $me = DB::table('extypes')->get();
+    return view('despesa/especifica', compact('pagina','rba','sr','ed', 'me', 'esp'));
 });
 Route::get('/receita/{pagina}', function($abr){
     $pagina = $abr;
-    return view('receita/centros', compact('pagina'));
+    $sr = DB::table('sources')->get();
+    $ed = DB::table('intype_source')->get();
+    $me = DB::table('intypes')->get();
+    return view('receita/centros', compact('pagina','sr','ed', 'me'));
+});
+Route::get('/receitas/{pagina}/{esp}', function($abr, $rba){
+    $pagina = $abr;
+    $esp = $rba;
+    $sr = DB::table('sources')->get();
+    $ed = DB::table('intype_source')->get();
+    $me = DB::table('intypes')->get();
+    return view('receita/especifica', compact('pagina','rba','sr','ed', 'me', 'esp'));
 });
 // ----- x ------ ------------------------------ ----- x ----- \\
 // ----- x ------ Centros de Despesas e Receitas ----- x ----- \\

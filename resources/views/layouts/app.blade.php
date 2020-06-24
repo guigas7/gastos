@@ -59,6 +59,16 @@
             background-color: transparent;
             text-decoration: underline;
         }
+        .column {
+        float: left;
+        width: 50%;
+        padding: 10px;
+        }
+        .row:after {
+        content: "";
+        display: table;
+        clear: both;
+        }
     </style>
 </head>
 <body>
