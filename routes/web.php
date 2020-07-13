@@ -22,6 +22,12 @@ Route::get('receita', function (){
     $centro = DB::table('sources')->get();
     return view('receita', ['centro' => $centro]);
 });
+Route::get('/despesa/criar', function(){
+    $sr = DB::table('sources')->get();
+    $ed = DB::table('extype_source')->get();
+    $me = DB::table('extypes')->get();
+    return view('criar', compact('sr','ed', 'me'));
+});
 Route::get('/despesa/{pagina}', function($abr){
     $pagina = $abr;
     $sr = DB::table('sources')->get();
