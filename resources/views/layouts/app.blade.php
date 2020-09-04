@@ -70,6 +70,8 @@
         clear: both;
         }
     </style>
+
+    @yield('header')
 </head>
 <body>
     <div id="app">
@@ -132,11 +134,13 @@
         </nav>
 
         <main class="py-4">
-            @guest
-            @else
-                @yield('content')
-            @endguest
+            @yield('content')
         </main>
     </div>
+
+    @yield('footer')
+
+    @yield('scripts')
 </body>
+
 </html>

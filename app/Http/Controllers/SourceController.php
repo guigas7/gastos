@@ -18,11 +18,15 @@ class SourceController extends Controller
         $months = Month::all();
         $years = yearRange();
         $sources = Source::all();
-        dd(compact('months', 'years', 'sources'));
+        $month = session('month', thisMonth());
+        $year = session('year', thisYear());
+        // dd(compact('months', 'years', 'sources'));
         return view('source.index', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
         	'sources', // all sources
+            'month', // current month
+            'year', // current year
         ));
     }
 
@@ -63,13 +67,20 @@ class SourceController extends Controller
      * @param  \App\Source  $source
      * @return \Illuminate\Http\Response
      */
-    public function show(Source $source, $year, $month)
+    public function show(Request $request, Source $source)
     {
+        if (!$request->session()->has('month') || !$request->session()->has('year')) {
+            session([
+                'month' => thisMonth()->short,
+                'year'  => thisYear(),
+            ]);
+        }
+        $year = now()->format('Y');
         $months = Month::all();
         $years = yearRange();
         $intypes = $source->allIntypesAt($year, $month);
         $extypes = $source->allExtypesAt($year, $month);
-        return view('source.create', compact(
+        return view('source.show', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
         	'month', // string of selected month

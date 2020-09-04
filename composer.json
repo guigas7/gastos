@@ -8,6 +8,7 @@
     ],
     "license": "MIT",
     "require": {
+        "symfony/http-kernel": "5.1.5",
         "php": "^7.2.5",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",

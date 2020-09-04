@@ -2,32 +2,46 @@
 
 use Illuminate\Support\Facades\Route;
 
+// ----- x ------ ---- ----- x ----- \\
+// ----- x ------ Auth ----- x ----- \\
+// ----- x ------ ---- ----- x ----- \\
+
+Auth::routes(['register' => false]);
+Route::get('/home', 'HomeController@index');
+Route::get('/', 'HomeController@index');
+
+Route::post('/month', 'HomeController@month')->name('home.month');
+
+// ----- x ------ ------------------------------ ----- x ----- \\
+// ----- x ------ Centros de Despesas e Receitas ----- x ----- \\
+// ----- x ------ ------------------------------ ----- x ----- \\
+
+// Lista de centros de despesas e receita (sources). Opções de editar, excluir, visualizar e criar
+Route::get('/centros',                          'SourceController@index')   ->name('source.index');
+// Inserir novo centro
+Route::post('/centros/criar',                   'SourceController@store')   ->name('source.store');
+// Formuláio de criação de novo centro
+Route::get('/centros/criar',                    'SourceController@create')  ->name('source.create');
+// Formuláio de edição do centro {source}
+Route::get('/centros/{source}/editar',          'SourceController@edit')    ->name('source.edit');
+// Atualizar o centro {source}
+Route::put('/centros/{source}/',                'SourceController@update')  ->name('source.update');
+// Ver as despesas e receitas mensais (se houver) do centro {source}, no ano {year}, no mês {month}
+Route::get('/centros/{source}',                 'SourceController@show')    ->name('source.show');
+// Apagar o centro {source}
+Route::delete('/centros/{source}/',             'SourceController@destroy')->name('source.delete');
+
 // ----- x ------ -------------------- ----- x ----- \\
 // ----- x ------ Resumo de relatórios ----- x ----- \\
 // ----- x ------ -------------------- ----- x ----- \\
 
-Route::get('/home', 'HomeController@index');
-// ----- x ------ ---- ----- x ----- \\
-// ----- x ------ Auth ----- x ----- \\
-// ----- x ------ ---- ----- x ----- \\
-Auth::routes(['register' => false]);
-Route::get('/', 'HomeController@index');
-Route::get('/despesa', 'HomeController@despesa');
-Route::get('/receita', 'HomeController@receita');
-Route::get('despesa', function (){
-    $centro = DB::table('sources')->get();
-    return view('despesa', ['centro' => $centro]);
-});
-Route::get('receita', function (){
-    $centro = DB::table('sources')->get();
-    return view('receita', ['centro' => $centro]);
-});
 Route::get('/despesa/criar', function(){
     $sr = DB::table('sources')->get();
     $ed = DB::table('extype_source')->get();
     $me = DB::table('extypes')->get();
     return view('criar', compact('sr','ed', 'me'));
 });
+
 Route::get('/despesa/{pagina}', function($abr){
     $pagina = $abr;
     $sr = DB::table('sources')->get();
@@ -35,6 +49,7 @@ Route::get('/despesa/{pagina}', function($abr){
     $me = DB::table('extypes')->get();
     return view('despesa/centros', compact('pagina','sr','ed', 'me'));
 });
+
 Route::get('/despesa/{pagina}/{esp}', function($abr, $rba){
     $pagina = $abr;
     $esp = $rba;
@@ -43,6 +58,7 @@ Route::get('/despesa/{pagina}/{esp}', function($abr, $rba){
     $me = DB::table('extypes')->get();
     return view('despesa/especifica', compact('pagina','rba','sr','ed', 'me', 'esp'));
 });
+
 Route::get('/despesa/{pagina}/criar', function($abr){
     $pagina = $abr;
     $sr = DB::table('sources')->get();
@@ -50,6 +66,7 @@ Route::get('/despesa/{pagina}/criar', function($abr){
     $me = DB::table('extypes')->get();
     return view('despesa/criar', compact('pagina','sr','ed', 'me'));
 });
+
 Route::get('/despesa/{pagina}/{esp}/editar', function($abr, $rba){
     $pagina = $abr;
     $esp = $rba;
@@ -58,6 +75,7 @@ Route::get('/despesa/{pagina}/{esp}/editar', function($abr, $rba){
     $me = DB::table('extypes')->get();
     return view('despesa/editar', compact('pagina','rba','sr','ed', 'me', 'esp'));
 });
+
 Route::get('/receita/{pagina}', function($abr){
     $pagina = $abr;
     $sr = DB::table('sources')->get();
@@ -65,6 +83,7 @@ Route::get('/receita/{pagina}', function($abr){
     $me = DB::table('intypes')->get();
     return view('receita/centros', compact('pagina','sr','ed', 'me'));
 });
+
 Route::get('/receita/{pagina}/{esp}', function($abr, $rba){
     $pagina = $abr;
     $esp = $rba;
@@ -73,6 +92,7 @@ Route::get('/receita/{pagina}/{esp}', function($abr, $rba){
     $me = DB::table('intypes')->get();
     return view('receita/especifica', compact('pagina','rba','sr','ed', 'me', 'esp'));
 });
+
 Route::get('/receitas/{pagina}/criar', function($abr){
     $pagina = $abr;
     $sr = DB::table('sources')->get();
@@ -80,6 +100,7 @@ Route::get('/receitas/{pagina}/criar', function($abr){
     $me = DB::table('intypes')->get();
     return view('receita/criar', compact('pagina','rba','sr','ed', 'me'));
 });
+
 Route::get('/receitas/{pagina}/{esp}/editar', function($abr, $rba){
     $pagina = $abr;
     $esp = $rba;
@@ -88,24 +109,6 @@ Route::get('/receitas/{pagina}/{esp}/editar', function($abr, $rba){
     $me = DB::table('intypes')->get();
     return view('receita/editar', compact('pagina','rba','sr','ed', 'me', 'esp'));
 });
-// ----- x ------ ------------------------------ ----- x ----- \\
-// ----- x ------ Centros de Despesas e Receitas ----- x ----- \\
-// ----- x ------ ------------------------------ ----- x ----- \\
-
-// Lista de centros de despesas e receita (sources). Opções de editar, excluir, visualizar e criar
-Route::get('/centros', 							'SourceController@index')	->name('source.index');
-// Inserir novo centro
-Route::post('/centros/criar', 					'SourceController@store')	->name('source.store');
-// Formuláio de criação de novo centro
-Route::get('/centros/criar', 					'SourceController@create')	->name('source.create');
-// Formuláio de edição do centro {source}
-Route::get('/centros/{source}/editar', 			'SourceController@edit')	->name('source.edit');
-// Atualizar o centro {source}
-Route::put('/centros/{source}/', 				'SourceController@update')	->name('source.update');
-// Ver as despesas e receitas mensais (se houver) do centro {source}, no ano {year}, no mês {month}
-Route::get('/centros/{source}/{year}/{month}', 	'SourceController@show')	->name('source.show');
-// Apagar o centro {source}
-Route::delete('/centros/{source}/', 			'SourceController@destroy')->name('source.delete');
 
 // ----- x ------ ----------------- ----- x ----- \\
 // ----- x ------ Tipos de Despesas ----- x ----- \\

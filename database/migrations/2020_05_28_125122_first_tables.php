@@ -15,6 +15,7 @@ class FirstTables extends Migration
     {
         Schema::enableForeignKeyConstraints();
 
+        // The owner of expenses and incomes
         Schema::create('sources', function (Blueprint $table) {
             $table->id();
             $table->string('name', 80);
@@ -23,6 +24,7 @@ class FirstTables extends Migration
             $table->timestamps();
         }); 
 
+        // Types of incomes
         Schema::create('intypes', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
@@ -31,6 +33,7 @@ class FirstTables extends Migration
             $table->timestamps();
         });
 
+        // Instances of an income type, when associated to a source in a set year / month
         Schema::create('intype_source', function (Blueprint $table) {
             $table->id();
             $table->index(['intype_id', 'source_id', 'year', 'month']);
@@ -52,6 +55,7 @@ class FirstTables extends Migration
                 ->onDelete('cascade');
         });
 
+        // Types of expenses
         Schema::create('extypes', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
@@ -60,6 +64,7 @@ class FirstTables extends Migration
             $table->timestamps();
         });
 
+        // Instances of an expense type, when associated to a source in a set year / month
         Schema::create('extype_source', function (Blueprint $table) {
             $table->id();
             $table->index(['extype_id', 'source_id', 'year', 'month']);
@@ -82,6 +87,7 @@ class FirstTables extends Migration
                 ->onDelete('cascade');
         });
 
+        // Months
         Schema::create('months', function (Blueprint $table) {
             $table->id();
             $table->string('name', 10);
