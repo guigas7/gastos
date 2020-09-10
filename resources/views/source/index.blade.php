@@ -32,7 +32,7 @@
             @endforeach
             <br>
             <h4 style="text-align: center">
-                <a class="botao" href="{{ URL::to('/despesa/criar') }}">{{ __('Criar novo centro') }}</a>
+                <a class="botao" href="{{ URL::to('/centros/criar') }}">{{ __('Criar novo centro') }}</a>
             </h4>
         </div>
     </div>
