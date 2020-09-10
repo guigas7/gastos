@@ -90,10 +90,10 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ URL::to('receita') }}">{{ __('Receita') }}</a>
+                            <a class="nav-link" href="{{ URL::to('centros') }}">{{ __('Centros') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ URL::to('despesa') }}">{{ __('Despesa') }}</a>
+                            <a class="nav-link" href="{{ URL::to('resumos') }}">{{ __('Resumos') }}</a>
                         </li>
                     </ul>
                     @endguest
