@@ -34,5 +34,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ExtypesTableSeeder::class);
         $this->call(IntypeSourcesTableSeeder::class);
         $this->call(ExtypeSourcesTableSeeder::class);
+        $this->call(SourceExtypePeriodsTableSeeder::class);
+        $this->call(SourceIntypePeriodsTableSeeder::class);
     }
 }

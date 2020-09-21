@@ -25,7 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return redirect('/centros');
     }
 
     public function month(Request $request)
@@ -37,4 +37,5 @@ class HomeController extends Controller
         ]);
         return back()->withInput();
     }
+
 }

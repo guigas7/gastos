@@ -32,12 +32,29 @@ class Extype extends Model
             'extype_source',
             'extype_id',
             'source_id',
-        )->withPivot('year');
+        )->withPivot(
+            'year',
+            'month',
+            'value',
+            'observations'
+        );
     }
 
-    public function exregisters()
+    public function sourcesPeriod()
     {
-        return $this->hasMany('App\Exregister', 'extype_source_id');
+        return $this->belongsToMany(
+            'App\Source',
+            'source_extype_period',
+            'extype_id',
+            'source_id',
+        )->withPivot(
+            'default',
+            'start_year',
+            'start_month',
+            'end_year',
+            'end_month',
+            'details',
+        );
     }
 
     public static function boot()

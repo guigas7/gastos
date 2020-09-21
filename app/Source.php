@@ -41,6 +41,23 @@ class Source extends Model
         );
     }
 
+    public function intypesPeriod()
+    {
+        return $this->belongsToMany(
+            'App\Intype',
+            'source_intype_period',
+            'source_id',
+            'intype_id',
+        )->withPivot(
+            'default',
+            'start_year',
+            'start_month',
+            'end_year',
+            'end_month',
+            'details',
+        );
+    }
+
     public function extypes()
     {
         return $this->belongsToMany(
@@ -50,10 +67,26 @@ class Source extends Model
             'extype_id',
         )->withPivot(
             'year',
-            'default',
             'month',
             'value',
             'observations',
+        );
+    }
+
+    public function extypesPeriod()
+    {
+        return $this->belongsToMany(
+            'App\Extype',
+            'source_extype_period',
+            'source_id',
+            'extype_id',
+        )->withPivot(
+            'default',
+            'start_year',
+            'start_month',
+            'end_year',
+            'end_month',
+            'details',
         );
     }
 

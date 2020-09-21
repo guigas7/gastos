@@ -31,12 +31,27 @@ class Intype extends Model
             'intype_source',
             'intype_id',
             'source_id',
-        )->withPivot('year');
+        )->withPivot(
+            'year',
+            'month',
+            'observations'
+        );
     }
 
-    public function intypeSources()
+    public function sourcesPeriod()
     {
-        return $this->hasMany('App\IntypeSource');
+        return $this->belongsToMany(
+            'App\Source',
+            'source_intype_period',
+            'intype_id',
+            'source_id',
+        )->withPivot(
+            'start_year',
+            'start_month',
+            'end_year',
+            'end_month',
+            'details'
+        );
     }
 
     public static function boot()

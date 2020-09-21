@@ -55,6 +55,29 @@ class FirstTables extends Migration
                 ->onDelete('cascade');
         });
 
+        // Describes a period of association between a source and an intype
+        Schema::create('source_intype_period', function (Blueprint $table) {
+            $table->id();
+            $table->index(['intype_id', 'source_id', 'start_year', 'start_month'], "intype_id_source_id_start_year_start_month_index");
+            $table->unsignedBigInteger('intype_id');
+            $table->unsignedBigInteger('source_id');
+            $table->string('start_year', 4);
+            $table->string('start_month', 2);
+            $table->string('end_year', 4);
+            $table->string('end_month', 2);
+            $table->string('details', 255)->nullable();
+
+            $table->foreign('intype_id')
+                ->references('id')
+                ->on('intypes')
+                ->onDelete('cascade');
+
+            $table->foreign('source_id')
+                ->references('id')
+                ->on('sources')
+                ->onDelete('cascade');
+        });
+
         // Types of expenses
         Schema::create('extypes', function (Blueprint $table) {
             $table->id();
@@ -70,11 +93,34 @@ class FirstTables extends Migration
             $table->index(['extype_id', 'source_id', 'year', 'month']);
             $table->unsignedBigInteger('extype_id');
             $table->unsignedBigInteger('source_id');
-            $table->decimal('default', 19,4)->nullable();
             $table->string('year', 4);
             $table->string('month', 2);
             $table->decimal('value', 19,4);
             $table->string('observations', 255)->nullable();
+
+            $table->foreign('extype_id')
+                ->references('id')
+                ->on('extypes')
+                ->onDelete('cascade');
+
+            $table->foreign('source_id')
+                ->references('id')
+                ->on('sources')
+                ->onDelete('cascade');
+        });
+
+        // Describes a period of association between a source and an extype
+        Schema::create('source_extype_period', function (Blueprint $table) {
+            $table->id();
+            $table->index(['extype_id', 'source_id', 'start_year', 'start_month'], "extype_id_source_id_start_year_start_month_index");
+            $table->unsignedBigInteger('extype_id');
+            $table->unsignedBigInteger('source_id');
+            $table->decimal('default', 19,4)->nullable();
+            $table->string('start_year', 4);
+            $table->string('start_month', 2);
+            $table->string('end_year', 4);
+            $table->string('end_month', 2);
+            $table->string('details', 255)->nullable();
 
             $table->foreign('extype_id')
                 ->references('id')
@@ -111,6 +157,12 @@ class FirstTables extends Migration
             $table->dropForeign('source_id');
         });
         Schema::dropIfExists('intype_source');
+
+        Schema::table('source_intype_period', function (Blueprint $table) {
+            $table->dropForeign('intype_id');
+            $table->dropForeign('source_id');
+        });
+        Schema::dropIfExists('source_intype_period');
         
         Schema::dropIfExists('extypes');
 
@@ -120,7 +172,12 @@ class FirstTables extends Migration
         });
         Schema::dropIfExists('extype_source');
 
-        Schema::dropIfExists('months');
+        Schema::table('source_extype_period', function (Blueprint $table) {
+            $table->dropForeign('extype_id');
+            $table->dropForeign('source_id');
+        });
+        Schema::dropIfExists('source_extype_period');
 
+        Schema::dropIfExists('months');
     }
 }

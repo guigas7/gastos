@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Extype;
 use Illuminate\Http\Request;
 
-class ExpenseController extends Controller
+class ExtypeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,22 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        //
+        // List all expenses, with a list of all sources that have them in the selected date
+        $month = session('month', thisMonth());
+        $year = session('year', thisYear());
+        $extypes = Extype::all();
+        foreach ($extypes as &$extype) {
+            $extype->sources = $extype->sources()->where([
+                ["year", "2020"],
+                ["month", "09"]
+            ])->get()->toArray();
+        }
+        dd(compact('months', 'years', 'extypes'));
+        return view('source.index', compact(
+            'months', // all months, with name, short (name), and string
+            'years', // all years, just strings
+            'extypes', // all existing extypes
+        ));
     }
 
     /**
