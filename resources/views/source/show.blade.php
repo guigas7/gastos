@@ -17,7 +17,9 @@
             @foreach($exregister as $key => $valor)
                 @foreach($extypes as $key => $despesas)
                     @if($valor->extype_source == $despesas->id)
-                        <h4> {{$despesas->name}} - {{$valor->value}} </h4>
+                        <h4> {{$despesas->name}} - 
+                            Valor: <input type="text" id="mudarValor" value="{{$valor->value}}">
+                        </h4>
                     @endif
                 @endforeach
             @endforeach
@@ -38,4 +40,9 @@
 
 @section('scripts')
     <script src="{{ asset('js/calendar.js') }}" defer></script>
+    <script>
+        function MudarValor() {
+            var x = document.getElementById("mudarValor").value;
+        }
+    </script>
 @endsection
