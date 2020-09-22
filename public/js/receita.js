@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    var wrapper = $(".form_container");
-    var add_button = $(".add_form_fields");
+    var wrapper = $(".form_container_income");
+    var add_button = $(".add_form_fields_income");
     var x = 0;
     
     $(add_button).click(function(e) {
@@ -10,12 +10,12 @@ $(document).ready(function() {
         // Create new div
         var div = document.createElement("div");
         $(div)
-            .attr("id", "new_expense_".concat(x.toString()))
+            .attr("id", "new_income_".concat(x.toString()))
             .appendTo(wrapper);
         
         // Create title
         $('<h3 />')
-            .text('Tipo de despesa '.concat(x.toString()))
+            .text('Tipo de receita '.concat(x.toString()))
             .appendTo(div);
         
         // Create delete option
@@ -29,7 +29,7 @@ $(document).ready(function() {
         // Create name input
         var name_div = document.createElement("div");
         div.append(name_div);
-        var name_id = "expense_name".concat(x.toString());
+        var name_id = "income_name".concat(x.toString());
         
         $('<label />')
             .attr("for", name_id)
@@ -44,7 +44,7 @@ $(document).ready(function() {
         // Create description input
         var desc_div = document.createElement("div");
         div.append(desc_div);
-        var description_id = "expense_description".concat(x.toString());
+        var description_id = "income_description".concat(x.toString());
         
         $('<label />')
             .attr("for", description_id)
@@ -59,7 +59,7 @@ $(document).ready(function() {
         // Create default input
         var defa_div = document.createElement("div");
         div.append(defa_div);
-        var default_id = "expense_default".concat(x.toString());
+        var default_id = "income_default".concat(x.toString());
         
         $('<label />')
             .attr("for", default_id)
