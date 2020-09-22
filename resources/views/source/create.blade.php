@@ -39,8 +39,8 @@
         </div>
         <br>
 
-        <div class="form_container">
-            <button class="add_form_fields">Inserir novo tipo de despesa
+        <div class="form_container_despesa">
+            <button class="add_form_fields_despesa">Inserir novo tipo de despesa
                 <span style="font-size:16px; font-weight:bold;">+ </span>
             </button>
         </div>
@@ -52,7 +52,7 @@
             </button>
         </div>
         <br><br>
-        
+
         <div class="form-group row mb-0">
             <button id="enviar" type="submit" class="btn btn-primary bt">
                 {{ __('Enviar') }}
