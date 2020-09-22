@@ -17,7 +17,7 @@
                 <tr>
                     <th>
                         <br>
-                        @if($source->income == "0")
+                        @if($source->income == "1")
                         <h4 style="text-align: center">
                             <b>{{$source->name}}</b> <br><a class="botao" href="{{ URL::to('centros/' . $source->slug) }}">Despesa e Receita</a>
                         </h4>
