@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    var wrapper = $(".form_container_despesa");
-    var add_button = $(".add_form_fields_despesa");
+    var wrapper = $(".form_container_desp");
+    var add_button = $(".add_form_fields_desp");
     var x = 0;
     
     $(add_button).click(function(e) {

@@ -1,5 +1,4 @@
 @extends('layouts.login')
-<script src="{{ asset('js/despesas.js') }}"></script>
 
 @section('content')
 <div class="container">
@@ -40,8 +39,24 @@
         </div>
         <br>
 
-        <div class="form_container">
-            <button class="add_form_fields">Inserir novo tipo de despesa
+        <div class="form_container_despesa">
+            <button class="add_form_fields_despesa">Inserir novo tipo de despesa
+                <span style="font-size:16px; font-weight:bold;">+ </span>
+            </button>
+        </div>
+        <br><br>
+
+
+        <div class="form_container_desp">
+            <button class="add_form_fields_desp">Inserir despesa existente
+                <span style="font-size:16px; font-weight:bold;">+ </span>
+            </button>
+        </div>
+        <br><br>
+
+
+        <div class="form_container_income">
+            <button class="add_form_fields_income">Inserir novo tipo de receita
                 <span style="font-size:16px; font-weight:bold;">+ </span>
             </button>
         </div>
