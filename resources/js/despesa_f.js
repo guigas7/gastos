@@ -36,8 +36,8 @@ $(document).ready(function() {
             .text("Nome: ")
             .appendTo(name_div);
         
-        $('<input />')
-            .attr("type", "text")
+        $('<select>')
+            .attr("select", "text")
             .attr("name", name_id)
             .appendTo(name_div);
 
