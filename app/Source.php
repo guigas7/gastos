@@ -26,6 +26,11 @@ class Source extends Model
         return 'slug';
     }
 
+    public function groups()
+    {
+        return $this->hasMany('App\Exgroup');
+    }
+
     public function intypes()
     {
         return $this->belongsToMany(
@@ -49,7 +54,6 @@ class Source extends Model
             'source_id',
             'intype_id',
         )->withPivot(
-            'default',
             'start_year',
             'start_month',
             'end_year',

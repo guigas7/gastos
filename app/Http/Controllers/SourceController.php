@@ -136,4 +136,18 @@ class SourceController extends Controller
     {
         //
     }
+
+    public function report(Source $source)
+    {
+        $extypes = $source->extypesPeriod;
+        $intypes = $source->intypesPeriod;
+        $groups = $source->groups; 
+        return view('source.report', compact(
+            'source', // Current source
+            'extypes', // All extypes from source
+            'extypes', // All intypes from source
+            'groups', // All groups from source
+        ));
+
+    }
 }
