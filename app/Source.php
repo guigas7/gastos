@@ -20,6 +20,13 @@ class Source extends Model
     protected $guarded = [];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    // protected $appends = ['fixedExpenses', 'variableExpenses'];
+
+    /**
      * Get the route key for the model.
      *
      * @return string
@@ -44,12 +51,12 @@ class Source extends Model
         return $this->hasMany('App\ExpenseType');
     }
 
-    public function fixedExpenses()
+    public function getFixedExpensesAttribute()
     {
         return $this->expenseTypes()->where('default', "!=", null)->get();
     }
 
-    public function variableExpenses()
+    public function getVariableExpensesAttribute()
     {
         return $this->expenseTypes()->where('default', null)->get();
     }
@@ -61,5 +68,45 @@ class Source extends Model
             $inGroup = $inGroup->merge($group->expenseTypes);
         }
         return $this->expenseTypes->diff($inGroup)->values();
+    }
+
+    public function allIncomesAt($year, Month $month = null)
+    {
+        if (empty($month)) {
+            return $this->
+                incomeTypes()
+                ->with('records')
+                ->whereHas('records', function ($record) use ($year) {
+                    $record
+                        ->where('year', $year);
+                })->get();
+        } else {
+            return $this->
+                incomeTypes()
+                ->with('records')
+                ->whereHas('records', function ($record) use ($year, $month) {
+                    $record
+                        ->where('year', $year)
+                        ->where('month_id', $month->id);
+                })->get();
+        }
+    }
+
+    public function allExpensesAt($year, Month $month = null)
+    {
+        if (empty($month)) {
+            return $this->
+                ExpenseTypes()
+                ->with(['records' => function($query) use ($year) {
+                        $query->where('year', $year);
+                }])->get();
+        } else {
+            return $this->
+                ExpenseTypes()
+                ->with(['records' => function($query) use ($year, $month) {
+                        $query->where('year', $year)
+                            ->where('month_id', $month->id);
+                }])->get();
+        }
     }
 }

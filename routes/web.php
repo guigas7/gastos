@@ -18,9 +18,9 @@ Route::post('/month', 'HomeController@month')->name('home.month');
 Route::get('/',                         'SourceController@index')   ->name('source.index');
 // Inserir novo centro
 Route::post('/criar',                   'SourceController@store')   ->name('source.store');
-// Formuláio de criação de novo centro
+// Formulário de criação de novo centro
 Route::get('/criar',                    'SourceController@create')  ->name('source.create');
-// Formuláio de edição do centro {source}
+// Formulário de edição do centro {source}
 Route::get('/{source}/editar',          'SourceController@edit')    ->name('source.edit');
 // Atualizar o centro {source}
 Route::put('/{source}',                 'SourceController@update')  ->name('source.update');

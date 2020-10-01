@@ -37,5 +37,4 @@ class HomeController extends Controller
         ]);
         return back()->withInput();
     }
-
 }

@@ -5,9 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Source;
 use App\Month;
+use App\ExpenseType;
+use App\IncomeType;
 
 class SourceController extends Controller
 {
+    /**
+     * Instantiate a new UserController instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,15 +27,14 @@ class SourceController extends Controller
     {
         $months = Month::all();
         $years = yearRange();
-        $sources = Source::all();
         $month = session('month', thisMonth());
         $year = session('year', thisYear());
-        // dd(compact('months', 'years', 'sources'));
+        $sources = Source::all();
         return view('source.index', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
         	'sources', // all sources
-            'month', // current month
+            'month', // current month, with name, short (name), and string
             'year', // current year
         ));
     }
@@ -39,14 +48,10 @@ class SourceController extends Controller
     {
         $months = Month::all();
         $years = yearRange();
-        $extypes = Extype::all();
-        $intypes = Intype::all();
-        dd(compact('months', 'years', 'extypes', 'intypes'));
+        dd(compact('months', 'years'));
         return view('source.create', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
-        	'extypes', // all existing extypes
-        	'intypes', // all existing intypes
         ));
     }
 
@@ -69,17 +74,13 @@ class SourceController extends Controller
      */
     public function show(Request $request, Source $source)
     {
-        if (!$request->session()->has('month') || !$request->session()->has('year')) {
-            session([
-                'month' => thisMonth()->short,
-                'year'  => thisYear(),
-            ]);
-        }
-        $year = now()->format('Y');
         $months = Month::all();
         $years = yearRange();
-        $intypes = $source->allIntypesAt($year, $month);
-        $extypes = $source->allExtypesAt($year, $month);
+        $month = session('month', thisMonth());
+        $year = session('year', thisYear());
+
+        $incomeTypes = $source->allIntypesAt($year, $month);
+        $expenseTypes = $source->allExtypesAt($year, $month);
         return view('source.show', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
