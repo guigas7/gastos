@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false]);
 
-Route::get('/', 'HomeController@index');
-
 Route::post('/month', 'HomeController@month')->name('home.month');
 
 // ----- x ------ ------------------------------ ----- x ----- \\
@@ -17,36 +15,36 @@ Route::post('/month', 'HomeController@month')->name('home.month');
 // ----- x ------ ------------------------------ ----- x ----- \\
 
 // Lista de centros de despesas e receita (sources). Opções de editar, excluir, visualizar e criar
-Route::get('/centros',                          'SourceController@index')   ->name('source.index');
+Route::get('/',                         'SourceController@index')   ->name('source.index');
 // Inserir novo centro
-Route::post('/centros/criar',                   'SourceController@store')   ->name('source.store');
+Route::post('/criar',                   'SourceController@store')   ->name('source.store');
 // Formuláio de criação de novo centro
-Route::get('/centros/criar',                    'SourceController@create')  ->name('source.create');
+Route::get('/criar',                    'SourceController@create')  ->name('source.create');
 // Formuláio de edição do centro {source}
-Route::get('/centros/{source}/editar',          'SourceController@edit')    ->name('source.edit');
+Route::get('/{source}/editar',          'SourceController@edit')    ->name('source.edit');
 // Atualizar o centro {source}
-Route::put('/centros/{source}',                 'SourceController@update')  ->name('source.update');
+Route::put('/{source}',                 'SourceController@update')  ->name('source.update');
 // Ver as despesas e receitas mensais (se houver) do centro {source} no ano e mês selecionados
-Route::get('/centros/{source}',                 'SourceController@show')    ->name('source.show');
+Route::get('/{source}',                 'SourceController@show')    ->name('source.show');
 // Apagar o centro {source}
-Route::delete('/centros/{source}/',             'SourceController@destroy') ->name('source.delete');
+Route::delete('/{source}/',             'SourceController@destroy') ->name('source.delete');
 // Mostra os relatórios do centro {source}
-Route::get('/centros/{source}/relatorios/',     'SourceController@report')  ->name('source.report');
+Route::get('/{source}/relatorios/',     'SourceController@report')  ->name('source.report');
 
 // ----- x ------ -------------------------- ----- x ----- \\
 // ----- x ------ Grupos de tipos de despesa ----- x ----- \\
 // ----- x ------ -------------------------- ----- x ----- \\
 
 // Lista de grupos, editar, excluir e criar novo
-Route::get('/centros/{source}/grupos',          'ExgroupController@index')  ->name('exgroup.index');
+Route::get('/{source}/grupos',          'ExgroupController@index')  ->name('exgroup.index');
 // Inserir novo grupo
-Route::post('/centros/{source}/criar',          'ExgroupController@store')  ->name('exgroup.store');
+Route::post('/{source}/criar',          'ExgroupController@store')  ->name('exgroup.store');
 // Formulário de edição de grupo
-Route::get('/centros/{source}/{exgroup}/editar','ExgroupController@edit')   ->name('exgroup.edit');
+Route::get('/{source}/{exgroup}/editar','ExgroupController@edit')   ->name('exgroup.edit');
 // Atualizar o grupo
-Route::put('/centros/{source}/{exgroup}',       'ExgroupController@update') ->name('exgroup.update');
+Route::put('/{source}/{exgroup}',       'ExgroupController@update') ->name('exgroup.update');
 // Apagar o grupo
-Route::delete('/centros/{source}/{exgroup}',    'ExgroupController@destroy')->name('exgroup.delete');
+Route::delete('/{source}/{exgroup}',    'ExgroupController@destroy')->name('exgroup.delete');
 
 // ----- x ------ ----------------- ----- x ----- \\
 // ----- x ------ Tipos de Despesas ----- x ----- \\

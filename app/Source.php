@@ -5,10 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Intype;
 use App\Extype;
-use Illuminate\Support\Str;
+use App\Traits\Sluggable;
+use Illuminate\Support\Str; // Sluggable
 
 class Source extends Model
 {
+    use Sluggable;
+
 	/**
      * The attributes that are not mass assignable.
      *
@@ -26,192 +29,37 @@ class Source extends Model
         return 'slug';
     }
 
-    public function groups()
+    public function expenseGroups()
     {
-        return $this->hasMany('App\Exgroup');
+        return $this->hasMany('App\ExpenseGroup');
     }
 
-    public function intypes()
+    public function incomeTypes()
     {
-        return $this->belongsToMany(
-            'App\Intype',
-            'intype_source',
-            'source_id',
-            'intype_id',
-        )->withPivot(
-            'year',
-            'month',
-            'value',
-            'observations',
-        );
+        return $this->hasMany('App\IncomeType');
     }
 
-    public function intypesPeriod()
+    public function expenseTypes()
     {
-        return $this->belongsToMany(
-            'App\Intype',
-            'source_intype_period',
-            'source_id',
-            'intype_id',
-        )->withPivot(
-            'start_year',
-            'start_month',
-            'end_year',
-            'end_month',
-            'details',
-        );
+        return $this->hasMany('App\ExpenseType');
     }
 
-    public function extypes()
+    public function fixedExpenses()
     {
-        return $this->belongsToMany(
-            'App\Extype',
-            'extype_source',
-            'source_id',
-            'extype_id',
-        )->withPivot(
-            'year',
-            'month',
-            'value',
-            'observations',
-        );
+        return $this->expenseTypes()->where('default', "!=", null)->get();
     }
 
-    public function extypesPeriod()
+    public function variableExpenses()
     {
-        return $this->belongsToMany(
-            'App\Extype',
-            'source_extype_period',
-            'source_id',
-            'extype_id',
-        )->withPivot(
-            'default',
-            'start_year',
-            'start_month',
-            'end_year',
-            'end_month',
-            'details',
-        );
+        return $this->expenseTypes()->where('default', null)->get();
     }
 
-    public function extypeSources()
+    public function ungroupedExpenses()
     {
-        return $this->hasMany('App\ExtypeSource');
-    }
-
-    public function intypeSources()
-    {
-        return $this->hasMany('App\IntypeSource');
-    }
-
-    public function allIntypesAt($year, $month = null)
-    {
-        if (empty($month)) {
-            return $this->intypes->
-            where('pivot.year', $year)->
-            map(function ($item) {
-                return $item->only('id', 'name', 'slug', 'description');
-            })->unique();
+        $inGroup = collect();
+        foreach ($this->expenseGroups as $group) {
+            $inGroup = $inGroup->merge($group->expenseTypes);
         }
-
-        return $this->intypes->
-            where('pivot.year', $year)->
-            where('pivot.month', $month)->
-            map(function ($item) {
-                return $item->only('id', 'name', 'slug', 'description');
-            })->unique();
+        return $this->expenseTypes->diff($inGroup)->values();
     }
-
-    public function allExtypesAt($year, $month = null)
-    {
-        if (empty($month)) {
-            return $this->extypes->
-            where('pivot.year', $year)->
-            map(function ($item) {
-                return $item->only('id', 'name', 'slug', 'description');
-            })->unique();
-        }
-        
-        return $this->extypes->
-            where('pivot.year', $year)->
-            where('pivot.month', $month)->
-            map(function ($item) {
-                return $item->only('id', 'name', 'slug', 'description');
-            })->unique();
-    }
-
-    public function allInValuesAt($year, $month = null)
-    {
-        if (empty($month)) {
-            return $this->intypeSources->
-            where('year', $year);
-        }
-        
-        return $this->intypeSources->
-            where('year', $year)->
-            where('month', $month);
-    }
-
-    public function allExValuesAt($year, $month = null)
-    {
-        if (empty($month)) {
-            return $this->extypeSources->
-            where('year', $year);
-        }
-        
-        return $this->extypeSources->
-            where('year', $year)->
-            where('month', $month);
-    }
-
-    public static function boot()
-    {
-        parent::boot();
- 
-        static::creating(function ($source) {
-            if (!is_null($source->name)) {
-                $source->slug = Str::slug($source->name);
-     
-                $latestSlug =
-                Source::whereRaw("slug RLIKE '^{$source->slug}(--[0-9]*)?$'")
-                    ->latest('slug')
-                    ->pluck('slug');
-                if ($latestSlug->first() != null) {
-                    $pieces = explode('--', $latestSlug->first());
-                    if (count($pieces) == 1) { // first repetition
-                        $source->slug .= '--' . '1';
-                    } else {
-                        $number = intval(end($pieces));
-                        $source->slug .= '--' . ($number + 1);
-                    }
-                } 
-            }
-        });
- 
-        static::updating(function ($source) {
-            $oldsource = Source::findOrFail($source->id);
-            if (is_null($source->name)) {
-                $source->slug = null;
-            } else {
-                if ($oldsource->name != $source->name) { // se o nome foi alterado, então altera slug também
-                    $source->slug = Str::slug($source->name);
-    
-                    $latestSlug =
-                    Source::whereRaw("slug RLIKE '^{$source->slug}(--[0-9]*)?$'")
-                        ->latest('slug')
-                        ->pluck('slug');
-                    if ($latestSlug->first() != null) {
-                        $pieces = explode('--', $latestSlug->first());
-                        if (count($pieces) == 1) { // first repetition
-                            $source->slug .= '--' . '1';
-                        } else {
-                            $number = intval(end($pieces));
-                            $source->slug .= '--' . ($number + 1);
-                        }
-                    } 
-                }
-            }
-        });
-	}
 }
-
