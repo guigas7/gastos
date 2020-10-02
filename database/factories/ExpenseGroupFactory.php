@@ -10,15 +10,17 @@ $factory->define(ExpenseGroup::class, function (Faker $faker) {
         'name' => $faker->word,
         'description' => $faker->optional()->text(200),
         'source_id' => factory(App\Source::class),
-        'fixed' => $faker->boolean(30),
+        'fixed' => $faker->boolean(50),
     ];
 });
 
 $factory->afterCreating(App\ExpenseGroup::class, function ($group, $faker) {
+	$expensesWithSameType = $group
+		->source
+		->ungroupedExpenses()
+		->where('default', ($group->fixed == 0 ? "=" : "!="), null)
+		->take($faker->numberBetween(2, 3))->pluck('id')->all();
 	$group
 		->expenseTypes()
-		->attach($group
-			->source
-			->ungroupedExpenses()
-			->take($faker->numberBetween(2, 3))->pluck('id')->all()); // adds 2 or 3 expenses to the group
+		->attach($expensesWithSameType);
 });

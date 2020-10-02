@@ -6,15 +6,19 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h1> {{$source->name}} </h1>
-            <br>
+    <div class="page-header">
+        <h1>{{$source->name}}</h1>
+    </div>
 
-            <x-calendar value="{{ $month->name }} {{ $year }}"></x-calendar>
+    <x-calendar value="{{ $month->name }} {{ $year }}"></x-calendar>
 
-            <h4 style="text-align: center">Despesas</h4>
-            @foreach($exregister as $key => $valor)
+
+    <div class="panel panel-default col-sm-4">
+        <div class="panel-heading">
+            <h3 class="panel-title">Despesas Fixas</h3>
+        </div>
+        <div class="panel-body">
+            @foreach($source->fixedExpenses as $expense)
                 @foreach($extypes as $key => $despesas)
                     @if($valor->extype_source == $despesas->id)
                         <h4> {{$despesas->name}} - 
@@ -23,18 +27,16 @@
                     @endif
                 @endforeach
             @endforeach
-            <br>
-            <h4 style="text-align: center">Receitas</h4>
-            @foreach($inregister as $key => $valor)
-                @foreach($intypes as $key => $receitas)
-                    @if($valor->intype_source == $receitas->id)
-                        <h4> {{$receitas->name}} - {{$valor->value}} </h4>
-                    @endif
-                @endforeach
-            @endforeach
-        
         </div>
     </div>
+    <h4 style="text-align: center">Receitas</h4>
+    @foreach($inregister as $key => $valor)
+        @foreach($intypes as $key => $receitas)
+            @if($valor->intype_source == $receitas->id)
+                <h4> {{$receitas->name}} - {{$valor->value}} </h4>
+            @endif
+        @endforeach
+    @endforeach
 </div>
 @endsection
 

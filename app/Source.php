@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Intype;
 use App\Extype;
+use App\Month;
 use App\Traits\Sluggable;
 use Illuminate\Support\Str; // Sluggable
 
@@ -41,6 +42,11 @@ class Source extends Model
         return $this->hasMany('App\ExpenseGroup');
     }
 
+    public function expenseGroupsWithExpenses()
+    {
+        return $this->hasMany('App\ExpenseGroup')->with('expenseTypes');
+    }
+
     public function incomeTypes()
     {
         return $this->hasMany('App\IncomeType');
@@ -70,43 +76,107 @@ class Source extends Model
         return $this->expenseTypes->diff($inGroup)->values();
     }
 
-    public function allIncomesAt($year, Month $month = null)
+    public function incomesAt($year, Month $month = null, $only = null)
     {
-        if (empty($month)) {
-            return $this->
-                incomeTypes()
-                ->with('records')
-                ->whereHas('records', function ($record) use ($year) {
-                    $record
-                        ->where('year', $year);
-                })->get();
-        } else {
-            return $this->
-                incomeTypes()
-                ->with('records')
-                ->whereHas('records', function ($record) use ($year, $month) {
-                    $record
-                        ->where('year', $year)
-                        ->where('month_id', $month->id);
-                })->get();
+        // Query to eager load all records from the selected period
+        $callback = function($recordQuery) use ($year, $month) {
+            $recordQuery = $recordQuery->where('year', $year);
+            if (!empty($month)) {
+                $recordQuery = $recordQuery->where('month_id', $month->id);
+            }
+            return $recordQuery;
+        };
+
+        // Return only expenses with records in the selected period
+        $typeQuery = $this->incomeTypes();
+        if ($only === "only") {
+            $typeQuery = $typeQuery->whereHas('records', $callback);
+        }
+
+        return $typeQuery
+            ->with(['records' => $callback])
+            ->get();
+    }
+
+    public function expensesAt($year, Month $month = null, $only = null, $fixed = null)
+    {
+        // Query to eager load all records from the selected period
+        $callback = function($recordQuery) use ($year, $month) {
+            $recordQuery = $recordQuery->where('year', $year);
+            if (!empty($month)) {
+                $recordQuery = $recordQuery->where('month_id', $month->id);
+            }
+            return $recordQuery;
+        };
+
+        // Only fixed expenses, only variable expenses or both (aka, no filter)
+        $typeQuery = $this->expenseTypes();
+        if ($fixed === "fixed") {
+            $typeQuery = $typeQuery->where('default', "!=", null);
+        } elseif ($fixed === "variable") {
+            $typeQuery = $typeQuery->where('default', "=", null);
+        }
+
+        // Return only expenses with records in the selected period
+        if ($only === "only") {
+            $typeQuery = $typeQuery->whereHas('records', $callback);
+        }
+
+        return $typeQuery
+            ->with(['records' => $callback])
+            ->get();
+    }
+
+    public function createRecordsIfNotCreated($year)
+    {
+        $typesWithNoRecords = expenseTypesToCreateIn($year);
+        if ($typesWithNoRecords->count() > 0) {
+            $months = Month::all();
+            foreach ($typesWithNoRecords as $type) {
+                $records = [];
+                $defaultValue = ($type->default == null ? 0 : $type->default);
+                foreach ($months as $month) {
+                    array_push($records, new App\record([
+                        'year' => $year,
+                        'month_id' => $month->id,
+                        'value' => $defaultValue,
+                    ]));
+                }
+                $type->records()->saveMany($records);
+            }
+        }
+
+        if ($this->income == 0) return;
+
+        $typesWithNoRecords = incomeTypesToCreateIn($year);
+
+        if ($typesWithNoRecords->count() > 0) {
+            $months = Month::all();
+            foreach ($typesWithNoRecords as $type) {
+                $records = [];
+                foreach ($months as $month) {
+                    array_push($records, new App\record([
+                        'year' => $year,
+                        'month_id' => $month->id,
+                        'value' => 0,
+                    ]));
+                }
+                $type->records()->saveMany($records);
+            }
         }
     }
 
-    public function allExpensesAt($year, Month $month = null)
+    public function expenseTypesToCreateIn($year)
     {
-        if (empty($month)) {
-            return $this->
-                ExpenseTypes()
-                ->with(['records' => function($query) use ($year) {
-                        $query->where('year', $year);
-                }])->get();
-        } else {
-            return $this->
-                ExpenseTypes()
-                ->with(['records' => function($query) use ($year, $month) {
-                        $query->where('year', $year)
-                            ->where('month_id', $month->id);
-                }])->get();
-        }
+        $typesWithRecords = $source->expensesAt($year, null, "only")->pluck('id');
+        $allTypes = $source->expenseTypes->pluck('id');
+        return $allTypes->diff($typesWithRecords);
+    }
+
+    public function incomeTypesToCreateIn($year)
+    {
+        $typesWithRecords = $source->incomesAt($year, null, "only")->pluck('id');
+        $allTypes = $source->incomeTypes->pluck('id');
+        return $allTypes->diff($typesWithRecords);
     }
 }

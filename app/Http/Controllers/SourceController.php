@@ -30,6 +30,7 @@ class SourceController extends Controller
         $month = session('month', thisMonth());
         $year = session('year', thisYear());
         $sources = Source::all();
+        $source = Source::first();
         return view('source.index', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
@@ -72,24 +73,24 @@ class SourceController extends Controller
      * @param  \App\Source  $source
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Source $source)
+    public function show(Source $source)
     {
         $months = Month::all();
         $years = yearRange();
         $month = session('month', thisMonth());
         $year = session('year', thisYear());
 
-        $incomeTypes = $source->allIntypesAt($year, $month);
-        $expenseTypes = $source->allExtypesAt($year, $month);
+        $incomeTypes = $source->incomesAt($year, $month);
+        $FixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed");
+        $variableExpenseTypes = $source->expensesAt($year, $month, "all", "variable");
         return view('source.show', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
         	'month', // string of selected month
         	'year', // string of selected year
-        	'extypes', // id, name, slug and description from extypes $source has in $year
-        	'exregister', // all extype_sources, from all extypes $source has in $year, in $month
-        	'intypes', // id, name, slug and description from intypes $source has in $year
-        	'inregister', // all intype_sources, from all intypes $source has in $year, in $month 
+        	'incomeTypes', // id, name, slug and description from extypes $source has in $year
+        	'expenseTypes', // all extype_sources, from all extypes $source has in $year, in $month
+            'source', // current source to show
         ));
     }
 
@@ -103,14 +104,10 @@ class SourceController extends Controller
     {
         $months = Month::all();
         $years = yearRange();
-        $extypes = Extype::all();
-        $intypes = Intype::all();
         dd(compact('months', 'years', 'extypes', 'intypes'));
         return view('source.edit', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
-        	'extypes', // all existing extypes
-        	'intypes', // all existing intypes
         	'source', // current source to edit
         ));
     }
@@ -140,8 +137,6 @@ class SourceController extends Controller
 
     public function report(Source $source)
     {
-        $extypes = $source->extypesPeriod;
-        $intypes = $source->intypesPeriod;
         $groups = $source->groups; 
         return view('source.report', compact(
             'source', // Current source
@@ -149,6 +144,5 @@ class SourceController extends Controller
             'extypes', // All intypes from source
             'groups', // All groups from source
         ));
-
     }
 }
