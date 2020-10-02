@@ -46,15 +46,6 @@
         </div>
         <br><br>
 
-
-        <div class="form_container_desp">
-            <button class="add_form_fields_desp">Inserir despesa existente
-                <span style="font-size:16px; font-weight:bold;">+ </span>
-            </button>
-        </div>
-        <br><br>
-
-
         <div class="form_container_income">
             <button class="add_form_fields_income">Inserir novo tipo de receita
                 <span style="font-size:16px; font-weight:bold;">+ </span>

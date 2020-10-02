@@ -11,7 +11,7 @@
             <h1> Centros do CEPETI </h1>
             <br>
 
-            <!--<x-calendar value="{{ $month->name }} {{ $year }}"></x-calendar> --> 
+         
 
             @foreach($sources as $source)
                 <tr>
@@ -23,7 +23,7 @@
                         </h4>
                         @else
                         <h4 style="text-align: center">
-                            <b>{{$source->name}}</b> <br><a class="botao" href="{{ URL::to('despesa/' . $source->slug) }}">Despesa</a>
+                            <b>{{$source->name}}</b> <br><a class="botao" href="{{ URL::to('centros/' . $source->slug) }}">Despesa</a>
                         </h4>
                         @endif
                         <br>
