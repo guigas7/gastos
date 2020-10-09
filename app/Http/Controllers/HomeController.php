@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Month;
+use Illuminate\Validation\Rule;
+
 
 class HomeController extends Controller
 {
@@ -30,11 +32,22 @@ class HomeController extends Controller
 
     public function month(Request $request)
     {
-        $pieces = explode(" ", $request->month);
-        session([
-            'month' => Month::where('name', $pieces[0])->first(),
-            'year' => $pieces[1],
+        $validatedData = $request->validate([
+            'month' => [
+                'required',
+                Rule::in(Month::all()->pluck('id')->toArray()),
+            ],
+            'year' => [
+                'required',
+                Rule::in(yearRange()),
+            ],
         ]);
+
+        session([
+            'month' => Month::where('id', $validatedData['month'])->first(),
+            'year' => $validatedData['year'],
+        ]);
+
         return back()->withInput();
     }
 }

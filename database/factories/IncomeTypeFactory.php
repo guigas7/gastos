@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(IncomeType::class, function (Faker $faker) {
     return [
-        'name' => $faker->word,
+        'name' => $faker->sentence(3),
         'source_id' => factory(App\Source::class),
         'description' => $faker->text(200),
     ];

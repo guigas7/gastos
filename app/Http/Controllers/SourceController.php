@@ -35,8 +35,8 @@ class SourceController extends Controller
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
         	'sources', // all sources
-            'month', // current month, with name, short (name), and string
-            'year', // current year
+            'month', // Current month
+            'year', // Current year
         ));
     }
 
@@ -80,17 +80,21 @@ class SourceController extends Controller
         $month = session('month', thisMonth());
         $year = session('year', thisYear());
 
+        $source->createRecordsIfNotCreated($year);
+
         $incomeTypes = $source->incomesAt($year, $month);
-        $FixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed");
+        $fixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed");
         $variableExpenseTypes = $source->expensesAt($year, $month, "all", "variable");
+        //dd($fixedExpenseTypes->first()->records);
         return view('source.show', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
-        	'month', // string of selected month
-        	'year', // string of selected year
-        	'incomeTypes', // id, name, slug and description from extypes $source has in $year
-        	'expenseTypes', // all extype_sources, from all extypes $source has in $year, in $month
+        	'incomeTypes', // all income types from $source
+            'fixedExpenseTypes', // all fixed expenseTypes from $source
+        	'variableExpenseTypes', // all variabel expenseTypes from $source
             'source', // current source to show
+            'month', // Current month
+            'year', // Current year
         ));
     }
 
@@ -104,10 +108,18 @@ class SourceController extends Controller
     {
         $months = Month::all();
         $years = yearRange();
-        dd(compact('months', 'years', 'extypes', 'intypes'));
+        $month = session('month', thisMonth());
+        $year = session('year', thisYear());
+        $incomeTypes = $source->incomesAt($year, $month);
+        $fixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed");
+        $variableExpenseTypes = $source->expensesAt($year, $month, "all", "variable");
+        dd(compact('months', 'years', 'incomeTypes', 'fixedExpenseTypes', 'variableExpenseTypes'));
         return view('source.edit', compact(
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
+            'incomeTypes', // all income types from $source
+            'fixedExpenseTypes', // all fixed expenseTypes from $source
+            'variableExpenseTypes', // all variabel expenseTypes from $source
         	'source', // current source to edit
         ));
     }
@@ -137,12 +149,18 @@ class SourceController extends Controller
 
     public function report(Source $source)
     {
-        $groups = $source->groups; 
+        $groups = $source->groups;
+        $month = session('month', thisMonth());
+        $year = session('year', thisYear());
+        $fixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed");
+        $variableExpenseTypes = $source->expensesAt($year, $month, "all", "variable");
         return view('source.report', compact(
-            'source', // Current source
-            'extypes', // All extypes from source
-            'extypes', // All intypes from source
+            'fixedExpenseTypes', // all fixed expenseTypes from $source
+            'variableExpenseTypes', // all variabel expenseTypes from $source
             'groups', // All groups from source
+            'source', // Current source
+            'month', // Current month
+            'year', // Current year
         ));
     }
 }

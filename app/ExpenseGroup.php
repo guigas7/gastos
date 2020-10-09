@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExpenseGroup extends Model
 {
+
+    protected $guarded = [];
+
     public function source()
     {
         return $this->belongsTo(
@@ -17,6 +20,6 @@ class ExpenseGroup extends Model
 
     public function expenseTypes()
     {
-        return $this->belongsToMany('App\ExpenseType');
+        return $this->hasMany('App\ExpenseType', 'expense_group_id');
     }
 }

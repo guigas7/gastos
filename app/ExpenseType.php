@@ -31,6 +31,6 @@ class ExpenseType extends Model
 
     public function expenseGroups()
     {
-        return $this->belongsToMany('App\ExpenseGroups');
+        return $this->belongsTo('App\ExpenseGroups', 'expense_group_id');
     }
 }

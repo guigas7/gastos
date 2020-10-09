@@ -40,9 +40,13 @@ class FirstTables extends Migration
             $table->string('name', 50);
             $table->string('slug', 60)->unique();
             $table->unsignedBigInteger('source_id');
+            $table->unsignedBigInteger('expense_group_id')->nullable()->default(null);
             $table->string('description', 255);
-            $table->decimal('default', 19,4)->nullable();
+            $table->boolean('fixed');
             $table->timestamps();
+
+            $table->foreign('expense_group_id')->references('id')->on('expense_groups')
+                ->onDelete('set null');
         });
 
         // A value recorded in expense or income of $holder_id in $year and $month
@@ -53,7 +57,7 @@ class FirstTables extends Migration
             $table->string('recordable_type', 50);
             $table->string('year', 4);
             $table->unsignedBigInteger('month_id');
-            $table->decimal('value', 19,4);
+            $table->decimal('value', 19,2)->default(0.0);
             $table->string('description', 255)->nullable();
             $table->timestamps();
         });

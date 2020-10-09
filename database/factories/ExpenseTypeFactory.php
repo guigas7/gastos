@@ -7,10 +7,10 @@ use Faker\Generator as Faker;
 
 $factory->define(ExpenseType::class, function (Faker $faker) {
     return [
-        'name' => $faker->word,
+        'name' => $faker->sentence(3),
         'source_id' => factory(App\Source::class),
         'description' => $faker->text(200),
-        'default' => $faker->optional()->randomFloat(2),
+        'fixed' => $faker->boolean(50),
     ];
 });
 

@@ -22,7 +22,7 @@ $factory->afterCreating(App\Source::class, function ($source, $faker) {
 		'source_id' => $source->id,
     ]);
 
-    factory(App\ExpenseGroup::class, 2)->create([
+    factory(App\ExpenseGroup::class, 1)->create([
         'source_id' => $source->id,
     ]);
 });

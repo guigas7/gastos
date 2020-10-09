@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Intype;
 use App\Extype;
 use App\Month;
+use App\Record;
 use App\Traits\Sluggable;
 use Illuminate\Support\Str; // Sluggable
 
@@ -37,14 +38,46 @@ class Source extends Model
         return 'slug';
     }
 
-    public function expenseGroups()
+    public function ExpenseGroups()
     {
         return $this->hasMany('App\ExpenseGroup');
     }
 
-    public function expenseGroupsWithExpenses()
+    public function getFixedExpenseGroupsAttribute()
+    {
+        return $this
+            ->expenseGroups()
+            ->where("fixed", 1)
+            ->get();
+    }
+
+    public function getVariableExpenseGroupsAttribute()
+    {
+        return $this
+            ->expenseGroups()
+            ->where("fixed", 0)
+            ->get();
+    }
+
+    public function ExpenseGroupsWithExpenses()
     {
         return $this->hasMany('App\ExpenseGroup')->with('expenseTypes');
+    }
+
+    public function getFixedExpenseGroupsWithExpensesAttribute()
+    {
+        return $this
+            ->ExpenseGroupsWithExpenses()
+            ->where("fixed", 1)
+            ->get();
+    }
+
+    public function getVariableExpenseGroupsWithExpensesAttribute()
+    {
+        return $this
+            ->ExpenseGroupsWithExpenses()
+            ->where("fixed", 0)
+            ->get();
     }
 
     public function incomeTypes()
@@ -57,23 +90,38 @@ class Source extends Model
         return $this->hasMany('App\ExpenseType');
     }
 
-    public function getFixedExpensesAttribute()
+    public function getFixedExpenseTypesAttribute()
     {
-        return $this->expenseTypes()->where('default', "!=", null)->get();
+        return $this->expenseTypes()->where('fixed', true)->get();
     }
 
-    public function getVariableExpensesAttribute()
+    public function getVariableExpenseTypesAttribute()
     {
-        return $this->expenseTypes()->where('default', null)->get();
+        return $this->expenseTypes()->where('fixed', false)->get();
     }
 
-    public function ungroupedExpenses()
+    public function ungroupedExpenses($fixed = null)
     {
+        if ($fixed === null) {
+            $groups = $this->ExpenseGroups;
+        } elseif ($fixed == "fixed") {
+            $groups = $this->fixedExpenseGroups;
+        } else {
+            $groups = $this->variableExpenseGroups;
+        }
+
         $inGroup = collect();
-        foreach ($this->expenseGroups as $group) {
+        foreach ($groups as $group) {
             $inGroup = $inGroup->merge($group->expenseTypes);
         }
-        return $this->expenseTypes->diff($inGroup)->values();
+
+        if ($fixed === null) {
+            return $this->ExpenseTypes->diff($inGroup)->values();
+        } elseif ($fixed == "fixed") {
+            return $this->fixedExpenseTypes->diff($inGroup)->values();
+        } else {
+            return $this->variableExpenseTypes->diff($inGroup)->values();
+        }
     }
 
     public function incomesAt($year, Month $month = null, $only = null)
@@ -112,9 +160,9 @@ class Source extends Model
         // Only fixed expenses, only variable expenses or both (aka, no filter)
         $typeQuery = $this->expenseTypes();
         if ($fixed === "fixed") {
-            $typeQuery = $typeQuery->where('default', "!=", null);
+            $typeQuery = $typeQuery->where('fixed', true);
         } elseif ($fixed === "variable") {
-            $typeQuery = $typeQuery->where('default', "=", null);
+            $typeQuery = $typeQuery->where('fixed', false);
         }
 
         // Return only expenses with records in the selected period
@@ -129,17 +177,16 @@ class Source extends Model
 
     public function createRecordsIfNotCreated($year)
     {
-        $typesWithNoRecords = expenseTypesToCreateIn($year);
+        $typesWithNoRecords = $this->expenseTypesToCreateIn($year);
         if ($typesWithNoRecords->count() > 0) {
             $months = Month::all();
-            foreach ($typesWithNoRecords as $type) {
+            foreach ($typesWithNoRecords as $id) {
+                $type = ExpenseType::find($id);
                 $records = [];
-                $defaultValue = ($type->default == null ? 0 : $type->default);
                 foreach ($months as $month) {
-                    array_push($records, new App\record([
+                    array_push($records, new Record([
                         'year' => $year,
                         'month_id' => $month->id,
-                        'value' => $defaultValue,
                     ]));
                 }
                 $type->records()->saveMany($records);
@@ -148,17 +195,17 @@ class Source extends Model
 
         if ($this->income == 0) return;
 
-        $typesWithNoRecords = incomeTypesToCreateIn($year);
+        $typesWithNoRecords = $this->incomeTypesToCreateIn($year);
 
         if ($typesWithNoRecords->count() > 0) {
             $months = Month::all();
-            foreach ($typesWithNoRecords as $type) {
+            foreach ($typesWithNoRecords as $id) {
+                $type = IncomeType::find($id);
                 $records = [];
                 foreach ($months as $month) {
-                    array_push($records, new App\record([
+                    array_push($records, new Record([
                         'year' => $year,
                         'month_id' => $month->id,
-                        'value' => 0,
                     ]));
                 }
                 $type->records()->saveMany($records);
@@ -168,15 +215,21 @@ class Source extends Model
 
     public function expenseTypesToCreateIn($year)
     {
-        $typesWithRecords = $source->expensesAt($year, null, "only")->pluck('id');
-        $allTypes = $source->expenseTypes->pluck('id');
+        $typesWithRecords = $this->expensesAt($year, null, "only")->pluck('id');
+        $allTypes = $this->expenseTypes->pluck('id');
         return $allTypes->diff($typesWithRecords);
     }
 
     public function incomeTypesToCreateIn($year)
     {
-        $typesWithRecords = $source->incomesAt($year, null, "only")->pluck('id');
-        $allTypes = $source->incomeTypes->pluck('id');
+        $typesWithRecords = $this->incomesAt($year, null, "only")->pluck('id');
+        $allTypes = $this->incomeTypes->pluck('id');
         return $allTypes->diff($typesWithRecords);
+    }
+
+    public function getLimitedName30Attribute()
+    {
+        if (strlen($this->name) <= 30) return $this->name;
+        return Str::limit($this->name, 30); 
     }
 }

@@ -1,0 +1,68 @@
+.fixed-height {
+    height: min-content;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.cent {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.card {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.card-header {
+	width: 100%;
+    text-align: center;
+    border-bottom-width: initial;
+    color: #FFFFFF;
+    color: green;
+    font-weight: bold;
+}
+
+.btn {
+  min-width: 41px;
+}
+
+.btn-selecionar {
+  width: 92px;
+}
+
+.btn-salvar {
+  width: 70px;
+  min-width: 70px;
+  float: right;
+}
+
+.btn-apagar {
+  width: 90px;
+  min-width: 90px;
+  float: right;
+}
+
+.value-input {
+  width: 100px;
+}
+
+.value-form {
+  justify-content: center;
+}
+
+.tab {
+  all: initial;
+  display: inline;
+}
