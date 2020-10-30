@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             'records',
             'months',
             'expense_groups',
-            'expense_group_expense_type',
         ];
 
         Schema::disableForeignKeyConstraints();

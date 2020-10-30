@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Sluggable;
 
 class ExpenseGroup extends Model
 {
+    use Sluggable;
 
     protected $guarded = [];
 

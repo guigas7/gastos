@@ -19,11 +19,11 @@
                         <br>
                         @if($source->income == "1")
                         <h4 style="text-align: center">
-                            <b>{{$source->name}}</b> <br><a class="botao" href="{{ URL::to('centros/' . $source->slug) }}">Despesa e Receita</a>
+                            <b>{{$source->name}}</b> <br><a class="botao" href="{{ route('source.show', $source->slug) }}">Despesa e Receita</a>
                         </h4>
                         @else
                         <h4 style="text-align: center">
-                            <b>{{$source->name}}</b> <br><a class="botao" href="{{ URL::to('centros/' . $source->slug) }}">Despesa</a>
+                            <b>{{$source->name}}</b> <br><a class="botao" href="{{ route('source.show', $source->slug) }}">Despesa</a>
                         </h4>
                         @endif
                         <br>
@@ -32,13 +32,9 @@
             @endforeach
             <br>
             <h4 style="text-align: center">
-                <a class="botao" href="{{ URL::to('/centros/criar') }}">{{ __('Criar novo centro') }}</a>
+                <a class="botao" href="{{ route('source.create') }}">{{ __('Criar novo centro') }}</a>
             </h4>
         </div>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-    <script src="{{ asset('js/calendar.js') }}" defer></script>
 @endsection

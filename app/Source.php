@@ -28,56 +28,14 @@ class Source extends Model
      */
     // protected $appends = ['fixedExpenses', 'variableExpenses'];
 
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
-
     public function ExpenseGroups()
     {
         return $this->hasMany('App\ExpenseGroup');
     }
 
-    public function getFixedExpenseGroupsAttribute()
-    {
-        return $this
-            ->expenseGroups()
-            ->where("fixed", 1)
-            ->get();
-    }
-
-    public function getVariableExpenseGroupsAttribute()
-    {
-        return $this
-            ->expenseGroups()
-            ->where("fixed", 0)
-            ->get();
-    }
-
     public function ExpenseGroupsWithExpenses()
     {
         return $this->hasMany('App\ExpenseGroup')->with('expenseTypes');
-    }
-
-    public function getFixedExpenseGroupsWithExpensesAttribute()
-    {
-        return $this
-            ->ExpenseGroupsWithExpenses()
-            ->where("fixed", 1)
-            ->get();
-    }
-
-    public function getVariableExpenseGroupsWithExpensesAttribute()
-    {
-        return $this
-            ->ExpenseGroupsWithExpenses()
-            ->where("fixed", 0)
-            ->get();
     }
 
     public function incomeTypes()
@@ -102,13 +60,7 @@ class Source extends Model
 
     public function ungroupedExpenses($fixed = null)
     {
-        if ($fixed === null) {
-            $groups = $this->ExpenseGroups;
-        } elseif ($fixed == "fixed") {
-            $groups = $this->fixedExpenseGroups;
-        } else {
-            $groups = $this->variableExpenseGroups;
-        }
+        $groups = $this->ExpenseGroups;
 
         $inGroup = collect();
         foreach ($groups as $group) {
@@ -152,7 +104,7 @@ class Source extends Model
         $callback = function($recordQuery) use ($year, $month) {
             $recordQuery = $recordQuery->where('year', $year);
             if (!empty($month)) {
-                $recordQuery = $recordQuery->where('month_id', $month->id);
+                    $recordQuery = $recordQuery->where('month_id', $month->id);
             }
             return $recordQuery;
         };

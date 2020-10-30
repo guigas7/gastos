@@ -50,7 +50,11 @@ class RecordController extends Controller
     {
         $record->update($request->validate([
             'value' => 'required|numeric',
+            'description' => 'max:255'
         ]));
+        $month = session('month', thisMonth())->name;
+        $number = number_format($request->value, 2, ',', '');
+        $request->session()->flash('success', "O valor de {$record->recordable->name} de {$record->recordable->source->name} foi alterado em {$month} para {$number}");
         return back()->withInput();
     }
 

@@ -24,9 +24,27 @@ class ExpenseTypeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Source $source, Request $request)
     {
-        //
+        // insert expenses
+        if ($request->has('expense-names')) {
+            $exNameAmnt = sizeof($request->input('expense-names'));
+            $exDescAmnt = sizeof($request->input('expense-descriptions'));
+
+            $maxExpense = min($exNameAmnt, $exDescAmnt);
+
+            $expenses = collect();
+            for ($i = 0; $i < $maxExpense; $i++) {
+                $expenses->push(new ExpenseType([
+                    'name' => $request->input('expense-names')[$i],
+                    'fixed' => $request->boolean ('expense-type' . strval($i + 1)),
+                    'description' => $request->input('expense-descriptions')[$i],
+                ]));
+            }
+
+            $source->expenseTypes()->saveMany(array_values($expenses->all()));
+        }
+        return back()->with('success', "As despesas foram atribuídas a {$source->name}"); 
     }
 
     /**
@@ -49,7 +67,12 @@ class ExpenseTypeController extends Controller
      */
     public function update(Request $request, ExpenseType $expenseType)
     {
-        //
+        $expenseType->update([
+            'name' => $request->input("expense-name"),
+            'fixed' => $request->boolean ("expense-type"),
+            'description' => $request->input("expense-description"),
+        ]);
+        return back()->with('success', "A despesa {$expenseType->name} foi atualizada");
     }
 
     /**
@@ -60,7 +83,13 @@ class ExpenseTypeController extends Controller
      */
     public function destroy(ExpenseType $expenseType)
     {
+        $name = $expenseType->name;
         $expenseType->delete();
-        return back();
+
+        if (request()->expectsJson()) {
+            return response(['status' => 'Tipo de despesa apagado']);
+        }
+
+        return back()->with('success', "A despesa {$name} foi apagada"); 
     }
 }

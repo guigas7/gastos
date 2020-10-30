@@ -10,13 +10,17 @@
         <div class="col-md-8">
             <h1> Relatórios </h1>
 
-            Este centro não possui grupos de despesa, crie novos grupos <a href="{{ route('exgroup.index', $source->slug) }}">clicando aqui</a>!
-
+            @if ($groups == null)
+            	<p>
+            		Este centro não possui grupos de despesa, crie novos grupos <a href="{{ route('exgroup.index', $source->slug) }}">clicando aqui</a>!
+            	</p>
+            @else
+                <p>
+                    Para alterar os grupos de despesas, <a href="{{ route('exgroup.index', $source->slug) }}">clique aqui</a>!
+                </p>
+            	<graph :values="[0, 200, 300]" :labels="['January', 'February', 'March']"></graph>
+            @endif
         </div>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-    <script src="{{ asset('js/calendar.js') }}" defer></script>
 @endsection

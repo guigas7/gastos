@@ -34,7 +34,6 @@ class ExpenseGroupController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|max:80',
             'description' => 'required|max:255',
-            'fixed' => 'required|boolean',
             'expenseTypes' => 'required',
             'expenseTypes.*' => 'exists:expense_types,id',
         ]);
@@ -47,6 +46,7 @@ class ExpenseGroupController extends Controller
         $group
             ->expenseTypes()
             ->saveMany(array_values($types->all()));
+        $request->session()->flash('success', "Grupo de despesa {$group->name} criado com sucesso");
         return back();
     }
 
@@ -56,7 +56,7 @@ class ExpenseGroupController extends Controller
      * @param  \App\ExpenseType  $expenseType
      * @return \Illuminate\Http\Response
      */
-    public function show(ExpenseType $expenseType)
+    public function show(ExpenseGroup $expenseGroup)
     {
         //
     }
@@ -68,9 +68,31 @@ class ExpenseGroupController extends Controller
      * @param  \App\ExpenseType  $expenseType
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ExpenseType $expenseType)
+    public function update(Request $request, ExpenseGroup $expenseGroup)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|max:80',
+            'description' => 'required|max:255',
+            'expenseTypes.*' => 'exists:expense_types,id',
+        ]);
+
+        if ($request->has('expenseTypes')) {
+            $types = collect(array_map(function ($id) {
+                return \App\ExpenseType::find($id);
+            }, $validatedData['expenseTypes']));
+
+            $expenseGroup
+                ->expenseTypes()
+                ->saveMany(array_values($types->all()));
+        }
+
+        $expenseGroup->update([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
+
+        $request->session()->flash('success', "Grupo de despesa {$expenseGroup->name} atualizado com sucesso");
+        return back();
     }
 
     /**
@@ -79,8 +101,15 @@ class ExpenseGroupController extends Controller
      * @param  \App\ExpenseType  $expenseType
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ExpenseType $expenseType)
+    public function destroy(Request $request, ExpenseGroup $expenseGroup)
     {
-        //
+        if ($request->get('sure') != '1') {
+            return back();
+        }
+        $slug = $expenseGroup->source->slug;
+        $name = $expenseGroup->name;
+        $expenseGroup->delete();
+        $request->session()->flash('success', "O grupo {$name} foi apagado");
+        return redirect()->route('exgroup.index', $slug);
     }
 }

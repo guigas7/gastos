@@ -32,3 +32,8 @@
 	font-weight: bold;
 }
 
+.expense-list {
+    display: flex !important;
+    justify-content: center;
+    justify-content: space-between;
+}

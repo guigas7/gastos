@@ -9,8 +9,7 @@
 
     <title>{{ config('app.name', 'CEPETI') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -90,10 +89,10 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ URL::to('centros') }}">{{ __('Centros') }}</a>
+                            <a class="nav-link" href="{{ route('source.index') }}">{{ __('Centros') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ URL::to('resumos') }}">{{ __('Resumos') }}</a>
+                            <a class="nav-link" href="{{ route('source.create') }}">{{ __('Criar') }}</a>
                         </li>
                     </ul>
                     @endguest
@@ -136,10 +135,22 @@
         <main class="py-4">
             @yield('content')
         </main>
+
+        <div class="alert-box">
+            <x-flash></x-flash>
+        </div>
+
     </div>
 
-    @yield('footer')
-
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">© 2020 CEPETI</p>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="#app">Voltar ao topo</a></li>
+        </ul>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')
 </body>
 

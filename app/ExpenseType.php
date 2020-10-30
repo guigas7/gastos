@@ -19,18 +19,15 @@ class ExpenseType extends Model
      */
     protected $guarded = [];
 
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
+    protected $appends = ['endPoint'];
+
+    public function expenseGroup()
     {
-        return 'slug';
+        return $this->belongsTo('App\ExpenseGroup', 'expense_group_id');
     }
 
-    public function expenseGroups()
+    public function getEndPointAttribute()
     {
-        return $this->belongsTo('App\ExpenseGroups', 'expense_group_id');
+        return route('expense.delete', $this->slug);
     }
 }

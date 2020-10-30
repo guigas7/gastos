@@ -1,62 +1,69 @@
-@extends('layouts.login')
+@extends('layouts.app')
+
+@section('header')
+    <link rel="stylesheet" type="text/css" href="/css/source.css">
+@endsection
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <br>
-        <h2>{{ __('Criar novo Centro') }}</h2>
-        <br>
+    <div class="justify-content-center">
+        <h2 class="py-3 title">Criar novo Centro</h2>
     </div>
     <br><br>
-    <form method="POST" action="/centros/criar">
-    @csrf
-    <div class="form-group row">
-        <label for="name" class="col-md-5 col-form-label text-md-center">{{ __('Nome') }}</label>
-        <div class="col-md-5">
-            <input id="name" type="string" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autofocus>
+    <form method="POST" action="{{ route('source.store') }}">
+        @csrf
+        <div class="form-group row py-3 justify-content-center">
+            <label for="name" class="col-form-label">Nome</label>
+            <div class="col-md-5">
+                <input id="name" type="string" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autofocus>
 
-            @error('name')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
-        </div>
+                @error('name')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
         </div>
         <hr>
 
-        <div class="form-group row mb-0">
-            <label for="income" class="col-md-5 col-form-label text-md-center">{{ __('Este centro também é um centro de Receita?') }}</label>
+        <div class="form-group pt-3 row justify-content-center">
+            <label for="income" class="col-form-label">Este centro também tem Receitas?</label>
 
-            <div class="col-md-2">
+            <div class="pl-4">
                 <p>
-                    <input type="radio" id="vent-on" name="income" required value="1">
-                        <label for="income">Sim</label>
-                        <br>
-                    <input type="radio" id="vent-off" name="income" value="0">
-                        <label for="income">Não</label>
+                    <input type="radio" id="with" name="income" value="1" {{ old('income') ? 'checked' : ''}}>
+                    <label for="with">Sim</label>
+                </p>
+                <P>
+                    <input type="radio" id="without" name="income" value="0" {{ old('income') === '0' ? 'checked' : ''}}>
+                    <label for="without">Não</label>
                 </p>
             </div>
         </div>
-        <br>
+        <hr>
 
-        <div class="form_container_despesa">
-            <button class="add_form_fields_despesa">Inserir novo tipo de despesa
-                <span style="font-size:16px; font-weight:bold;">+ </span>
-            </button>
+        <div class="mt-5 card col-lg-8 px-0">
+            <b-card no-body>
+                <b-tabs card justified>
+                    <b-tab title="Criar despesas" active>
+                        <b-card-text>
+                            <insert-expenses>
+                            </insert-expenses>
+                        </b-card-text>
+                    </b-tab>
+
+                    <b-tab title="Criar receitas">
+                        <b-card-text>
+                            <insert-incomes>
+                            </insert-incomes>
+                        </b-card-text>
+                    </b-tab>     
+                </b-tabs>
+            </b-card>     
         </div>
-        <br><br>
 
-        <div class="form_container_income">
-            <button class="add_form_fields_income">Inserir novo tipo de receita
-                <span style="font-size:16px; font-weight:bold;">+ </span>
-            </button>
-        </div>
-        <br><br>
-
-        <div class="form-group row mb-0">
-            <button id="enviar" type="submit" class="btn btn-primary bt">
-                {{ __('Enviar') }}
-            </button>
+        <div class="form-group row float-right">
+            <button id="enviar" type="submit" class="btn btn-primary bt">Enviar</button>
         </div>
 
     </form>

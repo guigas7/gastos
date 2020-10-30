@@ -1,17 +1,17 @@
-@props([
-	'type' => 'success',
-	'colors' => [
-		'success' => 'bg-green-500',
-		'error' => 'bg-red-500',
-		'warning' => 'bg-orange-500',
-	]
+@if (Session::has('success'))
+	<flash-message type="success" message="{{ Session::get('success') }}"></flash-message>
+@endif
 
-])
+@if (Session::has('danger'))
+	<flash-message type="danger" message="{{ Session::get('danger') }}"></flash-message>
+@endif
 
-<section {{ $attributes->merge(['class' => "{$colors[$type]} border-b p-4"]) }}>
-	<div class="flex justify-between">
-		<p>
-			{{ slot }}
-		</p>
-	</div>
-</section>
+@if (Session::has('warning'))
+	<flash-message type="warning" message="{{ Session::get('warning') }}"></flash-message>
+@endif
+
+@if($errors->all())
+    @foreach ($errors->all() as $error)
+      <flash-message type="danger" message="{{ $error }}"></flash-message>
+    @endforeach
+@endif

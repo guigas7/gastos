@@ -21,14 +21,11 @@ class IncomeType extends Model
      */
     protected $guarded = [];
 
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
+    protected $appends = ['endPoint'];
+
+    public function getEndPointAttribute()
     {
-        return 'slug';
+        return route('income.delete', $this->slug);
     }
 }
 

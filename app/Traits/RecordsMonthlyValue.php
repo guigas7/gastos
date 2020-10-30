@@ -4,6 +4,15 @@ namespace App\Traits;
 
 trait RecordsMonthlyValue
 {
+
+    public static function bootRecordsMonthlyValue()
+    {
+        // Delete associated images if they exist.
+        static::deleting(function($model) {
+            $model->records()->delete();
+        });
+    }
+
     /**
      * Makes a new record for the model.
      *
@@ -32,7 +41,6 @@ trait RecordsMonthlyValue
     {
         return $this->morphMany('App\Record', 'recordable');
     }
-
 
     public function source()
     {
