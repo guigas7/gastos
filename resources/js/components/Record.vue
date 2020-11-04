@@ -5,7 +5,7 @@
               <a  :title="type.description"
                   href="#"
                   class="type-title"
-                  v-b-modal.modal-{{ $id }}>
+                  v-b-modal="modalId()">
                   {{ type.name }}
               </a>
 
@@ -14,13 +14,13 @@
                       <form method="POST"
                           :action=" type.endPoint"
                           class="cent">
-                          @csrf
-                          @method('PUT')
+                          <input type="hidden" name="_method" value="PUT">
+                          <input type="hidden" name="_token" :value="csrf">
 
                           <div class="form-group row py-3 justify-content-center">
                               <label for="expense-name" class="col-form-label col-lg-3 offset-lg-1">Nome: </label>
                               <div class="col-lg-7">
-                                <input type="string" class="form-control" name="expense-name" required autofocus value="{{ $name }}">
+                                <input type="string" class="form-control" name="expense-name" required autofocus :value="type.name">
                               </div>
                           </div>
                           <hr>
@@ -30,12 +30,12 @@
 
                               <div class="pl-4 col-lg-7">
                                   <p>
-                                      <input type="radio" id="fixed-{{ $id }}" name="expense-type" required value="1" {{ $fixed == 1 ? 'checked' : '' }}>
-                                      <label for="fixed-{{ $id }}">Fixa</label>
+                                      <input type="radio" :id="'fixed-' + type.id" name="expense-type" required value="1" :checked="type.fixed">
+                                      <label :for="'fixed-' + type.id">Fixa</label>
                                   </p>
                                   <P>
-                                      <input type="radio" id="variable-{{ $id }}" name="expense-type" value="0" {{ $fixed == 1 ? '' : 'checked' }}>
-                                      <label for="variable-{{ $id }}">Variável</label>
+                                      <input type="radio" :id="'variable-' + type.id" name="expense-type" value="0" :checked="!type.fixed">
+                                      <label :for="'variable-' + type.id">Variável</label>
                                   </P>
                               </div>
                           </div>
@@ -49,11 +49,11 @@
                                     name="expense-description"
                                     rows="4"
                                     cols="50"
-                                    class="form-control">{{ $description }}</textarea>
+                                    class="form-control">{{ type.description }}</textarea>
                               </div>
                           </div>
 
-                          <button id="editar-{{ $slug }}" type="submit" class="btn btn-primary btn-sm btn-salvar">
+                          <button :id="'editar-' + type.slug" type="submit" class="btn btn-primary btn-sm btn-salvar">
                               Salvar
                           </button>
                       </form>
@@ -62,18 +62,7 @@
           </div>                                     
       </div>
 
-    <form method="POST"
-        action="{{ route('record.update', $recordId) }}"
-        class="cent">
-        @csrf
-        @method('PUT')
-
-        <div class="cent">
-            <button id="record-{{ $slug }}" type="submit" class="btn btn-primary btn-sm btn-salvar">
-            Salvar
-            </button>
-        </div>  
-
+    <div class="cent">
         <div class="d.flex row mb-2 justify-content-center">
             <div class="col-md-5 mb-3">
                 <label for="value">Valor</label>
@@ -81,8 +70,9 @@
                 name="value"
                 step=".01"
                 class="form-control"
-                  onClick="this.select();"
-                value="{{ $recordValue }}">
+                onClick="this.select();"
+                @change="updateValue"
+                v-model="record.value">
             </div>
             
             <div class="col-md-7 mb-3">
@@ -90,11 +80,11 @@
                 <input type="text"
                 name="description"
                 class="form-control"
-                {{ $recordDescription == null ? '' : 'readonly' }}
-                value="{{ $recordDescription }}"> 
+                @change="updateDescription"
+                v-model="record.description"> 
             </div>                                 
         </div>
-    </form>
+    </div>
   </li>
 </template>
 
@@ -108,7 +98,7 @@
       recAttrs: {
         type: Object,
         required: true,
-      },
+      }
     },
     computed: {
       type: function () {
@@ -118,5 +108,35 @@
         return this.recAttrs
       }
     },
+    data: function () {
+      return {
+        csrf: window.axios.defaults.headers.common['X-CSRF-TOKEN'],
+      }
+    },
+    methods: {
+      modalId() {
+        return 'modal-' + this.type.id
+      },
+      updateValue() {
+        axios.put(this.record.endPoint, {
+            value: this.record.value,
+            description: this.record.description
+        }).then(response => {
+          this.$eventBus.$emit('flash', "O valor de " + this.type.name + " foi alterado para " + this.record.value + ".", "success");
+        }).catch(error => {
+          this.$eventBus.$emit('flash', "Não foi possível concluir a operação, recarregue a página", "danger");
+        });
+      },
+      updateDescription() {
+        axios.put(this.record.endPoint, {
+            value: this.record.value,
+            description: this.record.description
+        }).then(response => {
+          this.$eventBus.$emit('flash', "A descrição de " + this.type.name + " foi alterada.", "success", "success");
+        }).catch(error => {
+          this.$eventBus.$emit('flash', "Não foi possível concluir a operação, recarregue a página", "danger");
+        });
+      }
+    }
   };
 </script>

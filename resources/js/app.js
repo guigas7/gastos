@@ -41,6 +41,7 @@ Vue.component('month-picker', require('./components/MonthPicker.vue').default);
 Vue.component('delete-type', require('./components/DeleteType.vue').default);
 Vue.component('delete-lists', require('./components/DeleteLists.vue').default);
 Vue.component('record', require('./components/Record.vue').default);
+Vue.component('flash-box', require('./components/FlashBox.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

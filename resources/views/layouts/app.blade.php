@@ -69,7 +69,6 @@
         clear: both;
         }
     </style>
-
     @yield('header')
 </head>
 <body>
@@ -96,7 +95,7 @@
                         </li>
                     </ul>
                     @endguest
-                    <!-- Right Side Of Navbar -->
+                                        <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
@@ -105,7 +104,7 @@
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">Cadastro</a>
                                 </li>
                             @endif
                         @else
@@ -120,7 +119,6 @@
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>

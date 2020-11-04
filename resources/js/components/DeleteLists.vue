@@ -46,15 +46,12 @@
     },
     methods: {
       removeIncome(index) {
-        alert(index)
         this.incomes.splice(index, 1)
       },
       removeFixed(index) {
-        alert(index)
         this.fixedExpenses.splice(index, 1)
       },
       removeVariable(index) {
-        alert(index)
         this.variableExpenses.splice(index, 1)
       }
     },

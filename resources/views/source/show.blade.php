@@ -36,24 +36,13 @@
                 <div class="card-body">
                     <div class="cent">
                         <ul class="list-group list-group-flush">
-
-                        @foreach($fixedExpenseTypes as $expense)
-                            <x-expense
-                                slug="{{ $expense->slug }}"
-                                name="{{ $expense->name }}"
-                                id="{{ $expense->id }}"
-                                fixed="{{ $expense->fixed }}"
-                                description="{{ $expense->description }}"
-                                recordValue="{{ $expense->records->first()->value }}"
-                                recordId="{{ $expense->records->first()->id }}"
-                                recordDescription="{{ $expense->records->first()->description }}">
-                            </x-expense>
-                            <record
-                                :type-attrs="{{ $expense }}"
-                                :rec-attrs="{{ $expense->records->first()}}">
-                            </record>
-                        @endforeach
-                          </ul>
+                            @foreach($fixedExpenseTypes as $expense)
+                                <record
+                                    :type-attrs="{{ $expense }}"
+                                    :rec-attrs="{{ $expense->records->first()}}">
+                                </record>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -69,21 +58,13 @@
                 <div class="card-body">
                     <div class="cent">
                         <ul class="list-group list-group-flush">
-
-                        @foreach($variableExpenseTypes as $expense)
-                            <x-expense
-                                slug="{{ $expense->slug }}"
-                                name="{{ $expense->name }}"
-                                id="{{ $expense->id }}"
-                                fixed="{{ $expense->fixed }}"
-                                description="{{ $expense->description }}"
-                                recordValue="{{ $expense->records->first()->value }}"
-                                recordId="{{ $expense->records->first()->id }}"
-                                recordDescription="{{ $expense->records->first()->description }}">
-
-                            </x-expense>
-                        @endforeach
-                          </ul>
+                            @foreach($variableExpenseTypes as $expense)
+                                <record
+                                    :type-attrs="{{ $expense }}"
+                                    :rec-attrs="{{ $expense->records->first()}}">
+                                </record>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -100,20 +81,13 @@
                 <div class="card-body">
                     <div class="cent">
                         <ul class="list-group list-group-flush">
-
-                        @foreach($incomeTypes as $income)
-                            <x-income
-                                slug="{{ $income->slug }}"
-                                name="{{ $income->name }}"
-                                id="{{ $income->id }}"
-                                description="{{ $income->description }}"
-                                recordValue="{{ $income->records->first()->value }}"
-                                recordId="{{ $income->records->first()->id }}"
-                                recordDescription="{{ $income->records->first()->description }}">
-
-                            </x-income>
-                        @endforeach
-                          </ul>
+                            @foreach($incomeTypes as $income)
+                                <record
+                                    :type-attrs="{{ $income }}"
+                                    :rec-attrs="{{ $income->records->first()}}">
+                                </record>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -127,7 +101,7 @@
                     {{-- Editar / Apagar --}}
                     <b-tab title="Ações" active>
                         <b-card-text>
-                            <h1 class="text-center">Editar {{ $source->name }}</h1>
+                            <h3 class="text-center">Editar {{ $source->name }}</h3>
                             <form method="POST" action="{{ route('source.update', $source->slug) }}">
                                 @csrf
                                 @method('PUT')
@@ -166,13 +140,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group float-right mr-4 mb-4">
-                                    <button id="enviar" type="submit" class="btn btn-primary bt">Atualizar</button>
+                                    <button id="atualizar-centro" type="submit" class="btn btn-primary bt">Atualizar</button>
                                 </div>
                             </form>
 
                             <hr class="cb">
 
-                            <h1 class="text-center">Apagar {{ $source->name }}</h1>
+                            <h3 class="text-center">Apagar {{ $source->name }}</h3>
                             <form method="POST"
                                 action="{{ route('source.delete', $source->slug) }}">
                                 @csrf
@@ -192,7 +166,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group float-right mr-4">
-                                    <button id="enviar" type="submit" class="btn btn-danger btn-apagar ml-4 mb-2 align-middle">
+                                    <button id="apagar-centro" type="submit" class="btn btn-danger btn-apagar ml-4 mb-2 align-middle">
                                         Apagar
                                     </button>
                                 </div>
@@ -210,7 +184,7 @@
                                     </insert-incomes>
                                 </b-card-text>
                                 <div class="form-group row float-right">
-                                    <button id="enviar" type="submit" class="btn btn-primary bt">Criar receitas</button>
+                                    <button id="criar-receita" type="submit" class="btn btn-primary bt">Criar receitas</button>
                                 </div>
                             </form>
                         </b-tab>
@@ -225,7 +199,7 @@
                                 </insert-expenses>
                             </b-card-text>
                             <div class="form-group row float-right">
-                                <button id="enviar" type="submit" class="btn btn-primary bt">Criar despesas</button>
+                                <button id="criar-despesa" type="submit" class="btn btn-primary bt">Criar despesas</button>
                             </div>
                         </form>
                     </b-tab>

@@ -15,3 +15,5 @@
       <flash-message type="danger" message="{{ $error }}"></flash-message>
     @endforeach
 @endif
+
+<flash-box></flash-box>

@@ -54,6 +54,12 @@ class RecordController extends Controller
         ]));
         $month = session('month', thisMonth())->name;
         $number = number_format($request->value, 2, ',', '');
+
+
+        if (request()->expectsJson()) {
+            return response(['status' => 'Registro atualizado']);
+        }
+        
         $request->session()->flash('success', "O valor de {$record->recordable->name} de {$record->recordable->source->name} foi alterado em {$month} para {$number}");
         return back()->withInput();
     }
