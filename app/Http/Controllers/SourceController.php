@@ -256,6 +256,7 @@ class SourceController extends Controller
             } else {
                 $item->percentFromTotal = 0;
             }
+            $item->order = $key;
         });
         //dd($source);
 
