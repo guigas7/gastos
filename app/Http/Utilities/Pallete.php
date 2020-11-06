@@ -79,6 +79,7 @@ Class Pallete
 
 	public static function take($amnt)
 	{
-		return array_splice(static::$colors, 0, $amnt);
+		$aux = static::$colors;
+		return array_splice($aux, 0, $amnt);
 	}
 }

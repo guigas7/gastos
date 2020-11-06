@@ -76,9 +76,9 @@ class ExpenseTypeController extends Controller
     public function update(Request $request, ExpenseType $expenseType)
     {
         $expenseType->update([
-            'name' => $request->input("expense-name"),
+            'name' => $request->input("name"),
             'fixed' => $request->boolean ("expense-type"),
-            'description' => $request->input("expense-description"),
+            'description' => $request->input("description"),
         ]);
         return back()->with('success', "A despesa {$expenseType->name} foi atualizada");
     }

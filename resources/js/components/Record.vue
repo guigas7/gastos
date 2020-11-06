@@ -9,7 +9,7 @@
                   {{ type.name }}
               </a>
 
-              <b-modal hide-footer :id="'modal-' + type.id" :title="'Editar ' + type.name" v-cloak>
+              <b-modal hide-footer :id="modalId()" :title="'Editar ' + type.name" v-cloak>
                   <div>
                       <form method="POST"
                           :action=" type.endPoint"
@@ -18,14 +18,14 @@
                           <input type="hidden" name="_token" :value="csrf">
 
                           <div class="form-group row py-3 justify-content-center">
-                              <label for="expense-name" class="col-form-label col-lg-3 offset-lg-1">Nome: </label>
+                              <label for="name" class="col-form-label col-lg-3 offset-lg-1">Nome: </label>
                               <div class="col-lg-7">
-                                <input type="string" class="form-control" name="expense-name" required autofocus :value="type.name">
+                                <input type="string" class="form-control" name="name" required autofocus :value="type.name">
                               </div>
                           </div>
                           <hr>
 
-                          <div class="form-group pt-3 row justify-content-center">
+                          <div class="form-group pt-3 row justify-content-center" v-if="!isIncome">
                               <label for="expense-type" class="col-form-label col-lg-3 offset-lg-1">Tipo: </label>
 
                               <div class="pl-4 col-lg-7">
@@ -39,14 +39,14 @@
                                   </P>
                               </div>
                           </div>
-                          <hr>
+                          <hr v-if="!isIncome">
 
                           <div class="form-group row py-3 justify-content-center">
-                              <label for="expense-description" class="col-lg-3 offset-lg-1 col-form-label">Descrição: </label>
+                              <label for="description" class="col-lg-3 offset-lg-1 col-form-label">Descrição: </label>
 
                               <div class="col-lg-7">
                                   <textarea
-                                    name="expense-description"
+                                    name="description"
                                     rows="4"
                                     cols="50"
                                     class="form-control">{{ type.description }}</textarea>
@@ -106,6 +106,9 @@
       },
       record: function () {
         return this.recAttrs
+      },
+      isIncome: function () {
+        return (this.type.fixed === undefined)
       }
     },
     data: function () {
@@ -115,7 +118,7 @@
     },
     methods: {
       modalId() {
-        return 'modal-' + this.type.id
+        return 'modal-' + (this.isIncome ? 'receita-' : 'despesa-') + this.type.id
       },
       updateValue() {
         axios.put(this.record.endPoint, {

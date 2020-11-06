@@ -138,8 +138,12 @@ class SourceController extends Controller
         $incomeTypes = $source->incomesAt($year, $month);
         $fixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed");
         $variableExpenseTypes = $source->expensesAt($year, $month, "all", "variable");
+        $sum = number_format(
+            sum($incomeTypes) - sum($fixedExpenseTypes) - sum($variableExpenseTypes), 2, ',', '.'
+        );
 
         return view('source.show', compact(
+            'sum', // Sum of incomes - expenses in this $month
         	'months', // all months, with name, short (name), and string
         	'years', // all years, just strings
         	'incomeTypes', // all income types from $source
@@ -240,13 +244,18 @@ class SourceController extends Controller
         $source->monthlyVariableAvg = $source->anualVariableExpense / 12;
         // Groups Anual sums
         $groups = $source->expenseGroups;
-        $groups->each(function ($item, $key) use ($year) {
+        $groups->each(function ($item, $key) use ($year, $source) {
             $item->anualExpense = $item->expenseSumAt($year);
             $item->monthlyAvg = $item->anualExpense / 12;
             $item->anualFixedExpense = $item->expenseSumAt($year, null, null, "fixed");
             $item->monthlyFixedAvg = $item->anualFixedExpense / 12;
             $item->anualVariableExpense = $item->expenseSumAt($year, null, null, "variable");
             $item->monthlyVariableAvg = $item->anualVariableExpense / 12;
+            if ($source->anualExpense > 0) {
+                $item->percentFromTotal = ($item->anualExpense / $source->anualExpense) * 100;
+            } else {
+                $item->percentFromTotal = 0;
+            }
         });
         //dd($source);
 

@@ -32,3 +32,12 @@ function monthlySum($types)
 		->pluck('value')
 		->sum(), 2, ',', '.');
 }
+
+// Expecting $types to be a return of expensesAt or incomesAt
+function sum($types)
+{
+	return $types->map(
+		function ($type) {
+			return $type->records->first();
+		})->pluck('value')->sum();
+}

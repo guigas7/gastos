@@ -8,7 +8,11 @@
     <div class="container-fluid text-center px-3">
         <div class="row">
             <div class="page-header col-lg-6 offset-lg-3 py-4 mb-2">
-                <h1 class="mb-3">{{$source->name}}</h1>
+                @if ($source->income)
+                <h1 class="mb-3">{{$source->name}}<span class="{{ $sum >= 0 ? 'text-success' : 'text-danger' }}">{{ '  R$' . $sum }}</span></h1>
+                @else
+                    <h1 class="mb-3">{{$source->name . '  R$' . $sum }}</h1>
+                @endif
 
                 <x-calendar month="{{ $month->name }}" year="{{ $year }}"></x-calendar>
             </div>
@@ -113,7 +117,7 @@
                                             class="form-control @error('name') is-invalid @enderror"
                                             name="name"
                                             value="{{ old('name') ? old('name') : $source->name }}"
-                                            required autofocus>
+                                            required>
 
                                         @error('name')
                                             <span class="invalid-feedback" role="alert">

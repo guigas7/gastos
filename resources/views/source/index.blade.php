@@ -8,7 +8,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h1> Centros do CEPETI </h1>
+            <h1 class="text-center">Centros de Despesa e Receita</h1>
             <br>
 
          

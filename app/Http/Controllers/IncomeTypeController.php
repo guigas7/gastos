@@ -75,8 +75,8 @@ class IncomeTypeController extends Controller
     public function update(Request $request, IncomeType $incomeType)
     {
         $incomeType->update([
-            'name' => $request->input("income-name"),
-            'description' => $request->input("income-description"),
+            'name' => $request->input("name"),
+            'description' => $request->input("description"),
         ]);
         return back()->with('success', "A receita {$incomeType->name} foi atualizada");
     }

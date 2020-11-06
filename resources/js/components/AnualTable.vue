@@ -27,6 +27,9 @@
           :fields="fields"
           :items="items"
           :keyword="keyword">
+            <template #cell(name)="row" :colors="colors">
+              <span :style="'font-weight: bold; color: ' + colors[row.index]">{{ row.item.name }}</span>
+            </template>
 
           <template #custom-foot
           :source="source"
@@ -36,6 +39,7 @@
               <b-th><b>Total</b></b-th>
               <b-th><b>{{ source[attr1].toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) }}</b></b-th>
               <b-th><b>{{ source[attr2].toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) }}</b></b-th>
+              <b-th><b>100%</b></b-th>
             </b-tr>
           </template>
         </b-table>
@@ -60,6 +64,10 @@
       source: {
         type: Object,
         required: true,
+      },
+      colors: {
+        type: Array,
+        required: true,
       }
     },
     data () {
@@ -70,9 +78,10 @@
           {key: this.attr1, label: 'Despesa Anual', sortable: true,
             formatter: (value, key, item) => value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})},
           {key: this.attr2, label: 'Média p/Mês', sortable: true,
-            formatter: (value, key, item) => value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}
-        ],
-        obj: this.source
+            formatter: (value, key, item) => value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})},
+          {key: 'percentFromTotal', label: '%', sortable: true,
+            formatter: (value, key, item) => value.toFixed(2).toString(10) + '%'}
+        ]
       }
     },
     computed: {
