@@ -26,6 +26,21 @@ class MonthsTableSeeder extends Seeder
     		'Dezembro',
     	];
     	
+        $short = [
+            'Jan',
+            'Fev',
+            'Mar',
+            'Abr',
+            'Mai',
+            'Jun',
+            'Jul',
+            'Ago',
+            'Set',
+            'Out',
+            'Nov',
+            'Dez',
+        ];
+        
     	$numbers = [
     		"01",
     		"02",
@@ -44,6 +59,7 @@ class MonthsTableSeeder extends Seeder
     	foreach ($names as $i => $name) {
 	    	factory('App\Month')->create([
 	    		'name' => $name,
+                'short' => $short[$i],
 	    		'number' => $numbers[$i]
 	    	]);
     	}

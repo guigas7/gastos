@@ -1,0 +1,139 @@
+.fixed-height {
+    height: min-content;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.cent {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.card {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.card-header {
+	width: 100%;
+    text-align: center;
+    border-bottom-width: initial;
+    color: #FFFFFF;
+    color: green;
+    font-weight: bold;
+}
+
+.btn {
+  min-width: 41px;
+}
+
+.btn-selecionar {
+  width: 92px;
+}
+
+.btn-salvar {
+  width: 70px;
+  min-width: 70px;
+  float: right;
+  height: fit-content;
+}
+
+.btn-apagar {
+  width: 90px;
+  min-width: 90px;
+  float: right;
+  height: fit-content;
+}
+
+.value-input {
+  width: 100px;
+}
+
+.value-form {
+  justify-content: center;
+}
+
+.title {
+  text-align: center;
+}
+
+.alert-box {
+  position: fixed;
+  right: 25px;
+  top: 25px;
+  width: 500px;
+  max-width: calc(100% - 30px);
+}
+
+.notification {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    color: #fff;
+    font-size: 16px;
+    padding: 15px 20px;
+    line-height: 20px;
+    margin-bottom: 15px;
+    animation: grow 0.5s ease-in forwards;
+}
+
+.notification.hide {
+    animation: shrink 0.3s ease-out forwards;
+}
+
+.alert-box.hide {
+    animation: shrink 0.3s ease-out forwards;
+}
+
+@keyframes shrink {
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+@keyframes grow {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.cb {
+  clear: both;
+}
+
+.record {
+  width: 100px;
+}
+
+.type-title {
+  all: revert;
+  font-size: 1.25em;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  margin-left: 0;
+  margin-right: 0;
+  line-height: 1.2;
+  font-weight: 500;
+  color: black !important;
+}
+
+[v-cloak] {
+  display: none;
+}

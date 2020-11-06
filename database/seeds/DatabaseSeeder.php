@@ -12,13 +12,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $toTruncate = [
-            'users',
             'sources',
+            'income_types',
+            'expense_types',
+            'records',
             'months',
-            'intypes',
-            'extypes',
-            'intype_source',
-            'extype_source',
+            'expense_groups',
         ];
 
         Schema::disableForeignKeyConstraints();
@@ -28,11 +27,7 @@ class DatabaseSeeder extends Seeder
         Schema::enableForeignKeyConstraints();
 
         $this->call(UsersTableSeeder::class);
-        $this->call(SourcesTableSeeder::class);
         $this->call(MonthsTableSeeder::class);
-        $this->call(IntypesTableSeeder::class);
-        $this->call(ExtypesTableSeeder::class);
-        $this->call(IntypeSourcesTableSeeder::class);
-        $this->call(ExtypeSourcesTableSeeder::class);
+        $this->call(SourcesTableSeeder::class);
     }
 }

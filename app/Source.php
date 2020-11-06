@@ -3,12 +3,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Intype;
-use App\Extype;
-use Illuminate\Support\Str;
+use App\IncomeType;
+use App\ExpenseType;
+use App\Month;
+use App\Record;
+use App\Traits\Sluggable;
+use App\Traits\HasExpense;
+use App\Traits\PrintsName;
+use Illuminate\Support\Str; // Sluggable
 
 class Source extends Model
 {
+    use Sluggable, PrintsName, HasExpense;
+
 	/**
      * The attributes that are not mass assignable.
      *
@@ -17,104 +24,69 @@ class Source extends Model
     protected $guarded = [];
 
     /**
-     * Get the route key for the model.
+     * The accessors to append to the model's array form.
      *
-     * @return string
+     * @var array
      */
-    public function getRouteKeyName()
+    // protected $appends = ['fixedExpenses', 'variableExpenses'];
+
+    public function ExpenseGroups()
     {
-        return 'slug';
+        return $this->hasMany('App\ExpenseGroup');
     }
 
-    public function intypes()
+    public function ExpenseGroupsWithExpenses()
     {
-        return $this->belongsToMany(
-            'App\Intype',
-            'intype_source',
-            'source_id',
-            'intype_id',
-        )->withPivot(
-            'year',
-            'month',
-            'value',
-            'observations',
-        );
+        return $this->hasMany('App\ExpenseGroup')->with('expenseTypes');
     }
 
-    public function extypes()
+    public function incomeTypes()
     {
-        return $this->belongsToMany(
-            'App\Extype',
-            'extype_source',
-            'source_id',
-            'extype_id',
-        )->withPivot(
-            'year',
-            'default',
-            'month',
-            'value',
-            'observations',
-        );
+        return $this->hasMany('App\IncomeType');
     }
 
-    public function extypeSources()
+    public function expenseTypes()
     {
-        return $this->hasMany('App\ExtypeSource');
+        return $this->hasMany('App\ExpenseType');
     }
 
-    public function intypeSources()
+    public function ungroupedExpenses($fixed = null)
     {
-        return $this->hasMany('App\IntypeSource');
+        $groups = $this->ExpenseGroups;
+
+        $inGroup = collect();
+        foreach ($groups as $group) {
+            $inGroup = $inGroup->merge($group->expenseTypes);
+        }
+
+        if ($fixed === null) {
+            return $this->ExpenseTypes->diff($inGroup)->values();
+        } elseif ($fixed == "fixed") {
+            return $this->fixedExpenseTypes->diff($inGroup)->values();
+        } else {
+            return $this->variableExpenseTypes->diff($inGroup)->values();
+        }
     }
 
-    public static function boot()
+    public function incomesAt($year, Month $month = null, $only = null)
     {
-        parent::boot();
- 
-        static::creating(function ($source) {
-            if (!is_null($source->name)) {
-                $source->slug = Str::slug($source->name);
-     
-                $latestSlug =
-                Source::whereRaw("slug RLIKE '^{$source->slug}(--[0-9]*)?$'")
-                    ->latest('slug')
-                    ->pluck('slug');
-                if ($latestSlug->first() != null) {
-                    $pieces = explode('--', $latestSlug->first());
-                    if (count($pieces) == 1) { // first repetition
-                        $source->slug .= '--' . '1';
-                    } else {
-                        $number = intval(end($pieces));
-                        $source->slug .= '--' . ($number + 1);
-                    }
-                } 
+        // Query to eager load all records from the selected period
+        $callback = function($recordQuery) use ($year, $month) {
+            $recordQuery = $recordQuery->where('year', $year);
+            if (!empty($month)) {
+                $recordQuery = $recordQuery->where('month_id', $month->id);
             }
-        });
- 
-        static::updating(function ($source) {
-            $oldsource = Source::findOrFail($source->id);
-            if (is_null($source->name)) {
-                $source->slug = null;
-            } else {
-                if ($oldsource->name != $source->name) { // se o nome foi alterado, então altera slug também
-                    $source->slug = Str::slug($source->name);
-    
-                    $latestSlug =
-                    Source::whereRaw("slug RLIKE '^{$source->slug}(--[0-9]*)?$'")
-                        ->latest('slug')
-                        ->pluck('slug');
-                    if ($latestSlug->first() != null) {
-                        $pieces = explode('--', $latestSlug->first());
-                        if (count($pieces) == 1) { // first repetition
-                            $source->slug .= '--' . '1';
-                        } else {
-                            $number = intval(end($pieces));
-                            $source->slug .= '--' . ($number + 1);
-                        }
-                    } 
-                }
-            }
-        });
-	}
+            return $recordQuery;
+        };
+
+        // Return only expenses with records in the selected period
+        $typeQuery = $this->incomeTypes();
+        if ($only === "only") {
+            $typeQuery = $typeQuery->whereHas('records', $callback);
+        }
+
+        return $typeQuery
+            ->with(['records' => $callback])
+            ->get();
+    }
 }
-

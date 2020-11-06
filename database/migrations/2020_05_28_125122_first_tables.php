@@ -15,76 +15,67 @@ class FirstTables extends Migration
     {
         Schema::enableForeignKeyConstraints();
 
+        // The owner of expenses and incomes
         Schema::create('sources', function (Blueprint $table) {
             $table->id();
             $table->string('name', 80);
             $table->string('slug', 90)->unique();
             $table->boolean('income')->default(0);
             $table->timestamps();
-        }); 
+        });
 
-        Schema::create('intypes', function (Blueprint $table) {
+        // Types of incomes
+        Schema::create('income_types', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
             $table->string('slug', 60)->unique();
-            $table->string('description', 255);
+            $table->unsignedBigInteger('source_id');
+            $table->string('description', 255)->nullable()->default(null);
             $table->timestamps();
         });
 
-        Schema::create('intype_source', function (Blueprint $table) {
+        Schema::create('expense_groups', function (Blueprint $table) {
             $table->id();
-            $table->index(['intype_id', 'source_id', 'year', 'month']);
-            $table->unsignedBigInteger('intype_id');
+            $table->string('name', 80);
+            $table->string('slug', 90);
+            $table->string('description', 255)->nullable();
             $table->unsignedBigInteger('source_id');
-            $table->string('year', 4);
-            $table->string('month', 2);
-            $table->decimal('value', 19,4);
-            $table->string('observations', 255)->nullable();
-
-            $table->foreign('intype_id')
-                ->references('id')
-                ->on('intypes')
-                ->onDelete('cascade');
-
-            $table->foreign('source_id')
-                ->references('id')
-                ->on('sources')
-                ->onDelete('cascade');
+            $table->timestamps();
         });
 
-        Schema::create('extypes', function (Blueprint $table) {
+        // Types of expenses
+        Schema::create('expense_types', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
             $table->string('slug', 60)->unique();
-            $table->string('description', 255);
+            $table->unsignedBigInteger('source_id');
+            $table->unsignedBigInteger('expense_group_id')->nullable()->default(null);
+            $table->string('description', 255)->nullable()->default(null);
+            $table->boolean('fixed');
+            $table->timestamps();
+
+            $table->foreign('expense_group_id')->references('id')->on('expense_groups')
+                ->onDelete('set null');
+        });
+
+        // A value recorded in expense or income of $holder_id in $year and $month
+        Schema::create('records', function (Blueprint $table) {
+            $table->id();
+            $table->unique(['recordable_id', 'recordable_type', 'year', 'month_id']);
+            $table->unsignedBigInteger('recordable_id');
+            $table->string('recordable_type', 50);
+            $table->string('year', 4);
+            $table->unsignedBigInteger('month_id');
+            $table->decimal('value', 19,2)->default(0.0);
+            $table->string('description', 255)->nullable()->default(null);
             $table->timestamps();
         });
 
-        Schema::create('extype_source', function (Blueprint $table) {
-            $table->id();
-            $table->index(['extype_id', 'source_id', 'year', 'month']);
-            $table->unsignedBigInteger('extype_id');
-            $table->unsignedBigInteger('source_id');
-            $table->decimal('default', 19,4)->nullable();
-            $table->string('year', 4);
-            $table->string('month', 2);
-            $table->decimal('value', 19,4);
-            $table->string('observations', 255)->nullable();
-
-            $table->foreign('extype_id')
-                ->references('id')
-                ->on('extypes')
-                ->onDelete('cascade');
-
-            $table->foreign('source_id')
-                ->references('id')
-                ->on('sources')
-                ->onDelete('cascade');
-        });
-
+        // Months
         Schema::create('months', function (Blueprint $table) {
             $table->id();
             $table->string('name', 10);
+            $table->string('short', 5);
             $table->string('number', 2);
         });
     }
@@ -97,23 +88,10 @@ class FirstTables extends Migration
     public function down()
     {
         Schema::dropIfExists('sources');
-        Schema::dropIfExists('intypes');
-
-        Schema::table('intype_source', function (Blueprint $table) {
-            $table->dropForeign('intype_id');
-            $table->dropForeign('source_id');
-        });
-        Schema::dropIfExists('intype_source');
-        
-        Schema::dropIfExists('extypes');
-
-        Schema::table('extype_source', function (Blueprint $table) {
-            $table->dropForeign('extype_id');
-            $table->dropForeign('source_id');
-        });
-        Schema::dropIfExists('extype_source');
-
+        Schema::dropIfExists('income_types');
+        Schema::dropIfExists('expense_types');
+        Schema::dropIfExists('records');
         Schema::dropIfExists('months');
-
+        Schema::dropIfExists('expense_groups');
     }
 }

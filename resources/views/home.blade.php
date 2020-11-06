@@ -5,16 +5,14 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">Bem-vindo</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    You are logged in!
+                    Olá {{ Auth::user()->name }},
+                    <br>
+                    Este sistema foi criado com o intuito de facilitar a visualização e manutenção do fluxo de caixa do CEPETI.
+                    <br>
+                    
                 </div>
             </div>
         </div>
