@@ -28,7 +28,7 @@
           :items="items"
           :keyword="keyword">
             <template #cell(name)="row" :colors="colors">
-              <span :style="'font-weight: bold; color: ' + colors[row.index]">{{ row.item.name }}</span>
+              <span :style="'font-weight: bold; color: ' + colors[row.item.order]">{{ row.item.name }}</span>
             </template>
 
           <template #custom-foot
