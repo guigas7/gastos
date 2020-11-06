@@ -7,12 +7,13 @@ use App\Month;
 use App\IncomeType;
 use App\Traits\RecordsMonthlyValue;
 use App\Traits\Sluggable;
+use App\Traits\PrintsName;
 use Illuminate\Support\Str; // Sluggable
 
 
 class IncomeType extends Model
 {
-	use RecordsMonthlyValue, Sluggable;
+	use RecordsMonthlyValue, Sluggable, PrintsName;
 
 	/**
      * The attributes that are not mass assignable.

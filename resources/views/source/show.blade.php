@@ -25,13 +25,13 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid text-center d.flex justify-content-center px-3 row">
+    <div class="container-fluid text-center d.flex justify-content-center px-3 row" v-cloak>
         {{-- Despesas Fixas --}}
         <div class="col-xl-3 col-lg-6 mb-5">
             <div class="card">
-                <h4 class="card-header">
+                <h5 class="card-header">
                     Despesas Fixas de {{ $month->name }} - R${{ monthlySum($fixedExpenseTypes) }}
-                </h4>
+                </h5>
 
                 <div class="card-body">
                     <div class="cent">
@@ -51,9 +51,9 @@
         {{-- Despesas Variáveis --}}
         <div class="col-xl-3 col-lg-6 mb-5">
             <div class="card">
-                <h4 class="card-header">
+                <h5 class="card-header">
                     Despesas Variáveis de {{ $month->name }} - R${{ monthlySum($variableExpenseTypes) }}
-                </h4>
+                </h5>
 
                 <div class="card-body">
                     <div class="cent">
@@ -74,9 +74,9 @@
         @if ($source->income == true)
         <div class="col-xl-3 col-lg-6 mb-5">
             <div class="card">
-                <h4 class="card-header">
+                <h5 class="card-header">
                     Receitas de {{ $month->name }} - R${{ monthlySum($incomeTypes) }}
-                </h4>
+                </h5>
 
                 <div class="card-body">
                     <div class="cent">

@@ -6,11 +6,12 @@ use App\ExpenseType;
 use App\Traits\RecordsMonthlyValue;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\PrintsName;
 use Illuminate\Support\Str; // Sluggable
 
 class ExpenseType extends Model
 {
-	use RecordsMonthlyValue, Sluggable;
+	use RecordsMonthlyValue, Sluggable, PrintsName;
 
    	/**
      * The attributes that are not mass assignable.

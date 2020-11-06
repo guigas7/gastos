@@ -35,13 +35,14 @@ import 'bootstrap/dist/css/bootstrap.css';
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('insert-expenses', require('./components/InsertExpenses.vue').default);
 Vue.component('insert-incomes', require('./components/InsertIncomes.vue').default);
-Vue.component('graph', require('./components/graph.vue').default);
 Vue.component('flash-message', require('./components/FlashMessage.vue').default);
 Vue.component('month-picker', require('./components/MonthPicker.vue').default);
 Vue.component('delete-type', require('./components/DeleteType.vue').default);
 Vue.component('delete-lists', require('./components/DeleteLists.vue').default);
 Vue.component('record', require('./components/Record.vue').default);
 Vue.component('flash-box', require('./components/FlashBox.vue').default);
+Vue.component('anual-table', require('./components/AnualTable.vue').default);
+Vue.component('pie-chart', require('./components/PieChart.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

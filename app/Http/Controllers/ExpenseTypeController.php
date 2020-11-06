@@ -8,6 +8,11 @@ use App\Source;
 
 class ExpenseTypeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -43,6 +48,9 @@ class ExpenseTypeController extends Controller
             }
 
             $source->expenseTypes()->saveMany(array_values($expenses->all()));
+        }
+        foreach (yearRange() as $year) {
+            $source->createRecordsIfNotCreated($year);
         }
         return back()->with('success', "As despesas foram atribuídas a {$source->name}"); 
     }

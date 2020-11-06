@@ -4,10 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Sluggable;
+use App\Traits\HasExpense;
+use App\Traits\PrintsName;
+use App\Extype;
+use App\Month;
+use Illuminate\Support\Str; // Sluggable
 
 class ExpenseGroup extends Model
 {
-    use Sluggable;
+    use Sluggable, PrintsName, HasExpense;
 
     protected $guarded = [];
 

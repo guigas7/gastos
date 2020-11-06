@@ -1,0 +1,16 @@
+.table {
+	margin: 0 auto;
+	width: 500px;
+	
+	.input-group-text {
+		padding: 0 .5em 0 .5em;
+		
+		.fa {
+			font-size: 12px;
+		}
+	}
+}
+
+canvas{
+	margin: 0 auto;
+}

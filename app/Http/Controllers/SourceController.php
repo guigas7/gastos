@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 class SourceController extends Controller
 {
     /**
-     * Instantiate a new UserController instance.
+     * Instantiate a new Controller instance.
      */
     public function __construct()
     {
@@ -110,6 +110,10 @@ class SourceController extends Controller
             }
 
             $source->incomeTypes()->saveMany(array_values($incomes->all()));
+        }
+
+        foreach (yearRange() as $year) {
+            $source->createRecordsIfNotCreated($year);
         }
 
         $request->session()->flash('success', "centro {$source->name} criado com sucesso");
@@ -224,14 +228,29 @@ class SourceController extends Controller
 
     public function report(Source $source)
     {
-        $groups = $source->expenseGroups;
         $month = session('month', thisMonth());
         $year = session('year', thisYear());
-        $fixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed");
-        $variableExpenseTypes = $source->expensesAt($year, $month, "all", "variable");
+
+        // Source Anual sums
+        $source->anualExpense = $source->expenseSumAt($year);
+        $source->monthlyAvg = $source->anualExpense / 12;
+        $source->anualFixedExpense = $source->expenseSumAt($year, null, null, "fixed");
+        $source->monthlyFixedAvg = $source->anualFixedExpense / 12;
+        $source->anualVariableExpense = $source->expenseSumAt($year, null, null, "variable");
+        $source->monthlyVariableAvg = $source->anualVariableExpense / 12;
+        // Groups Anual sums
+        $groups = $source->expenseGroups;
+        $groups->each(function ($item, $key) use ($year) {
+            $item->anualExpense = $item->expenseSumAt($year);
+            $item->monthlyAvg = $item->anualExpense / 12;
+            $item->anualFixedExpense = $item->expenseSumAt($year, null, null, "fixed");
+            $item->monthlyFixedAvg = $item->anualFixedExpense / 12;
+            $item->anualVariableExpense = $item->expenseSumAt($year, null, null, "variable");
+            $item->monthlyVariableAvg = $item->anualVariableExpense / 12;
+        });
+        //dd($source);
+
         return view('source.report', compact(
-            'fixedExpenseTypes', // all fixed expenseTypes from $source
-            'variableExpenseTypes', // all variabel expenseTypes from $source
             'groups', // All groups from source
             'source', // Current source
             'month', // Current month

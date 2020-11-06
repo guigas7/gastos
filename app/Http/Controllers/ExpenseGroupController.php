@@ -8,6 +8,11 @@ use App\Source;
 
 class ExpenseGroupController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -33,7 +38,7 @@ class ExpenseGroupController extends Controller
         //dd($request);
         $validatedData = $request->validate([
             'name' => 'required|max:80',
-            'description' => 'required|max:255',
+            'description' => 'max:255',
             'expenseTypes' => 'required',
             'expenseTypes.*' => 'exists:expense_types,id',
         ]);

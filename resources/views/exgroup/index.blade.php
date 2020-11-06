@@ -172,12 +172,12 @@
 
                                             <div class="pl-1">
                                                 <p>
-                                                    <input type="radio" id="sure" name="sure" required value="1">
-                                                    <label for="sure">Sim</label>
+                                                    <input type="radio" id="sure-{{ $group->slug }}" name="sure" required value="1">
+                                                    <label for="sure-{{ $group->slug }}">Sim</label>
                                                 </p>
                                                 <P>
-                                                    <input type="radio" id="notsure" name="sure" value="0" checked>
-                                                    <label for="notsure">Não</label>
+                                                    <input type="radio" id="notsure-{{ $group->slug }}" name="sure" value="0" checked>
+                                                    <label for="notsure-{{ $group->slug }}">Não</label>
                                                 </P>
                                             </div>
                                         </div>

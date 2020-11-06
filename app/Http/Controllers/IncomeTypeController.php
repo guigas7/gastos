@@ -8,6 +8,11 @@ use App\Source;
 
 class IncomeTypeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -42,6 +47,9 @@ class IncomeTypeController extends Controller
             }
 
             $source->incomeTypes()->saveMany(array_values($incomes->all()));
+        }
+        foreach (yearRange() as $year) {
+            $source->createRecordsIfNotCreated($year);
         }
         return back()->with('success', "As receitas foram atribuídas a {$source->name}"); 
     }
