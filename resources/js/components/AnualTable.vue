@@ -39,7 +39,7 @@
               <b-th><b>Total</b></b-th>
               <b-th><b>{{ source[attr1].toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) }}</b></b-th>
               <b-th><b>{{ source[attr2].toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) }}</b></b-th>
-              <b-th><b>100%</b></b-th>
+              <b-th><b>100.00%</b></b-th>
             </b-tr>
           </template>
         </b-table>
@@ -61,6 +61,10 @@
         type: String,
         required: true,
       },
+      attr3: {
+        type: String,
+        required: true,
+      },
       source: {
         type: Object,
         required: true,
@@ -79,7 +83,7 @@
             formatter: (value, key, item) => value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})},
           {key: this.attr2, label: 'Média p/Mês', sortable: true,
             formatter: (value, key, item) => value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})},
-          {key: 'percentFromTotal', label: '%', sortable: true,
+          {key: this.attr3, label: '%', sortable: true,
             formatter: (value, key, item) => value.toFixed(2).toString(10) + '%'}
         ]
       }

@@ -69,6 +69,7 @@
                                     :groups="{{ $groups }}"
                                     :attr1="'anualExpense'"
                                     :attr2="'monthlyAvg'"
+                                    :attr3="'percentFromTotal'"
                                     :source="{{ $source }}"
                                     :colors="{{ App\Http\Utilities\Pallete::jsonValues($groups->count()) }}">
                                 </anual-table>
@@ -99,6 +100,7 @@
                                     :groups="{{ $groups }}"
                                     :attr1="'anualFixedExpense'"
                                     :attr2="'monthlyFixedAvg'"
+                                    :attr3="'fixedPercentFromTotal'"
                                     :source="{{ $source }}"
                                     :colors="{{ App\Http\Utilities\Pallete::jsonValues($groups->count()) }}">
                                 </anual-table>
@@ -106,6 +108,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="col-xl-5 mb-5">
+                <pie-chart
+                    :groups="{{ $groups->pluck('name') }}"
+                    :anual-sums="{{ $groups->pluck('anualFixedExpense') }}"
+                    :colors="{{ App\Http\Utilities\Pallete::jsonValues($groups->count()) }}">
+                </pie-chart>
             </div>
 
             <div class="col-xl-5 mb-5">
@@ -121,6 +131,7 @@
                                     :groups="{{ $groups }}"
                                     :attr1="'anualVariableExpense'"
                                     :attr2="'monthlyVariableAvg'"
+                                    :attr3="'variablePercentFromTotal'"
                                     :source="{{ $source }}"
                                     :colors="{{ App\Http\Utilities\Pallete::jsonValues($groups->count()) }}">
                                 </anual-table>
@@ -128,6 +139,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="col-xl-5 mb-5">
+                <pie-chart
+                    :groups="{{ $groups->pluck('name') }}"
+                    :anual-sums="{{ $groups->pluck('anualVariableExpense') }}"
+                    :colors="{{ App\Http\Utilities\Pallete::jsonValues($groups->count()) }}">
+                </pie-chart>
             </div>
         </div>
     @endif

@@ -256,6 +256,16 @@ class SourceController extends Controller
             } else {
                 $item->percentFromTotal = 0;
             }
+            if ($source->anualFixedExpense > 0) {
+                $item->fixedPercentFromTotal = ($item->anualFixedExpense / $source->anualFixedExpense) * 100;
+            } else {
+                $item->fixedPercentFromTotal = 0;
+            }
+            if ($source->anualVariableExpense > 0) {
+                $item->variablePercentFromTotal = ($item->anualVariableExpense / $source->anualVariableExpense) * 100;
+            } else {
+                $item->variablePercentFromTotal = 0;
+            }
             $item->order = $key;
         });
         //dd($source);
