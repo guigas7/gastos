@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import {Chart} from 'Chart.js';
+    import {Chart} from 'chart.js';
     
         export default {
         props: {
