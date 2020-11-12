@@ -60,4 +60,11 @@ trait RecordsMonthlyValue
     {
         return get_class($this);
     }
+
+    // Not Ready Yet ---- Finish + Test
+    public function getCurrentMonthTotalAttribute()
+    {
+        $month = session('month', thisMonth());
+        return $this->records->pluck('value')->sum();
+    }
 }

@@ -61,7 +61,6 @@ class FirstTables extends Migration
         // A value recorded in expense or income of $holder_id in $year and $month
         Schema::create('records', function (Blueprint $table) {
             $table->id();
-            $table->unique(['recordable_id', 'recordable_type', 'year', 'month_id']);
             $table->unsignedBigInteger('recordable_id');
             $table->string('recordable_type', 50);
             $table->string('year', 4);

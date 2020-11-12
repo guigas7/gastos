@@ -100,4 +100,26 @@ class ExpenseTypeController extends Controller
 
         return back()->with('success', "A despesa {$name} foi apagada"); 
     }
+
+
+    public function record(Request $request, ExpenseType $expenseType)
+    {
+        $month = session('month', thisMonth());
+        $year = session('year', thisYear());
+        $record = $expenseType->records()->create([
+            'value' => 0,
+            'description' => null,
+            'month_id' => $month->number,
+            'year' => $year
+        ]);
+
+        if (request()->expectsJson()) {
+            return response([
+                'status' => 'Registro criado',
+                'id' => $record->id
+            ]);
+        }
+
+        return back()->with('success', "Um novo registro foi adicionado a despesa {$expenseType->name}.");
+    }
 }

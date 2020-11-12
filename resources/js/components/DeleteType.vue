@@ -35,11 +35,14 @@
     computed: {
       data: function () {
         return this.attributes
+      },
+      isIncome: function () {
+        return (this.attributes.fixed === undefined)
       }
     },
     methods: {
       modalId() {
-        return 'del-modal-' + this.data.id
+        return 'del-modal-' + (this.isIncome ? 'receita-' : 'despesa-') + this.attributes.id
       },
       hideModal() {
         this.$refs[this.modalId()].hide()

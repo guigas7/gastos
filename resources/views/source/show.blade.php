@@ -41,10 +41,11 @@
                     <div class="cent">
                         <ul class="list-group list-group-flush">
                             @foreach($fixedExpenseTypes as $expense)
-                                <record
+                                <show-type
                                     :type-attrs="{{ $expense }}"
-                                    :rec-attrs="{{ $expense->records->first()}}">
-                                </record>
+                                    :base-url="{{ json_encode(url('/')) }}"
+                                    :initial-recs="{{ $expense->records }}">
+                                </show-type>
                             @endforeach
                         </ul>
                     </div>
@@ -63,10 +64,11 @@
                     <div class="cent">
                         <ul class="list-group list-group-flush">
                             @foreach($variableExpenseTypes as $expense)
-                                <record
+                                <show-type
                                     :type-attrs="{{ $expense }}"
-                                    :rec-attrs="{{ $expense->records->first()}}">
-                                </record>
+                                    :base-url="{{ json_encode(url('/')) }}"
+                                    :initial-recs="{{ $expense->records }}">
+                                </show-type>
                             @endforeach
                         </ul>
                     </div>
@@ -86,10 +88,11 @@
                     <div class="cent">
                         <ul class="list-group list-group-flush">
                             @foreach($incomeTypes as $income)
-                                <record
+                                <show-type
                                     :type-attrs="{{ $income }}"
-                                    :rec-attrs="{{ $income->records->first()}}">
-                                </record>
+                                    :base-url="{{ json_encode(url('/')) }}"
+                                    :initial-recs="{{ $income->records }}">
+                                </show-type>
                             @endforeach
                         </ul>
                     </div>
