@@ -63,11 +63,34 @@ class FirstTables extends Migration
             $table->id();
             $table->unsignedBigInteger('recordable_id');
             $table->string('recordable_type', 50);
-            $table->string('year', 4);
             $table->unsignedBigInteger('month_id');
+            $table->string('year', 4);
             $table->decimal('value', 19,2)->default(0.0);
             $table->string('description', 255)->nullable()->default(null);
             $table->timestamps();
+        });
+
+        // payment of a payday in a given $month / $year
+        Schema::create('payment', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('month_id');
+            $table->string('year', 4);
+            $table->timestamps();
+        });
+
+        // Paydays of an expense
+        Schema::create('paydays', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('expense_type_id');
+            $table->unsignedBigInteger('payment_id')->nullable()->default(null);
+            $table->string('due_day');
+            $table->timestamps();
+
+            $table->foreign('expense_type_id')->references('id')->on('expense_types')
+                ->onDelete('cascade');
+
+            $table->foreign('payment_id')->references('id')->on('payments')
+                ->onDelete('set null');
         });
 
         // Months
