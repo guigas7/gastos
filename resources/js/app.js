@@ -40,6 +40,7 @@ Vue.component('month-picker', require('./components/MonthPicker.vue').default);
 Vue.component('delete-type', require('./components/DeleteType.vue').default);
 Vue.component('delete-lists', require('./components/DeleteLists.vue').default);
 Vue.component('show-type', require('./components/ShowType.vue').default);
+Vue.component('type-list', require('./components/TypeList.vue').default);
 Vue.component('flash-box', require('./components/FlashBox.vue').default);
 Vue.component('anual-table', require('./components/AnualTable.vue').default);
 Vue.component('pie-chart', require('./components/PieChart.vue').default);

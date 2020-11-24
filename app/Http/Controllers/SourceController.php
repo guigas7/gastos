@@ -117,16 +117,17 @@ class SourceController extends Controller
         }
 
         $request->session()->flash('success', "centro {$source->name} criado com sucesso");
-        return redirect()->route('source.show', $source->slug);
+        return redirect()->route('source.despesas', $source->slug);
     }
 
     /**
+
      * Display the specified resource.
      *
      * @param  \App\Source  $source
      * @return \Illuminate\Http\Response
      */
-    public function show(Source $source, Request $request)
+    public function despesas(Source $source)
     {
         $months = Month::all();
         $years = yearRange();
@@ -142,13 +143,49 @@ class SourceController extends Controller
             sum($incomeTypes) - sum($fixedExpenseTypes) - sum($variableExpenseTypes), 2, ',', '.'
         );
 
-        return view('source.show', compact(
+        return view('source.despesas', compact(
             'sum', // Sum of incomes - expenses in this $month
-        	'months', // all months, with name, short (name), and string
-        	'years', // all years, just strings
-        	'incomeTypes', // all income types from $source
+            'months', // all months, with name, short (name), and string
+            'years', // all years, just strings
             'fixedExpenseTypes', // all fixed expenseTypes from $source
-        	'variableExpenseTypes', // all variabel expenseTypes from $source
+            'variableExpenseTypes', // all variabel expenseTypes from $source
+            'source', // current source to show
+            'month', // Current month
+            'year', // Current year
+        ));
+    }
+
+    /**
+
+     * Display the specified resource.
+     *
+     * @param  \App\Source  $source
+     * @return \Illuminate\Http\Response
+     */
+    public function receitas(Source $source)
+    {
+        $months = Month::all();
+        $years = yearRange();
+        $month = session('month', thisMonth());
+        $year = session('year', thisYear());
+
+        $source->createRecordsIfNotCreated($year);
+
+        $incomeTypes = $source->incomesAt($year, $month);
+        $incomeTypes = $source->incomesAt($year, $month);
+        $fixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed");
+        $variableExpenseTypes = $source->expensesAt($year, $month, "all", "variable");
+        $sum = number_format(
+            sum($incomeTypes) - sum($fixedExpenseTypes) - sum($variableExpenseTypes), 2, ',', '.'
+        );
+
+        return view('source.receitas', compact(
+            'sum', // Sum of incomes - expenses in this $month
+            'months', // all months, with name, short (name), and string
+            'years', // all years, just strings
+            'incomeTypes', // all income types from $source
+            'fixedExpenseTypes', // all fixed expenseTypes from $source
+            'variableExpenseTypes', // all variabel expenseTypes from $source
             'source', // current source to show
             'month', // Current month
             'year', // Current year
@@ -204,7 +241,7 @@ class SourceController extends Controller
         $source->update($validated);
 
         $request->session()->flash('success', "Edição no centro {$source->name} feita com sucesso");
-        return redirect()->route('source.show', $source->slug);
+        return redirect()->route('source.receitas', $source->slug);
     }
 
     /**

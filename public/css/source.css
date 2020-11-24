@@ -30,7 +30,7 @@ input[type=number] {
     text-align: center;
     border-bottom-width: initial;
     color: #FFFFFF;
-    color: green;
+    color: #216353;
     font-weight: bold;
 }
 
@@ -136,4 +136,70 @@ input[type=number] {
 
 [v-cloak] {
   display: none;
+}
+
+.marg-70-r {
+  margin: 0px 0px 0px 70%;
+}
+
+.orange {
+    color: #f57b51 !important;
+}
+
+.green {
+    color: #216353 !important;
+}
+
+.dblue {
+    color: #0B1D51 !important;
+}
+
+.wine {
+    color: #CA2E55 !important;
+}
+
+.b-orange {
+    border-color: #f57b51 !important;
+}
+
+.b-green {
+    border-color: #216353 !important;
+}
+
+.b-dblue {
+    border-color: #0B1D51 !important;
+}
+
+.b-wine {
+    border-color: #CA2E55 !important;
+}
+
+.bg-orange {
+    background-color: #f57b51 !important;
+}
+
+.bg-green {
+    background-color: #216353 !important;
+}
+
+.bg-dblue {
+    background-color: #0B1D51 !important;
+}
+
+.bg-wine {
+    background-color: #CA2E55 !important;
+}
+
+.link-box {
+  color: white !important;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  align-self: flex-end;
+  height: 60px;
+}
+
+.link-box:hover {
+  filter: brightness(80%);
+  text-decoration: none;
 }
