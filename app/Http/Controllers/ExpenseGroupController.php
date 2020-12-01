@@ -77,7 +77,7 @@ class ExpenseGroupController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|max:80',
-            'description' => 'required|max:255',
+            'description' => 'max:255',
             'expenseTypes.*' => 'exists:expense_types,id',
         ]);
 

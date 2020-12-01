@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Record;
+use App\Traits\RecordsMonthlyValue;
 use Illuminate\Http\Request;
 
 class RecordController extends Controller
@@ -77,6 +78,12 @@ class RecordController extends Controller
      */
     public function destroy(Record $record)
     {
-        //
+        $record->delete();
+
+        if (request()->expectsJson()) {
+            return response(['status' => 'Registro apagado']);
+        }
+
+        return back()->with('success', "O registro foi apagado");
     }
 }

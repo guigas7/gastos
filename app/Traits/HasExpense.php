@@ -34,7 +34,7 @@ trait HasExpense
         }
 
         return $typeQuery
-            ->with(['records' => $callback])
+            ->with(['records' => $callback, 'paydays'])
             ->get();
     }
 

@@ -39,22 +39,22 @@
             text-decoration:none;
         }
         a:link {
-            color: green;
+            color: #216353;
             background-color: transparent;
             text-decoration: none;
         }
         a:visited {
-            color: green;
+            color: #216353;
             background-color: transparent;
             text-decoration: none;
         }
         a:hover {
-            color: green;
+            color: #216353;
             background-color: transparent;
             text-decoration: underline;
         }
         a:active {
-            color: green;
+            color: #216353;
             background-color: transparent;
             text-decoration: underline;
         }
@@ -137,10 +137,9 @@
         <div class="alert-box">
             <x-flash></x-flash>
         </div>
-
     </div>
 
-    <footer class="my-5 pt-5 text-muted text-center text-small" v-cloak>
+    <footer class="my-5 pt-5 text-muted text-center text-small">
         <p class="mb-1">© 2020 CEPETI</p>
         <ul class="list-inline">
             <li class="list-inline-item"><a href="#app">Voltar ao topo</a></li>

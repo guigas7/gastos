@@ -7,6 +7,8 @@ use App\Source;
 use App\Month;
 use App\ExpenseType;
 use App\IncomeType;
+use App\Payday;
+use App\expenseGroup;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
@@ -69,7 +71,23 @@ class SourceController extends Controller
      */
     public function store(Request $request)
     {
+        if ($request->has('income-names')) {
+            $exNameAmnt = sizeof($request->input('expense-names'));
+            $exDescAmnt = sizeof($request->input('expense-descriptions'));
+            $maxExpense = min($exNameAmnt, $exDescAmnt);
+        } else {
+            $maxExpense = 0;
+        }
+        if ($request->has('income-names')) {
+            $inNameAmnt = sizeof($request->input('income-names'));
+            $inDescAmnt = sizeof($request->input('income-descriptions'));
+            $maxIncome = min($inNameAmnt, $inDescAmnt);
+        } else {
+            $maxIncome = 0;
+        }
         $this->validateSource($request)->validate();
+        $this->validateArrays($request, $maxExpense, $maxIncome)->validate();
+
         $source = Source::create([
             'name' => $request->name,
             'income' => $request->boolean('income'),
@@ -77,11 +95,6 @@ class SourceController extends Controller
 
         // insert expenses
         if ($request->has('expense-names')) {
-            $exNameAmnt = sizeof($request->input('expense-names'));
-            $exDescAmnt = sizeof($request->input('expense-descriptions'));
-
-            $maxExpense = min($exNameAmnt, $exDescAmnt);
-
             $expenses = collect();
             for ($i = 0; $i < $maxExpense; $i++) {
                 $expenses->push(new ExpenseType([
@@ -92,10 +105,21 @@ class SourceController extends Controller
             }
 
             $source->expenseTypes()->saveMany(array_values($expenses->all()));
+
+            // Insert paydays
+            foreach ($expenses as $key => $expense) {
+                if ($request->has('due-day' . strval($key + 1))) {
+                    $paydays = [];
+                    foreach ($request->input('due-day' . strval($key + 1)) as $index => $value) {
+                        $paydays[] = (['due_day' => sprintf("%02d", $value)]);
+                    }
+                    $expense->paydays()->createMany($paydays);
+                }
+            }
         }
 
         // insert incomes
-        if ($source->income == '1' && $request->has('income-names')) {
+        if ($source->income == '1' && $maxIncome > 0) {
             $inNameAmnt = sizeof($request->input('income-names'));
             $inDescAmnt = sizeof($request->input('income-descriptions'));
 
@@ -117,16 +141,17 @@ class SourceController extends Controller
         }
 
         $request->session()->flash('success', "centro {$source->name} criado com sucesso");
-        return redirect()->route('source.show', $source->slug);
+        return redirect()->route('source.despesas', $source->slug);
     }
 
     /**
+
      * Display the specified resource.
      *
      * @param  \App\Source  $source
      * @return \Illuminate\Http\Response
      */
-    public function show(Source $source, Request $request)
+    public function despesas(Source $source)
     {
         $months = Month::all();
         $years = yearRange();
@@ -142,13 +167,49 @@ class SourceController extends Controller
             sum($incomeTypes) - sum($fixedExpenseTypes) - sum($variableExpenseTypes), 2, ',', '.'
         );
 
-        return view('source.show', compact(
+        return view('source.despesas', compact(
             'sum', // Sum of incomes - expenses in this $month
-        	'months', // all months, with name, short (name), and string
-        	'years', // all years, just strings
-        	'incomeTypes', // all income types from $source
+            'months', // all months, with name, short (name), and string
+            'years', // all years, just strings
             'fixedExpenseTypes', // all fixed expenseTypes from $source
-        	'variableExpenseTypes', // all variabel expenseTypes from $source
+            'variableExpenseTypes', // all variabel expenseTypes from $source
+            'source', // current source to show
+            'month', // Current month
+            'year', // Current year
+        ));
+    }
+
+    /**
+
+     * Display the specified resource.
+     *
+     * @param  \App\Source  $source
+     * @return \Illuminate\Http\Response
+     */
+    public function receitas(Source $source)
+    {
+        $months = Month::all();
+        $years = yearRange();
+        $month = session('month', thisMonth());
+        $year = session('year', thisYear());
+
+        $source->createRecordsIfNotCreated($year);
+
+        $incomeTypes = $source->incomesAt($year, $month);
+        $incomeTypes = $source->incomesAt($year, $month);
+        $fixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed");
+        $variableExpenseTypes = $source->expensesAt($year, $month, "all", "variable");
+        $sum = number_format(
+            sum($incomeTypes) - sum($fixedExpenseTypes) - sum($variableExpenseTypes), 2, ',', '.'
+        );
+
+        return view('source.receitas', compact(
+            'sum', // Sum of incomes - expenses in this $month
+            'months', // all months, with name, short (name), and string
+            'years', // all years, just strings
+            'incomeTypes', // all income types from $source
+            'fixedExpenseTypes', // all fixed expenseTypes from $source
+            'variableExpenseTypes', // all variabel expenseTypes from $source
             'source', // current source to show
             'month', // Current month
             'year', // Current year
@@ -167,19 +228,18 @@ class SourceController extends Controller
         $years = yearRange();
         $month = session('month', thisMonth());
         $year = session('year', thisYear());
+
         $incomeTypes = $source->incomesAt($year, $month);
         $fixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed");
         $variableExpenseTypes = $source->expensesAt($year, $month, "all", "variable");
-        dd(compact('months', 'years', 'incomeTypes', 'fixedExpenseTypes', 'variableExpenseTypes'));
 
-        
         return view('source.edit', compact(
-        	'months', // all months, with name, short (name), and string
-        	'years', // all years, just strings
+            'months', // all months, with name, short (name), and string
+            'years', // all years, just strings
             'incomeTypes', // all income types from $source
             'fixedExpenseTypes', // all fixed expenseTypes from $source
             'variableExpenseTypes', // all variabel expenseTypes from $source
-        	'source', // current source to edit
+            'source', // current source to show
         ));
     }
 
@@ -204,7 +264,7 @@ class SourceController extends Controller
         $source->update($validated);
 
         $request->session()->flash('success', "Edição no centro {$source->name} feita com sucesso");
-        return redirect()->route('source.show', $source->slug);
+        return redirect()->route('source.receitas', $source->slug);
     }
 
     /**
@@ -244,6 +304,14 @@ class SourceController extends Controller
         $source->monthlyVariableAvg = $source->anualVariableExpense / 12;
         // Groups Anual sums
         $groups = $source->expenseGroups;
+        $ungrouped = $source->ungroupedExpenses();
+        if (!empty($ungrouped->all())) {
+            $newGroup = New expenseGroup;
+            $newGroup->name = "Sem Grupo";
+            $source->ExpenseGroups()->save($newGroup);
+            $newGroup->expenseTypes()->saveMany($ungrouped);
+            $groups->push($newGroup);
+        }
         $groups->each(function ($item, $key) use ($year, $source) {
             $item->anualExpense = $item->expenseSumAt($year);
             $item->monthlyAvg = $item->anualExpense / 12;
@@ -267,8 +335,15 @@ class SourceController extends Controller
                 $item->variablePercentFromTotal = 0;
             }
             $item->order = $key;
+            $item->expenseString = $item->expenseString();
         });
-        //dd($source);
+
+        if (!empty($ungrouped->all())) {
+            foreach ($ungrouped as $expense) {
+                $expense->expenseGroup()->dissociate();
+            }
+            $newGroup->delete();
+        }
 
         return view('source.report', compact(
             'groups', // All groups from source
@@ -284,5 +359,31 @@ class SourceController extends Controller
             'name' => ['required', 'max:80'],
             'income' => ['required', 'boolean'],
         ]);
+    }
+
+    protected function validateArrays(Request $request, $expAmnt, $incAmnt)
+    {
+        $rules = [
+            'expense-names.*' => ['size:' . $expAmnt],
+            'expense-descriptions.*' => ['size:' . $expAmnt],
+            'income-names.*' => ['size:' . $expAmnt],
+            'income-descriptions.*' => ['size:' . $expAmnt]
+        ];
+        for ($i = 0; $i < $expAmnt; $i++) {
+            $rules['expense-type' . ($i + 1)] = 'required|boolean';
+            $rules['expense-names.' . $i] = 'required|max:80';
+            $rules['expense-descriptions.' . $i] = 'nullable|max:255|nullable';
+            if ($request->has('due-day' . ($i + 1))) {
+                $payDaysAmnt = sizeof($request->input('due-day' . ($i + 1)));
+                for ($j = 0; $j <= $payDaysAmnt; $j++) {
+                    $rules['due-day' . ($i + 1) . '.' . $j] = 'numeric|min:1|max:28';
+                }
+            }
+        }
+        for ($i = 0; $i < $incAmnt; $i++) {
+            $rules['income-names.' . $i] = 'required|max:80';
+            $rules['income-descriptions.' . $i] = 'nullable|max:255|nullable';
+        }
+        return Validator::make($request->all(), $rules);
     }
 }

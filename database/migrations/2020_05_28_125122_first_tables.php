@@ -61,14 +61,33 @@ class FirstTables extends Migration
         // A value recorded in expense or income of $holder_id in $year and $month
         Schema::create('records', function (Blueprint $table) {
             $table->id();
-            $table->unique(['recordable_id', 'recordable_type', 'year', 'month_id']);
             $table->unsignedBigInteger('recordable_id');
             $table->string('recordable_type', 50);
-            $table->string('year', 4);
             $table->unsignedBigInteger('month_id');
+            $table->string('year', 4);
             $table->decimal('value', 19,2)->default(0.0);
             $table->string('description', 255)->nullable()->default(null);
             $table->timestamps();
+        });
+
+        // payment of a payday in a given $month / $year
+        Schema::create('payments', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('payday_id');
+            $table->unsignedBigInteger('month_id');
+            $table->string('year', 4);
+            $table->timestamps();
+        });
+
+        // Paydays of an expense
+        Schema::create('paydays', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('expense_type_id');
+            $table->string('due_day');
+            $table->timestamps();
+
+            $table->foreign('expense_type_id')->references('id')->on('expense_types')
+                ->onDelete('cascade');
         });
 
         // Months

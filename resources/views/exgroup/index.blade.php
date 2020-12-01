@@ -6,32 +6,26 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid text-center d.flex justify-content-center px-3 row">
-
+    <div class="container-fluid text-center px-3">
+        <div class="row d-flex justify-content-center">
+            <div class="page-header col-lg-6 py-4">
+                <a href="{{ route('source.despesas', $source->slug) }}" class="type-title">
+                    <h1 class="mb-4">
+                        {{ $source->name }}
+                    </h1>
+                </a>
+            </div>
+        </div>
+        <x-icons
+        :receitas="false"
+        :despesas="false"
+        :groups="false"
+        :source="$source">
+        </x-icons> 
+    </div>
+    <div class="container-fluid text-center d.flex justify-content-center mx-auto row">
         @if ($groups->first() != null)
-            <div class="col-xl-5 col-lg-5 mb-5">
-                <div class="mb-4">
-                    <h1 class="d-inline mr-3">Grupos de despesa de {{ $source->name }}</h1>
-                    <a href="{{ route('source.report', $source->slug) }}">
-                        <button type="button" class="btn btn-outline-primary">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bar-chart-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <rect width="4" height="5" x="1" y="10" rx="1"></rect>
-                                <rect width="4" height="9" x="6" y="6" rx="1"></rect>
-                                <rect width="4" height="14" x="11" y="1" rx="1"></rect>
-                            </svg>
-                        </button>
-                    </a>
-                    <a href="{{ route('source.show', $source->slug) }}">
-                        <button type="button" class="btn btn-outline-primary">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-file-earmark-text" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M4 0h5.5v1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h1V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z"/>
-                              <path d="M9.5 3V0L14 4.5h-3A1.5 1.5 0 0 1 9.5 3z"/>
-                              <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-                            </svg>
-                        </button>
-                    </a>
-                </div>
- 
+            <div class="col-xl-6 mb-5">
                 <b-card no-body class="card">
                     <b-tabs card justified>
                         {{-- Grupos existentes --}}
@@ -204,8 +198,7 @@
             </div>
         @endif
 
-
-        <div class="col-xl-6 col-lg-6 mb-5">
+        <div class="col-xl-6 mb-5">
             <div class="card">
                 <h4 class="card-header">
                     Criar novo grupo de despesas para {{ $source->name }}

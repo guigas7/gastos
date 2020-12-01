@@ -27,9 +27,9 @@ function monthlySum($types)
 {
 	return number_format($types->map(
 		function ($type) {
-			return $type->records->first();
+			return $type->records->pluck('value');
 		})
-		->pluck('value')
+		->collapse()
 		->sum(), 2, ',', '.');
 }
 
@@ -38,6 +38,8 @@ function sum($types)
 {
 	return $types->map(
 		function ($type) {
-			return $type->records->first();
-		})->pluck('value')->sum();
+			return $type->records->pluck('value');
+		})
+		->collapse()
+		->sum();
 }

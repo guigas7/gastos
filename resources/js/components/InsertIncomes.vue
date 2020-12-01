@@ -3,24 +3,25 @@
     <b-card no-body>
       <b-tabs card>
         <!-- Render Tabs, supply a unique `key` to each tab -->
-        <b-tab v-for="i in tabs" :key="'inc-tab-' + i" :title="'Receita ' + i">
+        <b-tab v-for="(tab, tindex) in tabs" :key="'inc-tab-' + tab" :title="'Receita ' + tab">
           <div class="form-group row py-3 justify-content-center">
-            <label for="income-names[]" class="col-form-label col-lg-5 offset-lg-1">Nome da receita {{ i }}: </label>
+            <label for="income-names[]" class="col-form-label col-lg-5 offset-lg-1">Nome da receita {{ tab }}: </label>
             <div class="col-lg-5">
-              <input type="string" class="form-control" name="income-names[]" required autofocus>
+              <input type="string" class="form-control" name="income-names[]"  v-model="names[tindex]" required>
             </div>
           </div>
           <hr>
 
           <div class="form-group row py-3 justify-content-center">
-            <label for="income-descriptions[]" class="col-lg-5 offset-lg-1 col-form-label">Descrição da receita {{ i }}: </label>
+            <label for="income-descriptions[]" class="col-lg-5 offset-lg-1 col-form-label">Descrição da receita {{ tab }}: </label>
 
             <div class="col-lg-5">
               <textarea
                 name="income-descriptions[]"
                 rows="4"
                 cols="50"
-                class="form-control">
+                class="form-control"
+                v-model="descs[tindex]">
               </textarea>
             </div>
           </div>
@@ -48,22 +49,49 @@
 
 <script>
   export default {
+    props: {
+      old: {
+        type: Object,
+        required: false,
+      },
+    },
     data() {
       return {
         tabs: [],
         tabCounter: 1,
+        names: [],
+        descs: [],
       }
     },
     methods: {
-      closeTab(x) {
-        for (let i = 1; i < this.tabs.length; i++) {
-          if (this.tabs[i] === x) {
-            this.tabs.splice(i, 1)
-          }
-        }
+      closeTab(key) {
+        this.tabs.splice(key, 1);
+        this.names.splice(key, 1);
+        this.descs.splice(key, 1);
       },
       newTab() {
-        this.tabs.push(this.tabCounter++)
+        this.tabs.push(this.tabCounter++);
+        this.names.push();
+        this.descs.push();
+      }
+    },
+    computed: {
+      hasOld: function () {
+        if (this.old) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+    },
+    mounted() {
+      if (this.hasOld) {
+        var incAmnt = this.old['income-names'].length;
+        for (let i = 0; i < incAmnt; i++) {
+          this.newTab();
+          this.names[i] = this.old['income-names'][i];
+          this.descs[i] = this.old['income-descriptions'][i];
+        }
       }
     }
   }
