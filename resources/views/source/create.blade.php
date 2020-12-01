@@ -47,14 +47,24 @@
                 <b-tabs card justified>
                     <b-tab title="Criar despesas" active>
                         <b-card-text>
-                            <insert-expenses>
+                            <insert-expenses
+                                @if (old('name'))
+                                    :old="{{ json_encode(Session::getOldInput()) }}">
+                                @else
+                                    >
+                                @endif
                             </insert-expenses>
                         </b-card-text>
                     </b-tab>
 
                     <b-tab title="Criar receitas">
                         <b-card-text>
-                            <insert-incomes>
+                            <insert-incomes
+                                @if (old('name'))
+                                    :old="{{ json_encode(Session::getOldInput()) }}">
+                                @else
+                                    >
+                                @endif
                             </insert-incomes>
                         </b-card-text>
                     </b-tab>     
@@ -65,8 +75,6 @@
         <div class="form-group row float-right">
             <button id="enviar" type="submit" class="btn btn-primary bt">Enviar</button>
         </div>
-
     </form>
-
 </div>
 @endsection

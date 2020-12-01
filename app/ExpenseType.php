@@ -3,6 +3,7 @@
 namespace App;
 use App\Month;
 use App\ExpenseType;
+use App\Payday;
 use App\Traits\RecordsMonthlyValue;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Model;
@@ -30,5 +31,13 @@ class ExpenseType extends Model
     public function getEndPointAttribute()
     {
         return route('expense.delete', $this->slug);
+    }
+
+    /**
+     * Get the paydays for the Expense type.
+     */
+    public function paydays()
+    {
+        return $this->hasMany('App\Payday');
     }
 }

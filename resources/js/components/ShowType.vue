@@ -41,6 +41,29 @@
                           </div>
                           <hr v-if="!isIncome">
 
+                          <div v-for="(item, index) in paydays" class="form-group pt-3 row justify-content-center">
+                            <label :for="'due-day' + type.id + '[]'" class="col-form-label col-lg-5 offset-lg-1">{{ index + 1 }}º dia de pagamento: </label>
+
+                            <div class="pl-4 col-lg-4">
+                              <input type="number" class="form-control" :name="'due-day' + type.id + '[]'" required autofocus v-model="item.due_day">
+                            </div>
+
+                              <a class="align-self-center" href="#" @click.prevent="removeDueDay(index)">
+                                <svg width="1.3em" height="1.3em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                  <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                              </a>
+                          </div>
+
+                          <div class="form-group float-right mr-4 mb-4">
+                              <b-button size="sm" variant="secondary" class="float-right mb-3 btn btn-secondary" @click="addDueDay(key, 0)">
+                                Adicionar dia de pagamento
+                              </b-button>
+                          </div>
+                          <hr class="cb">
+
+
                           <div class="form-group row py-3 justify-content-center">
                               <label for="description" class="col-lg-3 offset-lg-1 col-form-label">Descrição: </label>
 
@@ -188,10 +211,17 @@
         records: null,
         editing: false,
         showing: false,
-        bColor: "b-" + this.cColor
+        bColor: "b-" + this.cColor,
+        paydays: null,
       }
     },
     methods: {
+      addDueDay(value) {
+        this.paydays.push(value);
+      },
+      removeDueDay(index) {
+          this.paydays.splice(index, 1);
+      },
       modalId() {
         return 'modal-' + (this.isIncome ? 'receita-' : 'despesa-') + this.type.id
       },
@@ -264,6 +294,7 @@
     },
     mounted() {
       this.records = this.recs
+      this.paydays = this.type.paydays
     }
   };
 </script>

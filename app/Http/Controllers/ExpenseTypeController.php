@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ExpenseType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Source;
 
 class ExpenseTypeController extends Controller
@@ -35,8 +36,8 @@ class ExpenseTypeController extends Controller
         if ($request->has('expense-names')) {
             $exNameAmnt = sizeof($request->input('expense-names'));
             $exDescAmnt = sizeof($request->input('expense-descriptions'));
-
             $maxExpense = min($exNameAmnt, $exDescAmnt);
+            $this->validateArrays($request, $maxExpense, 0)->validate();
 
             $expenses = collect();
             for ($i = 0; $i < $maxExpense; $i++) {
@@ -49,9 +50,21 @@ class ExpenseTypeController extends Controller
 
             $source->expenseTypes()->saveMany(array_values($expenses->all()));
         }
+
         foreach (yearRange() as $year) {
             $source->createRecordsIfNotCreated($year);
         }
+
+        foreach ($expenses as $key => $expense) {
+            if ($request->has('due-day' . strval($key + 1))) {
+                $paydays = [];
+                foreach ($request->input('due-day' . strval($key + 1)) as $index => $value) {
+                    $paydays[] = (['due_day' => strval($value)]);
+                }
+                $expense->paydays()->createMany($paydays);
+            }
+        }
+
         return back()->with('success', "As despesas foram atribuídas a {$source->name}"); 
     }
 
@@ -121,5 +134,25 @@ class ExpenseTypeController extends Controller
         }
 
         return back()->with('success', "Um novo registro foi adicionado a despesa {$expenseType->name}.");
+    }
+
+    protected function validateArrays(Request $request, $expAmnt, $incAmnt)
+    {
+        $rules = [
+            'expense-names.*' => ['size:' . $expAmnt],
+            'expense-descriptions.*' => ['size:' . $expAmnt],
+        ];
+        for ($i = 0; $i < $expAmnt; $i++) {
+            $rules['expense-type' . ($i + 1)] = 'required|boolean';
+            $rules['expense-names.' . $i] = 'required|max:80';
+            $rules['expense-descriptions.' . $i] = 'nullable|max:255|nullable';
+            if ($request->has('due-day' . ($i + 1))) {
+                $payDaysAmnt = sizeof($request->input('due-day' . ($i + 1)));
+                for ($j = 0; $j <= $payDaysAmnt; $j++) {
+                    $rules['due-day' . ($i + 1) . '.' . $j] = 'numeric|min:1|max:28';
+                }
+            }
+        }
+        return Validator::make($request->all(), $rules);
     }
 }

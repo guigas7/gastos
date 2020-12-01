@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\IncomeType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Source;
 
 class IncomeTypeController extends Controller
@@ -35,11 +36,12 @@ class IncomeTypeController extends Controller
         if ($source->income == '1' && $request->has('income-names')) {
             $inNameAmnt = sizeof($request->input('income-names'));
             $inDescAmnt = sizeof($request->input('income-descriptions'));
+            $maxIncome = min($inNameAmnt, $inDescAmnt);
 
-            $maxincome = min($inNameAmnt, $inDescAmnt);
+            $this->validateArrays($request, 0, $maxIncome)->validate();
 
             $incomes = collect();
-            for ($i = 0; $i < $maxincome; $i++) {
+            for ($i = 0; $i < $maxIncome; $i++) {
                 $incomes->push(new IncomeType([
                     'name' => $request->input('income-names')[$i],
                     'description' => $request->input('income-descriptions')[$i],
@@ -119,5 +121,18 @@ class IncomeTypeController extends Controller
         }
 
         return back()->with('success', "Um novo registro foi adicionado a receita {$incomeType->name}.");
+    }
+
+        protected function validateArrays(Request $request, $expAmnt, $incAmnt)
+    {
+        $rules = [
+            'income-names.*' => ['size:' . $expAmnt],
+            'income-descriptions.*' => ['size:' . $expAmnt]
+        ];
+        for ($i = 0; $i < $incAmnt; $i++) {
+            $rules['income-names.' . $i] = 'required|max:80';
+            $rules['income-descriptions.' . $i] = 'nullable|max:255|nullable';
+        }
+        return Validator::make($request->all(), $rules);
     }
 }

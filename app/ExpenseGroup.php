@@ -29,4 +29,9 @@ class ExpenseGroup extends Model
     {
         return $this->hasMany('App\ExpenseType', 'expense_group_id');
     }
+
+    public function expenseString()
+    {
+        return $this->expenseTypes->pluck('name')->implode(", ");
+    }
 }

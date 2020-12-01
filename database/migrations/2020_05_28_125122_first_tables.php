@@ -71,8 +71,9 @@ class FirstTables extends Migration
         });
 
         // payment of a payday in a given $month / $year
-        Schema::create('payment', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('payday_id');
             $table->unsignedBigInteger('month_id');
             $table->string('year', 4);
             $table->timestamps();
@@ -82,15 +83,11 @@ class FirstTables extends Migration
         Schema::create('paydays', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('expense_type_id');
-            $table->unsignedBigInteger('payment_id')->nullable()->default(null);
             $table->string('due_day');
             $table->timestamps();
 
             $table->foreign('expense_type_id')->references('id')->on('expense_types')
                 ->onDelete('cascade');
-
-            $table->foreign('payment_id')->references('id')->on('payments')
-                ->onDelete('set null');
         });
 
         // Months
