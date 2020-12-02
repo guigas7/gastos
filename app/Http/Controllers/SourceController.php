@@ -71,7 +71,7 @@ class SourceController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->has('income-names')) {
+        if ($request->has('expense-names')) {
             $exNameAmnt = sizeof($request->input('expense-names'));
             $exDescAmnt = sizeof($request->input('expense-descriptions'));
             $maxExpense = min($exNameAmnt, $exDescAmnt);
