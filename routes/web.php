@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Route;
 // ----- x ------ Auth ----- x ----- \\
 // ----- x ------ ---- ----- x ----- \\
 
-Auth::routes(['register' => false]);
+//Auth::routes(['register' => false]);
+Auth::routes();
 
 Route::post('/month', 'HomeController@month')->name('home.month');
 
