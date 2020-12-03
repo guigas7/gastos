@@ -7,7 +7,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="row y-2 p-0">
+        <div class="row my-2 p-0 w-100 d-flex justify-content-center">
             @foreach ($sources as $source)
                 <div class="col-lg-3 col-md-6 my-3">
                     <div class="row no-gutters border rounded flex-md-row mb-4 shadow-sm h-md-250 p-0 h-100">
