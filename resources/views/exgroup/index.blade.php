@@ -166,30 +166,10 @@
                                 </b-card-text>
                                 <b-card-text>
                                     <h2 class="text-center">Apagar grupo {{ $group->name }}</h2>
-                                    <form method="POST"
-                                        action="{{ route('exgroup.delete', $group->slug) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <div class="form-group pt-3 row d.flex justify-content-center">
-                                            <label for="sure" class="col-form-label col-md-8">Deseja apagar esse grupo?</label>
 
-                                            <div class="pl-1">
-                                                <p>
-                                                    <input type="radio" id="sure-{{ $group->slug }}" name="sure" required value="1">
-                                                    <label for="sure-{{ $group->slug }}">Sim</label>
-                                                </p>
-                                                <P>
-                                                    <input type="radio" id="notsure-{{ $group->slug }}" name="sure" value="0" checked>
-                                                    <label for="notsure-{{ $group->slug }}">Não</label>
-                                                </P>
-                                            </div>
-                                        </div>
-                                        <div class="form-group float-right mr-4">
-                                            <button id="enviar" type="submit" class="btn btn-danger btn-apagar ml-4 mb-2 align-middle">
-                                                Apagar
-                                            </button>
-                                        </div>
-                                    </form>
+                                    <delete-group
+                                        :attributes="{{ $group }}">
+                                    </delete-group>
                                 </b-card-text>
                             </b-tab>
                         @endforeach

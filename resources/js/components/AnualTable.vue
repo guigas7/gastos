@@ -120,7 +120,7 @@
     computed: {
       items () {
         return this.keyword
-          ? this.groups.filter(item => item.name.includes(this.keyword))
+          ? this.groups.filter(item => item.name.toLowerCase().includes(this.keyword.toLowerCase()))
           : this.groups
       }
     }

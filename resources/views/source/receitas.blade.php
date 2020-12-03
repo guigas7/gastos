@@ -20,7 +20,6 @@
         <x-icons
         :dropdown="false"
         :receitas="false"
-        :groups="false"
         :source="$source">
         </x-icons>
     </div>

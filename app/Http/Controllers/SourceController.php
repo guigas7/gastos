@@ -275,9 +275,6 @@ class SourceController extends Controller
      */
     public function destroy(Source $source, Request $request)
     {
-        if ($request->get('sure') != '1') {
-            return back();
-        }
         // delete 1 by one to activate model events of each type.
         foreach ($source->incomeTypes->merge($source->expenseTypes) as $type) {
             $type->delete();

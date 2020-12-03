@@ -72,30 +72,12 @@
                             <hr class="cb">
 
                             <h3 class="text-center">Apagar {{ $source->name }}</h3>
-                            <form method="POST"
-                                action="{{ route('source.delete', $source->slug) }}">
-                                @csrf
-                                @method('DELETE')
-                                <div class="form-group pt-3 row d.flex justify-content-center">
-                                    <label for="sure" class="col-form-label col-md-8">Deseja apagar esse centro e todos os tipos de despesa {{ $source->income == 1 ? 'e receita' : ''}} associados a ele?</label>
+                            
+                            <delete-source
+                            :attributes="{{ $source }}"
+                            >
 
-                                    <div class="pl-1">
-                                        <p>
-                                            <input type="radio" id="sure" name="sure" required value="1">
-                                            <label for="sure">Sim</label>
-                                        </p>
-                                        <P>
-                                            <input type="radio" id="notsure" name="sure" value="0" checked>
-                                            <label for="notsure">Não</label>
-                                        </P>
-                                    </div>
-                                </div>
-                                <div class="form-group float-right mr-4">
-                                    <button id="apagar-centro" type="submit" class="btn btn-danger btn-apagar ml-4 mb-2 align-middle">
-                                        Apagar
-                                    </button>
-                                </div>
-                            </form>
+                            </delete-source>
                         </b-card-text>
                     </b-tab>
 

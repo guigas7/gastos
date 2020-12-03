@@ -16,6 +16,8 @@ class ExpenseGroup extends Model
 
     protected $guarded = [];
 
+    protected $appends = ['endPoint'];
+
     public function source()
     {
         return $this->belongsTo(
@@ -33,5 +35,10 @@ class ExpenseGroup extends Model
     public function expenseString()
     {
         return $this->expenseTypes->pluck('name')->implode(", ");
+    }
+
+    public function getEndPointAttribute()
+    {
+        return route('exgroup.delete', $this->slug);
     }
 }

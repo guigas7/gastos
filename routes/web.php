@@ -80,9 +80,9 @@ Route::get('/{source}/despesas',        'SourceController@despesas')    ->name('
 // Ver as receitas mensais (se houver) do centro {source} e opções de edição do centro
 Route::get('/{source}/receitas',        'SourceController@receitas')    ->name('source.receitas');
 // Apagar o centro {source}
-Route::delete('/{source}/',             'SourceController@destroy') 	->name('source.delete');
+Route::delete('/{source}',              'SourceController@destroy') 	->name('source.delete');
 // Mostra os relatórios do centro {source}
-Route::get('/{source}/relatorios/',     'SourceController@report')  	->name('source.report');
+Route::get('/{source}/relatorios',      'SourceController@report')  	->name('source.report');
 // Lista de grupos, editar, excluir e criar novo
 Route::get('/{source}/grupos',          'ExpenseGroupController@index')	->name('exgroup.index');
 // Inserir novo tipo de despesa em {source}

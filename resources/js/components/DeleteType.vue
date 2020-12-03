@@ -16,7 +16,7 @@
                 </button>
                 <b-button class="btn btn-apagar" @click="hideModal">Cancelar</b-button>
             </template>
-      </b-modal>
+        </b-modal>
     </div>
 </template>
 

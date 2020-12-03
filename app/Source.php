@@ -23,6 +23,8 @@ class Source extends Model
      */
     protected $guarded = [];
 
+    protected $appends = ['endPoint'];
+
     /**
      * The accessors to append to the model's array form.
      *
@@ -88,5 +90,10 @@ class Source extends Model
         return $typeQuery
             ->with(['records' => $callback])
             ->get();
+    }
+
+    public function getEndPointAttribute()
+    {
+        return route('source.delete', $this->slug);
     }
 }

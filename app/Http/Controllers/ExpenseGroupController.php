@@ -108,9 +108,6 @@ class ExpenseGroupController extends Controller
      */
     public function destroy(Request $request, ExpenseGroup $expenseGroup)
     {
-        if ($request->get('sure') != '1') {
-            return back();
-        }
         $slug = $expenseGroup->source->slug;
         $name = $expenseGroup->name;
         $expenseGroup->delete();
