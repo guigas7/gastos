@@ -83,44 +83,27 @@
 
                     @if ($source->income == true)
                     {{-- Adicionar Receitas --}}
-                        <b-tab title="Criar receitas" v-cloak>
-                            <form method="POST" action="{{ route('income.store', $source->slug) }}">
-                                @csrf
-                                <b-card-text>
-                                    <insert-incomes
-                                    @if (old('income-names'))
-                                        :old="{{ json_encode(Session::getOldInput()) }}">
-                                    @else
-                                        >
-                                    @endif
-                                    </insert-incomes>
-                                </b-card-text>
-                                <div class="form-group row float-right">
-                                    <button id="criar-receita" type="submit" class="btn btn-primary bt">Criar receitas</button>
-                                </div>
-                            </form>
-                        </b-tab>
+                        <form method="POST" action="{{ route('income.store', $source->slug) }}">
+                            @csrf
+                            <insert-incomes
+                                @if (old('income-names'))
+                                    :old="{{ json_encode(Session::getOldInput()) }}"
+                                @endif
+                                    :form="true">
+                            </insert-incomes>
+                        </form>
                     @endif
 
                     {{-- Adicionar Despesas --}}
-                    <b-tab title="Criar despesas" v-cloak>
                         <form method="POST" action="{{ route('expense.store', $source->slug) }}">
                             @csrf
-                            <b-card-text>
-                                <insert-expenses
-                                    @if (old('expense-names'))
-                                        :old="{{ json_encode(Session::getOldInput()) }}">
-                                    @else
-                                        >
-                                    @endif
-                                </insert-expenses>
-                            </b-card-text>
-                            <div class="form-group row float-right">
-                                <button id="criar-despesa" type="submit" class="btn btn-primary bt">Criar despesas</button>
-                            </div>
+                            <insert-expenses
+                                @if (old('expense-names'))
+                                    :old="{{ json_encode(Session::getOldInput()) }}"
+                                @endif
+                                    :form="true">
+                            </insert-expenses>
                         </form>
-                    </b-tab>
-
                     {{-- Remover Despesas e Receitas --}}
                     <delete-lists
                         :has-income="{{ $source->income }}"

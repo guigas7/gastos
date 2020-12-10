@@ -45,29 +45,20 @@
         <div class="mt-5 card col-lg-8 px-0">
             <b-card no-body>
                 <b-tabs card justified>
-                    <b-tab title="Criar despesas" active>
-                        <b-card-text>
-                            <insert-expenses
-                                @if (old('name'))
-                                    :old="{{ json_encode(Session::getOldInput()) }}">
-                                @else
-                                    >
-                                @endif
-                            </insert-expenses>
-                        </b-card-text>
-                    </b-tab>
+                    <insert-expenses
+                        @if (old('expense-names'))
+                            :old="{{ json_encode(Session::getOldInput()) }}"
+                        @endif
+                            :active="true">
+                    </insert-expenses>
 
-                    <b-tab title="Criar receitas">
-                        <b-card-text>
-                            <insert-incomes
-                                @if (old('name'))
-                                    :old="{{ json_encode(Session::getOldInput()) }}">
-                                @else
-                                    >
-                                @endif
-                            </insert-incomes>
-                        </b-card-text>
-                    </b-tab>     
+                    <insert-incomes
+                        @if (old('name'))
+                            :old="{{ json_encode(Session::getOldInput()) }}">
+                        @else
+                            >
+                        @endif
+                    </insert-incomes>  
                 </b-tabs>
             </b-card>     
         </div>
