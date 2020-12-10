@@ -25,4 +25,4 @@ Homestead.json
 .phpunit.result.cache
 
 public/css/app.css
-public/js/app.js
+
