@@ -85,7 +85,6 @@ class FirstTables extends Migration
             $table->unsignedBigInteger('expense_type_id');
             $table->string('due_day');
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('expense_type_id')->references('id')->on('expense_types')
                 ->onDelete('cascade');
