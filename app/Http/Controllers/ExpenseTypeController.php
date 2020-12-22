@@ -6,6 +6,7 @@ use App\ExpenseType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Source;
+use App\Payday;
 
 class ExpenseTypeController extends Controller
 {
@@ -88,11 +89,47 @@ class ExpenseTypeController extends Controller
      */
     public function update(Request $request, ExpenseType $expenseType)
     {
+        //dd('testar o funcionamento de tudo, especialmente dos dias de pagamento');
         $expenseType->update([
             'name' => $request->input("name"),
             'fixed' => $request->boolean ("expense-type"),
             'description' => $request->input("description"),
         ]);
+
+        $days = array_merge(
+            $request->input('due-days')
+                ? $request->input('due-days')
+                : []
+            , $request->input('due-days-new')
+                ? $request->input('due-days-new')
+                : []
+        );
+        // Difference = days to fill - existing paydays
+        $difference = count($days) - $expenseType->Paydays->count();
+        // if there are more due_days to fill than existing ones
+        // dd($difference);
+        if ($difference > 0) {
+            for ($i = 0; $i < $difference; $i++) {
+                $expenseType->paydays()->save(new Payday([
+                    'due_day' => 1
+                ]));
+            }
+        // if there are more existing than to fill
+        } elseif ($difference < 0) {
+            // soft delete exceding amount
+            // foreach exceding payday
+            foreach ($expenseType->Paydays->slice($difference + $expenseType->Paydays->count()) as $payday) {
+                $payday->delete(); // soft deletes
+            }
+        }
+
+        $expenseType->refresh();
+
+        foreach ($expenseType->Paydays as $key => $value) {
+            $value->due_day = sprintf("%02d", $days[$key]);
+            $value->save();
+        }
+
         return back()->with('success', "A despesa {$expenseType->name} foi atualizada");
     }
 
@@ -146,10 +183,16 @@ class ExpenseTypeController extends Controller
             $rules['expense-type' . ($i + 1)] = 'required|boolean';
             $rules['expense-names.' . $i] = 'required|max:80';
             $rules['expense-descriptions.' . $i] = 'nullable|max:255|nullable';
-            if ($request->has('due-day' . ($i + 1))) {
-                $payDaysAmnt = sizeof($request->input('due-day' . ($i + 1)));
+            if ($request->has('due-days')) {
+                $payDaysAmnt = sizeof($request->input('due-days' . ($i + 1)));
                 for ($j = 0; $j <= $payDaysAmnt; $j++) {
-                    $rules['due-day' . ($i + 1) . '.' . $j] = 'numeric|min:1|max:28';
+                    $rules['due-days.' . $j] = 'numeric|min:1|max:28';
+                }
+            }
+            if ($request->has('due-days-new')) {
+                $payDaysAmnt = sizeof($request->input('due-days-new' . ($i + 1)));
+                for ($j = 0; $j <= $payDaysAmnt; $j++) {
+                    $rules['due-days.' . $j] = 'numeric|min:1|max:28';
                 }
             }
         }

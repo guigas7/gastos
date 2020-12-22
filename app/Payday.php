@@ -3,11 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Payment;
 use App\ExpenseType;
 
 class Payday extends Model
 {
+    use SoftDeletes;
+
     protected $guarded = [];
     
     public function payments()

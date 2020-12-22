@@ -370,10 +370,10 @@ class SourceController extends Controller
             $rules['expense-type' . ($i + 1)] = 'required|boolean';
             $rules['expense-names.' . $i] = 'required|max:80';
             $rules['expense-descriptions.' . $i] = 'nullable|max:255|nullable';
-            if ($request->has('due-day' . ($i + 1))) {
-                $payDaysAmnt = sizeof($request->input('due-day' . ($i + 1)));
+            if ($request->has('due-days')) {
+                $payDaysAmnt = sizeof($request->input('due-days' . ($i + 1)));
                 for ($j = 0; $j <= $payDaysAmnt; $j++) {
-                    $rules['due-day' . ($i + 1) . '.' . $j] = 'numeric|min:1|max:28';
+                    $rules['due-days.' . $j] = 'numeric|min:1|max:28';
                 }
             }
         }
