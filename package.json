@@ -10,7 +10,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "axios": "^0.19",
+        "axios": "^0.21.1",
         "bootstrap": "^4.5.3",
         "cross-env": "^7.0",
         "jquery": "^3.2",
@@ -30,6 +30,7 @@
         "chart.js": "^2.9.3",
         "esm": "^3.2.25",
         "jquery-datetimepicker": "^2.5.21",
+        "node-notifier": "^9.0.0",
         "portal-vue": "^2.1.7",
         "preload-js": "^0.6.3",
         "vue-chartjs": "^3.5.1"
