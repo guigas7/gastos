@@ -161,8 +161,8 @@ class SourceController extends Controller
         $source->createRecordsIfNotCreated($year);
 
         $incomeTypes = $source->incomesAt($year, $month);
-        $fixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed");
-        $variableExpenseTypes = $source->expensesAt($year, $month, "all", "variable");
+        $fixedExpenseTypes = $source->expensesAt($year, $month, "all", "fixed", 'name');
+        $variableExpenseTypes = $source->expensesAt($year, $month, "all", "variable", 'name');
         $sum = number_format(
             sum($incomeTypes) - sum($fixedExpenseTypes) - sum($variableExpenseTypes), 2, ',', '.'
         );
