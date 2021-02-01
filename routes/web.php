@@ -33,6 +33,12 @@ Route::get('/despesas/{expenseType}/editar',        'ExpenseTypeController@edit'
 Route::put('/despesas/{expenseType}',               'ExpenseTypeController@update') ->name('expense.update');
 // Deletar o tipo de despesa {expense}
 Route::delete('/despesas/{expenseType}',            'ExpenseTypeController@destroy')->name('expense.delete');
+// Retorna imagem do comprovante do pagamento $payment
+Route::get('/pagamentos/{source}/{expenseType}/{payment}',   'PaymentFileController@show')->name('paymentFile.show');
+// Inserir imagens de comprovantes no pagamento de id = {paymentId}
+Route::post('/pagamentos/{expenseType}',                    'PaymentFileController@store') ->name('paymentFile.store');
+Route::delete('/pagamentos/{expenseType}',                  'PaymentFileController@store') ->name('paymentFile.destroy');
+
 
 // ----- x ------ ----------------- ----- x ----- \\
 // ----- x ------ Tipos de Receitas ----- x ----- \\

@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Month;
 use Illuminate\Validation\Rule;
+use App\Source;
+use App\ExpenseType;
+use App\Payment;
+use Illuminate\Support\Facades\Storage;
+
 
 
 class HomeController extends Controller

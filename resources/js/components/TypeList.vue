@@ -5,20 +5,26 @@
                 <ul class="col-6 align-self-start">
                     <div v-for="(type, index) in leftTypes">
                         <show-type
+                            :source-slug="sourceSlug"
                             :type-attrs="type"
                             :base-url="baseUrl"
                             :initial-recs="type.records"
-                            :c-color="cColor">
+                            :c-color="cColor"
+                            :month="month"
+                            :year="year">
                         </show-type>
                     </div>
                 </ul>
                 <ul class="col-6 align-self-start">
                     <div v-for="(type, index) in rightTypes">
                         <show-type
+                            :source-slug="sourceSlug"
                             :type-attrs="type"
                             :base-url="baseUrl"
                             :initial-recs="type.records"
-                            :c-color="cColor">
+                            :c-color="cColor"
+                            :month="month"
+                            :year="year">
                         </show-type>
                     </div>
                 </ul>
@@ -39,6 +45,18 @@
         required: true,
       },
       cColor: {
+        type: String,
+        required: false
+      },
+      month: {
+        type: String,
+        required: false
+      },
+      year: {
+        type: String,
+        required: false
+      },
+      sourceSlug: {
         type: String,
         required: false
       }

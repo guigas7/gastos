@@ -9,7 +9,7 @@ use App\Record;
 
 trait HasExpense
 {
-    public function expensesAt($year, Month $month = null, $only = null, $fixed = null)
+    public function expensesAt($year, Month $month = null, $only = null, $fixed = null, $order = null, $direction = 'ASC')
     {
         // Query to eager load all records from the selected period
         $callback = function($recordQuery) use ($year, $month) {
@@ -32,6 +32,16 @@ trait HasExpense
         if ($only === "only") {
             $typeQuery = $typeQuery->whereHas('records', $callback);
         }
+
+        // Order
+        if ($order != null) {
+            $typeQuery = $typeQuery->orderBy($order, $direction);
+        }
+
+        $withPayments = function($paymentQuery) use ($callback) {
+            $paymentQuery = $paymentQuery->orderBy('due_day')->with(['payments' => $callback]);
+            return $paymentQuery;
+        };
 
         return $typeQuery
             ->with(['records' => $callback, 'paydays'])

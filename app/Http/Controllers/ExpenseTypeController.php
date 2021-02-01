@@ -96,6 +96,24 @@ class ExpenseTypeController extends Controller
             'description' => $request->input("description"),
         ]);
 
+        // New algorithm for sincronizing paydays
+
+        // Foreach existing paydays
+            // If not in $request->input('due-days')
+                // soft delete
+            // If is in $request->input('due-days')
+                // We cool
+        
+        // paydays->refresh()
+        // Foreach due-days-new
+            // If not in existing paydays
+                // If is soft deleted
+                    // Restore
+                // Else
+                    // Create
+            // If in existing paydays
+                // We cool
+
         $days = array_merge(
             $request->input('due-days')
                 ? $request->input('due-days')

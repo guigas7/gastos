@@ -8,7 +8,7 @@ use App\Payday;
 class Payment extends Model
 {
 	protected $guarded = [];
-	
+	    
 	/**
      * Get the payday that has the Payment.
      */

@@ -190,6 +190,11 @@ input[type=number] {
     background-color: #CA2E55 !important;
 }
 
+.preview-img {
+    max-height: 400px;
+    display: block;
+}
+
 .link-box {
   color: white !important;
   text-align: center;
@@ -202,4 +207,25 @@ input[type=number] {
 .link-box:hover {
   filter: brightness(80%);
   text-decoration: none;
+}
+
+.upload-btn {
+  color: white;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.file-chosen {
+  margin-left: 0.3rem;
+  font-family: sans-serif;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }

@@ -2,6 +2,7 @@
 
 @section('header')
     <link rel="stylesheet" type="text/css" href="/css/source.css">
+    <link rel="stylesheet" type="text/css" href="/css/checkbox.css">
 @endsection
 
 @section('content')
@@ -32,9 +33,12 @@
                 </h5>
 
                 <type-list
+                    :source-slug="{{ json_encode($source->slug) }}"
                     :in-types="{{ $fixedExpenseTypes }}"
                     :base-url="{{ json_encode(url('/')) }}"
-                    c-color="green">
+                    c-color="green"
+                    month="{{ $month->name }}"
+                    year="{{ $year }}">
                 </type-list>
             </div>
         </div>
