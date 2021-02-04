@@ -33,11 +33,13 @@ Route::get('/despesas/{expenseType}/editar',        'ExpenseTypeController@edit'
 Route::put('/despesas/{expenseType}',               'ExpenseTypeController@update') ->name('expense.update');
 // Deletar o tipo de despesa {expense}
 Route::delete('/despesas/{expenseType}',            'ExpenseTypeController@destroy')->name('expense.delete');
+
 // Retorna imagem do comprovante do pagamento $payment
-Route::get('/pagamentos/{source}/{expenseType}/{payment}',   'PaymentFileController@show')->name('paymentFile.show');
+Route::get('/pagamentos/{source}/{expenseType}/{payment}',      'PaymentController@show')   ->name('payment.show');
 // Inserir imagens de comprovantes no pagamento de id = {paymentId}
-Route::post('/pagamentos/{expenseType}',                    'PaymentFileController@store') ->name('paymentFile.store');
-Route::delete('/pagamentos/{expenseType}',                  'PaymentFileController@store') ->name('paymentFile.destroy');
+Route::post('/pagamentos/{expenseType}',                        'PaymentController@store')  ->name('payment.store');
+// Delete $payment and it's file, if it has one
+Route::delete('/pagamentos/{source}/{expenseType}/{payment}',   'PaymentController@destroy') ->name('payment.destroy');
 
 
 // ----- x ------ ----------------- ----- x ----- \\
@@ -49,9 +51,9 @@ Route::post('/receitas/{incomeType}',          		'IncomeTypeController@record') 
 // Formulário de edição do tipo de receira {incomeType}
 Route::get('/receitas/{incomeType}/editar',         'IncomeTypeController@edit')   ->name('income.edit');
 // Atualizar o tipo de receita {income}
-Route::put('/receitas/{incomeType}',                'IncomeTypeController@update')  ->name('income.update');
+Route::put('/receitas/{incomeType}',                'IncomeTypeController@update') ->name('income.update');
 // Deletar o tipo de receita {income}
-Route::delete('/receitas/{incomeType}',             'IncomeTypeController@destroy')  ->name('income.delete');
+Route::delete('/receitas/{incomeType}',             'IncomeTypeController@destroy')->name('income.delete');
 
 // ----- x ------ ------------------ ----- x ----- \\
 // ----- x ------ Grupos de Despesas ----- x ----- \\

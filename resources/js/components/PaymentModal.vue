@@ -25,6 +25,7 @@
                 :name="String(item.id) + '-pago'"
                 :ref="String(item.id) + '-pago'"
                 class="toggle__input"
+                @change="togglePay(index)"
                 v-model="isPaid[index]">
               <span class="toggle__label">
                 <span class="toggle__text">{{ isPaid[index] ? "Pago" : "Não pago" }}</span>
@@ -33,18 +34,35 @@
           </div>
         </div>
 
+        <b-modal :id="'confirm-' + index  + '-' + modalId" :ref="'confirm-' + modalId" title="Confirmar a operação" @hidden="revertPay(index)">
+          <h5
+            class="m-3"
+            >
+            Tem certeza de que deseja apagar o pagamento do dia <br>
+            <span class="orange" style="font-size: x-large;">{{ item.due_day }}</span> de <span class="orange" style="font-size: x-large;">{{ month }}</span> de <span class="orange" style="font-size: x-large;">{{ year }}</span>?
+          </h5>
+          <template v-slot:modal-footer>
+            <b-button class="btn btn-apagar" @click="hideModal('confirm-' + index  + '-')">
+              Cancelar
+            </b-button>
+            <button
+              @click="confirmedDelete(index)"
+              class="btn btn-danger">
+                Apagar
+            </button>
+          </template>
+        </b-modal>
+
         <div v-if="hasFile[index]">
           <div class="row d-flex justify-content-center px-0">
             <img
-              v-show="item.payments[0].filename.split('.')[item.payments[0].filename.split('.').length - 1] != 'pdf'"
-              :ref="String(item.id) + '-img-saved'"
+              v-show="item.payments[0].filename.split('.')[item.payments[0].filename.split('.').length - 1] != 'pdf' && isPaid[index]"
               class="col-11 preview-img"
               :src="paymentUrl + item.payments[0].id"
             />
 
             <embed
-              v-show="item.payments[0].filename.split('.')[item.payments[0].filename.split('.').length - 1] == 'pdf'"
-              :ref="String(item.id) + '-embed-saved'"
+              v-show="item.payments[0].filename.split('.')[item.payments[0].filename.split('.').length - 1] == 'pdf' && isPaid[index]"
               height="350"
               class="col-11"
               :src="paymentUrl + item.payments[0].id"
@@ -97,13 +115,13 @@
     </form>
 
     <template v-slot:modal-footer>
-      <b-button class="btn btn-apagar" @click="hideModal()">
-        Cancelar
+      <b-button class="btn btn-apagar" @click="hideModal('pay-')">
+        Fechar
       </b-button>
       <button
         @click="pay()"
         class="btn btn-primary">
-          Salvar
+          Salvar novos pagamentos
       </button>
     </template>
   </b-modal>
@@ -147,6 +165,7 @@ export default {
       hasImage: [],
       hasPDF: [],
       isPaid: [],
+      savedAsPaid: [],
       hasFile: [],
       csrf: window.axios.defaults.headers.common['X-CSRF-TOKEN'],
     }
@@ -171,14 +190,44 @@ export default {
         embed[0].style.display = "none"
       }
     },
-    hideModal() {
-      this.$refs['pay-' + this.modalId].hide()
+    hideModal(type) {
+      this.$bvModal.hide(type + this.modalId)
     },
     pay() {
       this.$refs['form'].submit()
     },
     togglePay(index) {
-      div = this.$refs[String(index) + '-color']
+      if (!this.isPaid[index] && this.savedAsPaid[index]) {
+        this.$bvModal.show('confirm-' + index  + '-' + this.modalId)
+        var checkbox = this.$refs[this.payDays[index].id + '-pago'][0]
+        // checkbox.click()
+      }
+    },
+    revertPay(index) {
+      // Reverts it only if the payment hasn't been removed
+      if (this.payDays[index].payments[0] != null) {
+        this.$set(this.isPaid, index, true);
+      }
+    },
+    confirmedDelete(index) {
+      try {
+        axios.delete(this.paymentUrl + this.payDays[index].payments[0].id);
+      } catch (err) {
+        // Handle Error Here
+        console.error(err);
+        this.$eventBus.$emit('flash', "Pagamento não pode ser apagado, atualize a página.", "danger");
+      }
+      this.$eventBus.$emit('flash', "Pagamento apagado!", "danger");
+      this.$bvModal.hide('confirm-' + index  + '-' + this.modalId)
+
+      this.$set(this.fileNames, index, "Nenhum arquivo selecionado");
+      this.$set(this.hasImage, index, false);
+      this.$set(this.hasPDF, index, false);
+      this.$set(this.isPaid, index, false);
+      this.$set(this.savedAsPaid, index, false);
+      this.$set(this.hasFile, index, false);
+
+      this.payDays[index].payments.splice(0, 1)
     }
   },
   watch: {
@@ -188,6 +237,7 @@ export default {
         this.hasImage[i] = false
         this.hasPDF[i] = false
         this.isPaid[i] = (ar[i].payments.length ? true : false)
+        this.savedAsPaid[i] = (ar[i].payments.length ? true : false)
         // Make an "is checked" like the one above to separate being checked as paid from being saved as paid
         this.hasFile[i] = (ar[i].payments.length && (ar[i].payments[0].filename != null) ? true : false)
         // Cannot set images in here because references aren't setted yet

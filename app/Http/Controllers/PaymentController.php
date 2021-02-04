@@ -11,15 +11,15 @@ use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\Cached\Storage\Memcached;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 
-
-class PaymentFileController extends Controller
+class PaymentController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -28,9 +28,9 @@ class PaymentFileController extends Controller
      */
     public function store(Request $request, ExpenseType $expenseType)
     {
+        $this->validateStore($request)->validate();
         $month = session('month', thisMonth());
         $year = session('year', thisYear());
-
         $payDays = $expenseType->paydaysWithPaymentsAt($year, $month);
         # Para cada Payday
         foreach ($payDays as $payDay) {
@@ -85,8 +85,30 @@ class PaymentFileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Source $source, ExpenseType $expenseType, Payment $payment)
     {
-        //-
+        if ($payment->filename != null) {
+            $filepath = 'comprovantes/' . $source->slug . '/' . $expenseType->slug . '/' . $payment->filename;
+            Storage::disk('local')->delete($filepath); # Returns false if doesn't exists
+        }
+        
+        $payment->delete();
+        if (request()->expectsJson()) {
+            return response(['status' => 'Pagamento apagado']);
+        }
+        return back()->with('success', "O pagamentos foi apagado");
+    }
+
+    protected function validateStore(Request $request)
+    {
+        $rules = [];
+        $files = $request->files->keys();
+        foreach ($files as $file) {
+            $rules[$file] = 'mimes:jpg,bmp,png,pdf,gif,jpeg,webp';
+            # If a file is being added, the payday has to be checked as paid
+            $rules[explode('-', $file)[0] . '-pago'] = 'required|accepted';
+        }
+
+        return Validator::make($request->all(), $rules);
     }
 }

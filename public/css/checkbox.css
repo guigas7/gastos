@@ -165,12 +165,14 @@ SETTINGS
 =====
 */
 
+/* Don't change color order */
 .orange__custom-settings{
   --toggleColor: #f57b51;
   --toggleOutlineColorFocus: #f57b51;
   --toggleSize: 2rem;
 }
 
+/* Don't change color order */
 .green__custom-settings{
   --toggleColor: #216353;
   --toggleOutlineColorFocus: #216353 ;
