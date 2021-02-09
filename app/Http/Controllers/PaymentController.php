@@ -49,7 +49,7 @@ class PaymentController extends Controller
             # Se já não existe arquivo salvo nesse pagamento E existe arquivo pra salvar E foi pago
             if ($payment != null && $payment->filename == null && $fileInput != false && $paidInput != false) {
                 # create new directory for this expense, if it doesn't exist yet
-                $directory = 'comprovantes/' . $expenseType->source->slug . '/' . $expenseType->slug;
+                $directory = 'comprovantes/' . $expenseType->source->id . '/' . $expenseType->id;
                 Storage::makeDirectory($directory, 'private');
                 $mimeEx = explode('/', $fileInput->getMimeType());
                 $extension = $mimeEx[count($mimeEx) - 1];
@@ -73,8 +73,8 @@ class PaymentController extends Controller
 
     public function show(Source $source, ExpenseType $expenseType, Payment $payment) {
         $path = 'app/comprovantes/' . # Base path
-        $source->slug . '/' . # Source
-        $expenseType->slug . '/' . # Expense Type
+        $source->id . '/' . # Source
+        $expenseType->id . '/' . # Expense Type
         $payment->filename; # Filename
         return response()->file(storage_path($path));
     }
@@ -88,7 +88,7 @@ class PaymentController extends Controller
     public function destroy(Source $source, ExpenseType $expenseType, Payment $payment)
     {
         if ($payment->filename != null) {
-            $filepath = 'comprovantes/' . $source->slug . '/' . $expenseType->slug . '/' . $payment->filename;
+            $filepath = 'comprovantes/' . $source->id . '/' . $expenseType->id . '/' . $payment->filename;
             Storage::disk('local')->delete($filepath); # Returns false if doesn't exists
         }
         

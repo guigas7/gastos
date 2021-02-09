@@ -1,0 +1,112 @@
+// Imports
+@import 'bourbon';
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400,700);
+
+// Colors
+$color-red: #ff6666;
+$color-white: #fff;
+$color-black: #2f2f2f;
+
+// Fonts
+$font-primary: Lato, sans-serif;
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}// html, body
+
+body {
+    @include background(radial-gradient(circle at bottom left, #f4d894, $color-red) );
+    color: $color-white;
+    font-family: $font-primary;
+    font-size: 24px;
+    font-weight: 300;
+    letter-spacing: 0.025em;
+}// body
+
+strong {
+    font-weight: bold;
+}
+
+em {
+    color: lighten( $color-black, 40% );
+    font-style: italic;
+}
+
+.tooltip-example {
+    @include transform( translateY(-50%) );
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 100%;
+}// .tooltip-example
+
+// Tooltip Styles
+.tooltip {
+    display: inline;
+    @include perspective(500px);
+    
+    &:hover {
+        cursor: pointer;
+        
+        .tooltip__content {
+            @include transform( translate3d(-50%,-10%,0) );
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
+    
+    &__content {
+        @include transition( all 200ms ease );
+        @include transform( translate3d(-50%,0%,0) );
+        @include transform-origin( 0 10px );
+        background-color: $color-white;
+        border-radius: 4px;
+        color: $color-black;
+        display: block;
+        font-size: 14px;
+        font-weight: normal;
+        left: 50%;
+        opacity: 0;
+        padding: 10px 20px;
+        pointer-events: none;
+        position: absolute;
+        text-align: left;
+        bottom: 100%;
+        
+        &:before {
+            border-color: transparent;
+            border-top-color: $color-white;
+            border-style: solid;
+            border-width: 10px;     
+            content: ' ';
+            display: block;
+            height: 0;
+            left: 50%;
+            margin-left: -10px;
+            position: absolute;
+            bottom: -20px;
+            width: 0;
+        }// .tooltip__content:after
+        
+        &:after {
+            content: ' ';
+            display: block;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+        }
+        
+        &:hover {
+            @include transform( rotateX(0deg) translate3d(-50%,-10%,0) );
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+    }// .tooltip__content
+    
+}// .tooltip

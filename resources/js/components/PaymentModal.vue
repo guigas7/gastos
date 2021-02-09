@@ -1,5 +1,5 @@
 <template>
-  <b-modal :id="'pay-' + modalId" :ref="'pay-' + modalId" :title="'Pagamentos de ' + type.name">
+  <b-modal :id="'pay-' + modalId" :ref="'pay-' + modalId" :title="'Pagamentos de ' + type.name" @hidden="resetFiles()">
     <form
       method="POST"
       :action="type.endPoint.replace('despesas', 'pagamentos')"
@@ -12,7 +12,7 @@
       >
         <h5
           class="col-form-label col-lg-6 d-inline"
-          >Dia <span class="orange" style="font-size: x-large;">{{ item.due_day }}</span> de {{ month }} de {{ year }}
+          >Dia <span class="orange" :class="[hasWarningToday && parseInt(item.due_day) <= parseInt(today) && !savedAsPaid[index] ? 'pulse yellow' : '']" style="font-size: x-large;">{{ item.due_day }}</span> de {{ month }} de {{ year }}
         </h5>
 
         <div class="page__section orange__custom-settings col-form-label col-lg-6 d-inline"
@@ -91,7 +91,7 @@
                 :id="String(item.id) + '-actual-btn'"
                 :name="String(item.id) + '-actual-btn'"
                 :ref="String(item.id) + '-actual-btn'"
-                @change="newFile(index)"
+                @change="newFile(item, index)"
                 accept="image/*,.pdf"
                 hidden
               />
@@ -108,6 +108,24 @@
               >
                 {{ fileNames[index] }}
               </span>
+              
+              <a
+                class="align-self-center"
+                href="#"
+                @click.prevent="removeFile(index)"
+                v-show="hasImage[index] || hasPDF[index]"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.3em"
+                  height="1.3em"
+                  fill="currentColor"
+                  class="bi bi-x"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+              </a>
             </div>
           </div>
         </transition>
@@ -157,6 +175,10 @@ export default {
     paymentUrl: {
       type: String,
       required: true
+    },
+    hasWarningToday: {
+      type: Boolean,
+      required: true
     }
   },
   data: function () {
@@ -168,26 +190,51 @@ export default {
       savedAsPaid: [],
       hasFile: [],
       csrf: window.axios.defaults.headers.common['X-CSRF-TOKEN'],
+      today: new Date
     }
   },
   methods: {
-    newFile(index) {
-      var input = this.$refs[this.payDays[index].id + '-actual-btn']
-      var image = this.$refs[this.payDays[index].id + '-img']
-      var embed = this.$refs[this.payDays[index].id + '-embed']
-      this.$set(this.fileNames, index, input[0].files[0].name)
-      if (this.fileNames[index].split('.')[this.fileNames[index].split('.').length - 1] == "pdf") {
-        this.$set(this.hasPDF, index, true);
-        this.$set(this.hasImage, index, false);
-        embed[0].src = window.URL.createObjectURL(input[0].files[0])
-        embed[0].style.display = "block"
-        image[0].style.display = "none"
-      } else {
-        this.$set(this.hasPDF, index, false);
-        this.$set(this.hasImage, index, true);
-        image[0].src = window.URL.createObjectURL(input[0].files[0])
-        image[0].style.display = "block"
-        embed[0].style.display = "none"
+    newFile(item, index) {
+      if (this.payDays != null) {
+        var input = this.$refs[this.payDays[index].id + '-actual-btn']
+        var image = this.$refs[this.payDays[index].id + '-img']
+        var embed = this.$refs[this.payDays[index].id + '-embed']
+        if (input[0].files[0] != null) {
+          this.$set(this.fileNames, index, input[0].files[0].name)
+          if (this.fileNames[index].split('.')[this.fileNames[index].split('.').length - 1] == "pdf") {
+            this.$set(this.hasPDF, index, true);
+            this.$set(this.hasImage, index, false);
+            embed[0].src = window.URL.createObjectURL(input[0].files[0])
+            embed[0].style.display = "block"
+            image[0].style.display = "none"
+          } else {
+            this.$set(this.hasPDF, index, false);
+            this.$set(this.hasImage, index, true);
+            image[0].src = window.URL.createObjectURL(input[0].files[0])
+            image[0].style.display = "block"
+            embed[0].style.display = "none"
+          }
+        }
+      }
+    },
+    removeFile(index) {
+      if (this.payDays != null) {
+        var input = this.$refs[this.payDays[index].id + '-actual-btn']
+        var image = this.$refs[this.payDays[index].id + '-img']
+        var embed = this.$refs[this.payDays[index].id + '-embed']
+        if (input[0].files[0] != null) {
+          if (this.fileNames[index].split('.')[this.fileNames[index].split('.').length - 1] == "pdf") {
+            this.$set(this.hasPDF, index, false);
+            embed[0].src = '#'
+            embed[0].style.display = "none"
+          } else {
+            this.$set(this.hasImage, index, false);
+            image[0].src = '#'
+            image[0].style.display = "none"
+          }
+        }
+        input[0].value = ""
+        this.$set(this.fileNames, index, "Nenhum arquivo selecionado")
       }
     },
     hideModal(type) {
@@ -228,6 +275,18 @@ export default {
       this.$set(this.hasFile, index, false);
 
       this.payDays[index].payments.splice(0, 1)
+    },
+    resetFiles() {
+      for (var index = 0; index < this.payDays.length; index++) {
+        if (!this.hasFile[index]) {
+          this.$set(this.fileNames, index, "Nenhum arquivo selecionado");
+          this.$set(this.hasImage, index, false);
+          this.$set(this.hasPDF, index, false);
+          if (!this.savedAsPaid[index]) {
+            this.$set(this.isPaid, index, false);
+          }
+        }
+      }
     }
   },
   watch: {
@@ -236,12 +295,19 @@ export default {
         this.fileNames[i] = "Nenhum arquivo selecionado"
         this.hasImage[i] = false
         this.hasPDF[i] = false
-        this.isPaid[i] = (ar[i].payments.length ? true : false)
-        this.savedAsPaid[i] = (ar[i].payments.length ? true : false)
-        // Make an "is checked" like the one above to separate being checked as paid from being saved as paid
-        this.hasFile[i] = (ar[i].payments.length && (ar[i].payments[0].filename != null) ? true : false)
-        // Cannot set images in here because references aren't setted yet
+        if (ar[i].payments != undefined) {
+          this.isPaid[i] = (ar[i].payments.length ? true : false)
+          this.savedAsPaid[i] = (ar[i].payments.length ? true : false)
+          this.hasFile[i] = (ar[i].payments.length && (ar[i].payments[0].filename != null) ? true : false)
+        } else {
+          this.isPaid[i] = false
+          this.savedAsPaid[i] = false
+          this.hasFile[i] = false
+        }
       }
+      this.today = this.today.toLocaleDateString("pt-BR", {
+        day: "2-digit"
+      })
     }
   }
 }

@@ -6,6 +6,7 @@
           :title="type.description"
           href="#"
           class="type-title"
+          :class="[hasWarningToday && paydayCompletion == -1 ? 'wine' : '', hasWarningToday && paydayCompletion == 0 ? 'orange' : '']"
           v-b-modal="modalId()"
         >
           {{ type.name }}
@@ -162,10 +163,6 @@
             </form>
           </div>
         </b-modal>
-
-
-
-
       </div>
       <a
         class="float-right col-sm-2"
@@ -210,9 +207,9 @@
         </svg>
       </a>
       <a
-        v-if="showPayday"
+        v-if="hasPayday"
         class="float-right col-sm-2"
-        :class="[cColor ? cColor : '']"
+        :class="[paydayCompletion == -1 ? 'wine' : paydayCompletion == 0 ? 'orange' : 'green']"
         href="#"
         v-b-modal="'pay-' + modalId()"
       >
@@ -221,8 +218,10 @@
           width="1.3em"
           height="1.3em"
           fill="currentColor"
-          class="bi bi-calendar-x"
+          class="bi bi-calendar-x pulse"
+          :class="[hasWarningToday ? 'red' : '']"
           viewBox="0 0 16 16"
+          v-if="paydayCompletion == -1"
         >
           <path
             d="M6.146 7.146a.5.5 0 0 1 .708 0L8 8.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 9l1.147 1.146a.5.5 0 0 1-.708.708L8 9.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 9 6.146 7.854a.5.5 0 0 1 0-.708z"
@@ -231,10 +230,37 @@
             d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"
           />
         </svg>
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1.3em"
+          height="1.3em"
+          fill="currentColor"
+          class="bi bi-calendar-check pulse"
+          viewBox="0 0 16 16"
+          :class="[hasWarningToday ? 'yellow' : '']"
+          v-if="paydayCompletion == 0"
+        >
+          <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+          <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+        </svg>
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1.3em"
+          height="1.3em"
+          fill="currentColor"
+          class="bi bi-calendar-check-fill"
+          viewBox="0 0 16 16"
+          v-if="paydayCompletion > 0"
+        >
+          <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-5.146-5.146l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+        </svg>
       </a>
 
       <payment-modal
         v-if="showPayday"
+        :has-warning-today="hasWarningToday"
         :payment-url="paymentUrl"
         :month="month"
         :year="year"
@@ -340,7 +366,6 @@
         </a>
         <a
           class="float-right col-sm-2"
-          :class="[cColor ? cColor : '']"
           href="#"
           @click.prevent="toggleShow"
           v-show="showing"
@@ -456,8 +481,52 @@ export default {
         return false
       }
     },
+    hasPayday: function () {
+      if (this.showPayday && this.type.paydays.length > 0) {
+        return true
+      }
+      return false
+    },
     paymentUrl: function () {
       return this.baseUrl + '/pagamentos/' + this.sourceSlug + '/' + this.typeAttrs.slug + '/'
+    },
+    paydayCompletion: function () {
+      // To add a 'with all files' check, uncomment lines
+      var complete = 0
+      // var hasFile = 0
+      var size = this.payDays.length
+      for (var index = 0; index < size; index++) {
+        if (this.payDays[index].payments !== undefined) {
+          complete += (this.payDays[index].payments.length > 0 ? 1 : 0)
+          // hasFile += (this.payDays[index].payments.length > 0 ? (this.payDays[index].payments[0].filename != null ? 1 : 0) : 0)
+        }
+      }
+      if (complete == 0) {
+        return -1
+      } else if (complete < size) {
+        return 0
+      // } else if (hasFile == size) {
+      //   return 2   
+      }
+      return 1
+    },
+    hasWarningToday () {
+      var today = new Date
+      var day = today.toLocaleDateString("pt-BR", {
+        day: "2-digit"
+      });
+      var hasOne = false
+      var payday
+      if (this.payDays != null) {
+        for (var index = 0; index < this.payDays.length; index++) {
+          payday = this.payDays[index]
+          if (parseInt(day) >= parseInt(payday.due_day) && (payday.payments == null || payday.payments.length == 0)) { // if doesn't have payment
+            hasOne = true
+            break
+          }
+        }
+      }
+      return (hasOne ? true : false)
     }
   },
   data: function () {

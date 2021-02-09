@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Source;
 use App\Payday;
+use Illuminate\Validation\Rule;
 
 class ExpenseTypeController extends Controller
 {
@@ -38,7 +39,7 @@ class ExpenseTypeController extends Controller
             $exNameAmnt = sizeof($request->input('expense-names'));
             $exDescAmnt = sizeof($request->input('expense-descriptions'));
             $maxExpense = min($exNameAmnt, $exDescAmnt);
-            $this->validateArrays($request, $maxExpense, 0)->validate();
+            $this->validateStore($request, $maxExpense, 0)->validate();
 
             $expenses = collect();
             for ($i = 0; $i < $maxExpense; $i++) {
@@ -89,63 +90,62 @@ class ExpenseTypeController extends Controller
      */
     public function update(Request $request, ExpenseType $expenseType)
     {
-        //dd('testar o funcionamento de tudo, especialmente dos dias de pagamento');
-        $expenseType->update([
-            'name' => $request->input("name"),
-            'fixed' => $request->boolean ("expense-type"),
-            'description' => $request->input("description"),
-        ]);
+        $this->validateUpdate($request)->validate();
 
-        // New algorithm for sincronizing paydays
-
-        // Foreach existing paydays
-            // If not in $request->input('due-days')
-                // soft delete
-            // If is in $request->input('due-days')
-                // We cool
-        
-        // paydays->refresh()
-        // Foreach due-days-new
-            // If not in existing paydays
-                // If is soft deleted
-                    // Restore
-                // Else
-                    // Create
-            // If in existing paydays
-                // We cool
-
-        $days = array_merge(
-            $request->input('due-days')
-                ? $request->input('due-days')
-                : []
-            , $request->input('due-days-new')
-                ? $request->input('due-days-new')
-                : []
-        );
-        // Difference = days to fill - existing paydays
-        $difference = count($days) - $expenseType->Paydays->count();
-        // if there are more due_days to fill than existing ones
-        // dd($difference);
-        if ($difference > 0) {
-            for ($i = 0; $i < $difference; $i++) {
-                $expenseType->paydays()->save(new Payday([
-                    'due_day' => 1
-                ]));
-            }
-        // if there are more existing than to fill
-        } elseif ($difference < 0) {
-            // soft delete exceding amount
-            // foreach exceding payday
-            foreach ($expenseType->Paydays->slice($difference + $expenseType->Paydays->count()) as $payday) {
-                $payday->delete(); // soft deletes
+        if ($expenseType->fixed == 1 && $request->boolean("expense-type") == 0) {
+            foreach ($expenseType->paydays as $payday) {
+                $payday->delete();
             }
         }
 
-        $expenseType->refresh();
+        $expenseType->update([
+            'name' => $request->input("name"),
+            'fixed' => $request->boolean("expense-type"),
+            'description' => $request->input("description"),
+        ]);
 
-        foreach ($expenseType->Paydays as $key => $value) {
-            $value->due_day = sprintf("%02d", $days[$key]);
-            $value->save();
+        $savedPayDays = $expenseType->paydays;
+
+        if ($request->has('due-days')) {
+            $existingPayDays = $request->input('due-days');
+            array_walk($existingPayDays, function(&$value, &$key) {
+                $value = sprintf("%02d", intval($value));
+            });
+        } else {
+            $existingPayDays = [];
+        }
+        // Handle existing due_days
+        foreach ($savedPayDays as $index => $payday) {
+            if (!in_array($payday->due_day, $existingPayDays)) {
+                $payday->delete();
+            }
+        }
+        $savedPayDays->fresh(); // If any were deleted,
+
+        // Handle new due_days
+        $possibleNewDays = $existingPayDays;
+        if ($newPayDays = $request->has('due-days-new')) {
+            $newPayDays = $request->input('due-days-new');
+            array_walk($newPayDays, function(&$value, &$key) {
+                $value = sprintf("%02d", intval($value));
+            });
+            $possibleNewDays = array_merge($existingPayDays, $newPayDays);
+        }
+
+        //dd($savedPayDays->pluck('due_day')->all());
+        foreach ($possibleNewDays as $day) {
+            if (!in_array($day, $savedPayDays->pluck('due_day')->all())) {
+                // Get all ids from trashed paydays, indexed by their due_days
+                $trashedDueDays = $expenseType->paydays()->onlyTrashed()->pluck('id', 'due_day')->all();
+                // Finds the payday id by index, aka, by due_day
+                if (in_array($day, array_keys($trashedDueDays))) {
+                    // If exists, restore it
+                    $newDay = Payday::onlyTrashed()->find($trashedDueDays[$day]);
+                    $newDay->restore();
+                } else {
+                    $expenseType->paydays()->create(['due_day' => $day]);
+                }
+            }
         }
 
         return back()->with('success', "A despesa {$expenseType->name} foi atualizada");
@@ -191,11 +191,11 @@ class ExpenseTypeController extends Controller
         return back()->with('success', "Um novo registro foi adicionado a despesa {$expenseType->name}.");
     }
 
-    protected function validateArrays(Request $request, $expAmnt, $incAmnt)
+    protected function validateStore(Request $request, $expAmnt, $incAmnt)
     {
         $rules = [
-            'expense-names.*' => ['size:' . $expAmnt],
-            'expense-descriptions.*' => ['size:' . $expAmnt],
+            'expense-names.*' => 'size:' . $expAmnt,
+            'expense-descriptions.*' => 'size:' . $expAmnt,
         ];
         for ($i = 0; $i < $expAmnt; $i++) {
             $rules['expense-type' . ($i + 1)] = 'required|boolean';
@@ -207,12 +207,24 @@ class ExpenseTypeController extends Controller
                     $rules['due-days.' . $j] = 'numeric|min:1|max:28';
                 }
             }
-            if ($request->has('due-days-new')) {
-                $payDaysAmnt = sizeof($request->input('due-days-new' . ($i + 1)));
-                for ($j = 0; $j <= $payDaysAmnt; $j++) {
-                    $rules['due-days.' . $j] = 'numeric|min:1|max:28';
-                }
-            }
+        }
+        return Validator::make($request->all(), $rules);
+    }
+
+    protected function validateUpdate(Request $request)
+    {
+        $rules = [
+            'expense-type' => 'required|boolean',
+            'name' => 'required|max:80',
+            'description' => 'nullable|max:255',
+        ];
+        $existingPayDays = $request->input('due-days');
+        $newPayDays = $request->input('due-days-new');
+        if ($request->has('due-days')) {
+            $rules['due-days.*'] = ['numeric', 'min:1', 'max:28', 'distinct', Rule::notIn($newPayDays)];
+        }
+        if ($request->has('due-days-new')) {
+            $rules['due-days-new.*'] = ['numeric', 'min:1', 'max:28', 'distinct', Rule::notIn($existingPayDays)];
         }
         return Validator::make($request->all(), $rules);
     }

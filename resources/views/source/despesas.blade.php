@@ -3,6 +3,7 @@
 @section('header')
     <link rel="stylesheet" type="text/css" href="/css/source.css">
     <link rel="stylesheet" type="text/css" href="/css/checkbox.css">
+    <link rel="stylesheet" type="text/css" href="/css/pulse.css">
 @endsection
 
 @section('content')
@@ -30,6 +31,7 @@
             <div class="card">
                 <h5 class="card-header">
                     Despesas Fixas de {{ $month->name }} - R${{ monthlySum($fixedExpenseTypes) }}
+                    <x-paymenthint></x-paymenthint>
                 </h5>
 
                 <type-list
@@ -42,7 +44,6 @@
                 </type-list>
             </div>
         </div>
-        
         {{-- Despesas Variáveis --}}
         <div class="col-xl-6 col-lg-12 mb-5">
             <div class="card">

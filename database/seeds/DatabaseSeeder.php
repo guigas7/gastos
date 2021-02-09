@@ -14,10 +14,12 @@ class DatabaseSeeder extends Seeder
         $toTruncate = [
             'sources',
             'income_types',
+            'expense_groups',
             'expense_types',
             'records',
+            'payments',
+            'paydays',
             'months',
-            'expense_groups',
         ];
 
         Schema::disableForeignKeyConstraints();

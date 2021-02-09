@@ -11,5 +11,6 @@ $factory->define(Payment::class, function (Faker $faker) {
     	'payday_id' => factory(App\Payday::class),
         'year' => $faker->numberBetween(2017, 2022),
         'month_id' => $faker->numberBetween(1, 12),
+        'filename' => null,
     ];
 });

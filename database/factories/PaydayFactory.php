@@ -10,7 +10,7 @@ use Faker\Generator as Faker;
 $factory->define(Payday::class, function (Faker $faker) {
     return [
         'expense_type_id' => factory(App\ExpenseType::class),
-        'due_day' => $faker->numberBetween(1, 27),
+        'due_day' => sprintf("%02d", $faker->numberBetween(1, 27)),
     ];
 });
 

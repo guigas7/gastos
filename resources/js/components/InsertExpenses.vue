@@ -34,7 +34,7 @@
                 <label :for="'due-day' + tab + '[]'" class="col-form-label col-lg-5 offset-lg-1">{{ index + 1 }}º dia de pagamento: </label>
 
                 <div class="pl-4 col-lg-4">
-                  <input type="number" class="form-control" :name="'due-day' + tab + '[]'" required autofocus v-model="listOfTabs[tindex][index]">
+                  <input type="number" class="form-control" :name="'due-day' + tab + '[]'" required v-model="listOfTabs[tindex][index]">
                 </div>
 
                   <a class="align-self-center" href="#" @click.prevent="removeDueDay(tindex, index)">

@@ -26,7 +26,6 @@ $factory->afterCreating(App\ExpenseType::class, function ($holder, $faker) {
 
 	if ($faker->boolean(90) && $holder->fixed == 1) {
 		Factory(App\Payday::class)->create([
-			'due_day' => $faker->numberBetween(1, 27),
 			'expense_type_id' => $holder->id,
 		]);
 	}
