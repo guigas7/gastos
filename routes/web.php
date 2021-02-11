@@ -68,6 +68,13 @@ Route::delete('/grupo/{expenseGroup}',    		'ExpenseGroupController@destroy')	->
 // Inserir novo grupo
 Route::post('/grupo/{source}/criar',          	'ExpenseGroupController@store')  	->name('exgroup.store');
 
+// ----- x ------ -------- ----- x ----- \\
+// ----- x ------ Gráficos ----- x ----- \\
+// ----- x ------ -------- ----- x ----- \\
+
+
+// Permite comparar 
+Route::get('/',                         'SourceController@index')       ->name('source.index');
 
 // ----- x ------ ------------------------------ ----- x ----- \\
 // ----- x ------ Centros de Despesas e Receitas ----- x ----- \\

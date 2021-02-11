@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/pretty.css') }}" rel="stylesheet">
     <style>
         .center-vertical {
             margin: 0;
@@ -139,7 +140,7 @@
         </div>
     </div>
 
-    <footer class="my-5 pt-5 text-muted text-center text-small">
+    <footer class="my-5 pt-5 text-muted text-center text-small footer">
         <p class="mb-1">© 2020 CEPETI</p>
         <ul class="list-inline">
             <li class="list-inline-item"><a href="#app">Voltar ao topo</a></li>

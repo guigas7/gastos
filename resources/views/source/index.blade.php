@@ -14,9 +14,9 @@
                     <a href="{{ route('source.create') }}">
                         Clique aqui</a>!</div>
             @else
-                @foreach ($sources as $source)
-                    <div class="col-lg-3 col-md-6 my-3">
-                        <div class="row no-gutters border rounded flex-md-row mb-4 shadow-sm h-md-250 p-0 h-100">
+                @foreach ($sources as $index => $source)
+                    <div class="col-lg-3 col-md-6 my-3 {{ floor($index/4) % 2 == 0 ? 'moveRight' : 'moveLeft' }}">
+                        <div class="row no-gutters border rounded flex-md-row mb-4 shadow-sm h-md-250 p-0 h-100 box">
                             <a href="{{ route('source.edit', $source->slug) }}" class="py-2 px-3 ml-auto">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-tools" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                   <path fill-rule="evenodd" d="M0 1l1-1 3.081 2.2a1 1 0 0 1 .419.815v.07a1 1 0 0 0 .293.708L10.5 9.5l.914-.305a1 1 0 0 1 1.023.242l3.356 3.356a1 1 0 0 1 0 1.414l-1.586 1.586a1 1 0 0 1-1.414 0l-3.356-3.356a1 1 0 0 1-.242-1.023L9.5 10.5 3.793 4.793a1 1 0 0 0-.707-.293h-.071a1 1 0 0 1-.814-.419L0 1zm11.354 9.646a.5.5 0 0 0-.708.708l3 3a.5.5 0 0 0 .708-.708l-3-3z"/>
