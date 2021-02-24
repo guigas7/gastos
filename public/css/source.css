@@ -146,6 +146,14 @@ input[type=number] {
     color: #f57b51 !important;
 }
 
+.black {
+    color: black !important;
+}
+
+.grey {
+    color: #6c757d!important;
+}
+
 .green {
     color: #216353 !important;
 }

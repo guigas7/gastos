@@ -350,6 +350,23 @@ class SourceController extends Controller
         ));
     }
 
+    public function analyze(Source $source)
+    {
+        $months = Month::all();
+        $years = yearRange();
+        $month = session('month', thisMonth());
+        $year = session('year', thisYear());
+        $source->expenseTypes = $source->expenseTypes->sortBy('name')->values()->toArray();
+        $source->expenseGroups = $source->expenseGroups->sortBy('name')->values()->toArray();
+        return view('source.analyze', compact(
+            'months', // all months, with name, short (name), and string
+            'years', // all years, just strings
+            'source', // Current source
+            'month', // Current month
+            'year', // Current year
+        ));
+    }
+
     protected function validateSource(Request $request)
     {
         return Validator::make($request->all(), [

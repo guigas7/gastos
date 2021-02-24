@@ -73,41 +73,51 @@ Route::post('/grupo/{source}/criar',          	'ExpenseGroupController@store')  
 // ----- x ------ -------- ----- x ----- \\
 
 
-// Permite comparar 
-Route::get('/',                         'SourceController@index')       ->name('source.index');
 
 // ----- x ------ ------------------------------ ----- x ----- \\
 // ----- x ------ Centros de Despesas e Receitas ----- x ----- \\
 // ----- x ------ ------------------------------ ----- x ----- \\
 
 // Lista de centros de despesas e receita (sources). Opções de editar, excluir, visualizar e criar
-Route::get('/',                         'SourceController@index')   	->name('source.index');
+Route::get('/',                             'SourceController@index')   	->name('source.index');
 // Inserir novo centro
-Route::post('/criar',                   'SourceController@store')   	->name('source.store');
+Route::post('/criar',                       'SourceController@store')   	->name('source.store');
 // Formulário de criação de novo centro
-Route::get('/criar',                    'SourceController@create')  	->name('source.create');
+Route::get('/criar',                        'SourceController@create')  	->name('source.create');
 // Formulário de edição do centro {source}
-Route::get('/{source}/editar',          'SourceController@edit')    	->name('source.edit');
+Route::get('/{source}/editar',              'SourceController@edit')    	->name('source.edit');
 // Atualizar o centro {source}
-Route::put('/{source}',                 'SourceController@update')  	->name('source.update');
+Route::put('/{source}',                     'SourceController@update')  	->name('source.update');
 // Ver as despesas mensais do centro {source}
-Route::get('/{source}/despesas',        'SourceController@despesas')    ->name('source.despesas');
+Route::get('/{source}/despesas',            'SourceController@despesas')    ->name('source.despesas');
 // Ver as receitas mensais (se houver) do centro {source} e opções de edição do centro
-Route::get('/{source}/receitas',        'SourceController@receitas')    ->name('source.receitas');
+Route::get('/{source}/receitas',            'SourceController@receitas')    ->name('source.receitas');
 // Apagar o centro {source}
-Route::delete('/{source}',              'SourceController@destroy') 	->name('source.delete');
+Route::delete('/{source}',                  'SourceController@destroy') 	->name('source.delete');
 // Mostra os relatórios do centro {source}
-Route::get('/{source}/relatorios',      'SourceController@report')  	->name('source.report');
+Route::get('/{source}/relatorio/geral',     'SourceController@report')  	->name('source.report');
 // Lista de grupos, editar, excluir e criar novo
-Route::get('/{source}/grupos',          'ExpenseGroupController@index')	->name('exgroup.index');
+Route::get('/{source}/grupos',              'ExpenseGroupController@index')	->name('exgroup.index');
 // Inserir novo tipo de despesa em {source}
-Route::post('/{source}/despesas',       'ExpenseTypeController@store')  ->name('expense.store');
+Route::post('/{source}/despesas',           'ExpenseTypeController@store')  ->name('expense.store');
 // Inserir novo tipo de receita em {source}
-Route::post('{source}/receitas',        'IncomeTypeController@store')   ->name('income.store');
+Route::post('{source}/receitas',            'IncomeTypeController@store')   ->name('income.store');
+// Permite comparar 
+Route::get('/{source}/relatorio/analise',   'SourceController@analyze')     ->name('source.analyze');
 
-// ----- x ------ -------------------------- ----- x ----- \\
-// ----- x ------ Grupos de tipos de despesa ----- x ----- \\
-// ----- x ------ -------------------------- ----- x ----- \\
+// ----- x ------ ---- ----- x ----- \\
+// ----- x ------ APIs ----- x ----- \\
+// ----- x ------ ---- ----- x ----- \\
 
 // Retorna o centro {source}
-Route::get('/api/{source}',                 'SourceController@source')    	->name('source.api');
+Route::get('/api/{source}',                 'SourceController@source')    	        ->name('source.api');
+// Retorna o centro {source}
+Route::get('/api/{expenseType}',            'expenseTypeController@expenseType')    ->name('expense.api');
+// Retorna o centro {source}
+Route::get('/api/{expenseGroup}',           'SourceController@expenseGroup')        ->name('exgroup.api');
+// Retorna o centro {source}
+Route::get('/api/{source}/records',         'SourceController@records')             ->name('source.records.api');
+// Retorna o centro {source}
+Route::get('/api/{expenseType}/records',    'SourceController@records')             ->name('expense.records.api');
+// Retorna o centro {source}
+Route::get('/api/{expenseGroup}/records',   'SourceController@records')             ->name('exgroup.records.api');

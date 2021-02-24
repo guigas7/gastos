@@ -47,6 +47,9 @@ Vue.component('pie-chart', require('./components/PieChart.vue').default);
 Vue.component('delete-source', require('./components/DeleteSource.vue').default);
 Vue.component('delete-group', require('./components/DeleteGroup.vue').default);
 Vue.component('payment-modal', require('./components/PaymentModal.vue').default);
+Vue.component('expense-selector', require('./components/ExpenseSelector.vue').default);
+Vue.component('selected-graph', require('./components/SelectedGraph.vue').default);
+Vue.component('comparison-list', require('./components/ComparisonList.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
