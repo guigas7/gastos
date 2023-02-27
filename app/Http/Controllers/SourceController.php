@@ -291,14 +291,14 @@ class SourceController extends Controller
     {
         $month = session('month', thisMonth());
         $year = session('year', thisYear());
-
+        $divide_by = ($year == thisYear() ? intVal($month->number) : 12);
         // Source Anual sums
         $source->anualExpense = $source->expenseSumAt($year);
-        $source->monthlyAvg = $source->anualExpense / 12;
+        $source->monthlyAvg = $source->anualExpense / $divide_by;
         $source->anualFixedExpense = $source->expenseSumAt($year, null, null, "fixed");
-        $source->monthlyFixedAvg = $source->anualFixedExpense / 12;
+        $source->monthlyFixedAvg = $source->anualFixedExpense / $divide_by;
         $source->anualVariableExpense = $source->expenseSumAt($year, null, null, "variable");
-        $source->monthlyVariableAvg = $source->anualVariableExpense / 12;
+        $source->monthlyVariableAvg = $source->anualVariableExpense / $divide_by;
         // Groups Anual sums
         $groups = $source->expenseGroups;
         $ungrouped = $source->ungroupedExpenses();
@@ -309,13 +309,13 @@ class SourceController extends Controller
             $newGroup->expenseTypes()->saveMany($ungrouped);
             $groups->push($newGroup);
         }
-        $groups->each(function ($item, $key) use ($year, $source) {
+        $groups->each(function ($item, $key) use ($year, $source, $divide_by) {
             $item->anualExpense = $item->expenseSumAt($year);
-            $item->monthlyAvg = $item->anualExpense / 12;
+            $item->monthlyAvg = $item->anualExpense / $divide_by;
             $item->anualFixedExpense = $item->expenseSumAt($year, null, null, "fixed");
-            $item->monthlyFixedAvg = $item->anualFixedExpense / 12;
+            $item->monthlyFixedAvg = $item->anualFixedExpense / $divide_by;
             $item->anualVariableExpense = $item->expenseSumAt($year, null, null, "variable");
-            $item->monthlyVariableAvg = $item->anualVariableExpense / 12;
+            $item->monthlyVariableAvg = $item->anualVariableExpense / $divide_by;
             if ($source->anualExpense > 0) {
                 $item->percentFromTotal = ($item->anualExpense / $source->anualExpense) * 100;
             } else {
